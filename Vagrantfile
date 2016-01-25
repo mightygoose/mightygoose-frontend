@@ -17,5 +17,7 @@ Vagrant.configure(2) do |config|
       sudo apt-get install -y python-pip git
 
       sudo pip install -r /musfinder/requirements.txt
+
+      sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
   SHELL
 end
