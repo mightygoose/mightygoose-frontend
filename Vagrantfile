@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = "puphpet/ubuntu1404-x64"
 
-  config.vm.synced_folder "src", "/musfinder", :nfs => true
+  #config.vm.synced_folder ".", "/musfinder", :nfs => true
 
   config.vm.network "private_network", ip: "192.168.100.202"
 
@@ -17,7 +17,5 @@ Vagrant.configure(2) do |config|
       sudo apt-get install -y python-pip git
 
       sudo pip install -r /musfinder/requirements.txt
-
-      sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
   SHELL
 end
