@@ -108,6 +108,6 @@ def serve():
 if __name__ == "__main__":
     enable_pretty_logging()
     app = serve()
-    app.listen(8888)
+    app.listen(os.environ.get("PORT", 8888))
     logging.info("starting torando web server")
     tornado.ioloop.IOLoop.current().start()
