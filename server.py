@@ -157,6 +157,7 @@ def serve():
     ], autoreload=True, debug=True)
 
 if __name__ == "__main__":
+    update_data()
     enable_pretty_logging()
     app = serve()
     app.listen(os.environ.get("PORT", 8888))
