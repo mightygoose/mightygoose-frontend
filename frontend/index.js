@@ -1,4 +1,7 @@
 var templates = {
+  "short_stat": function(){/*
+    <%= count %>
+  */},
   "stat": function(){/*
     <div class="panel row">
        <%= count %>
@@ -83,7 +86,9 @@ function template(name, params){
     var delegate = new window.domDelegate(document.body);
 
     var $stat_container = document.querySelector("#stat_container");
+    var $total_posts_count = document.querySelector("#total_posts_count");
     var $posts_container = document.querySelector("#posts_container");
+    var $random_post_spinner = document.querySelector("#random_post_spinner");
 
     delegate.on("click", "#search_button", function(event){
       event.preventDefault();
@@ -99,8 +104,10 @@ function template(name, params){
 
     delegate.on("click", "#random_post_button", function(event){
       event.preventDefault();
+      $random_post_spinner.classList.remove('hidden');
       microAjax("/api/post/random", function(data){
         $posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
+        $random_post_spinner.classList.add('hidden');
       });
     });
 
@@ -115,7 +122,7 @@ function template(name, params){
     });
 
     microAjax("/api/stat", function(data){
-      $stat_container.innerHTML = template("stat", JSON.parse(data));
+      $total_posts_count.innerHTML = template("short_stat", JSON.parse(data));
     });
 
   }, false);

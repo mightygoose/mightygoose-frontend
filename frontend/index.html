@@ -5,6 +5,9 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
         <script type="text/javascript" src="https://wzrd.in/standalone/dom-delegate@latest"></script>
 
+        <link href="/css/animation.css" rel="stylesheet" />
+        <link href="/css/fontello.css" rel="stylesheet" />
+
         <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css" rel="stylesheet" />
 
         <style>
@@ -26,17 +29,69 @@
                 display: none;
             }
             /* */
+            #random_post_spinner {
+                position: absolute;
+                margin-left: 10px;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .main-container {
+                margin-top: 20px;
+            }
+            .page-centered {
+
+            }
 
         </style>
     </head>
     <body>
-        <div class="row" id="stat_container">
-        </div>
-        <div class="row">
-            <a href="#" id="random_post_button" class="button expand">Random</a>
-        </div>
-        <div class="" id="posts_container">
-        </div>
+
+        <nav class="top-bar" data-topbar role="navigation">
+          <ul class="title-area">
+            <li class="name">
+              <h1><a href="#">Musfinder</a></h1>
+            </li>
+             <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+          </ul>
+
+          <section class="top-bar-section">
+            <!-- Left Nav Section -->
+            <ul class="left">
+              <li><a href="#">Random post</a></li>
+              <li><a href="#">Search</a></li>
+              <li><a href="#">Statistic</a></li>
+            </ul>
+
+            <!-- Right Nav Section -->
+            <ul class="right">
+              <li class="divider"></li>
+              <li class="has-form"><a class="button radius disabled" href="#">Log in</a></li>
+            </ul>
+          </section>
+        </nav>
+
+        <section role="main" class="main-container">
+            <div class="row" id="stat_container">
+                <div data-alert class="alert-box success radius">
+                    Total blog posts count:
+                    <strong id="total_posts_count">
+                        <i class="demo-icon icon-spin3 animate-spin"></i>
+                    </strong>
+                </div>
+            </div>
+            <div class="row">
+                <a href="#" id="random_post_button" class="button expand page-centered">
+                    Give me random post
+                    <i id="random_post_spinner" class="demo-icon icon-spin3 animate-spin hidden"></i>
+                </a>
+            </div>
+            <div class="row" id="posts_container">
+            </div>
+        </section>
     </body>
     <script src="/index.js"></script>
 </html>
