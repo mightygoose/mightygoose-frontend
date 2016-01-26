@@ -1,6 +1,7 @@
 import tornado.ioloop
 import tornado.web
 import tornado.options
+import tornado.httpclient
 from tornado.log import enable_pretty_logging
 
 import os
@@ -10,6 +11,8 @@ import logging
 import base64
 from json import loads
 from json import dumps
+from threading import Thread
+from functools import wraps
 
 import pdb
 
@@ -63,9 +66,32 @@ def basic_auth(auth_func=lambda *args, **kwargs: True, after_login_func=lambda *
 def check_credentials(user, pwd):
     return user == os.environ['BASE_AUTH_USERNAME'] and pwd == os.environ['BASE_AUTH_PASSWORD']
 
+
+def run_async(func):
+  @wraps(func)
+  def async_func(*args, **kwargs):
+    func_hl = Thread(target = func, args = args, kwargs = kwargs)
+    func_hl.start()
+    return func_hl
+
+  return async_func
+
+@run_async
 def update_data():
     global collection
-    collection = [item for item in hc.get_project(os.environ['PROJECT_ID']).items.list()]
+    logging.info("updating statisics")
+    http_client = tornado.httpclient.HTTPClient()
+    try:
+        request = tornado.httpclient.HTTPRequest(url="https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&filterany=%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D".format(os.environ['PROJECT_ID'], os.environ['STORAGE_KEY']), connect_timeout=200.0, request_timeout=200.0)
+        response = http_client.fetch(request)
+        data = loads(response.body)
+        collection = data
+    except tornado.httpclient.HTTPError as e:
+        print("Http Error: " + str(e))
+    except Exception as e:
+        print("Error: " + str(e))
+    http_client.close()
+    logging.info("statisics updated")
 
 def get_good():
     return filter(
@@ -153,12 +179,12 @@ def serve():
         (r"/api/tags", TagsHandler),
         (r"/api/stat", StatHandler),
         (r"/update", UpdateHandler),
-        (r'/(.*)', tornado.web.StaticFileHandler, {'path': FRONTEND_PATH})
+        (r'/(.*)', tornado.web.StaticFileHandler, {'path': FRONTEND_PATH, "default_filename": "index.html"})
     ], autoreload=True, debug=True)
 
 if __name__ == "__main__":
-    update_data()
     enable_pretty_logging()
+    update_data()
     app = serve()
     app.listen(os.environ.get("PORT", 8888))
     logging.info("starting torando web server")
