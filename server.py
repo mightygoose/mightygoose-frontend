@@ -142,7 +142,6 @@ class StatHandler(tornado.web.RequestHandler):
 class UpdateHandler(tornado.web.RequestHandler):
     def get(self):
         update_data()
-        pdb.set_trace()
         self.write('ok. new total count: {0}'.format(len(collection)))
 
 def serve():
