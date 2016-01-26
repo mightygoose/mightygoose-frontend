@@ -17,8 +17,8 @@ from random import randint
 from hubstorage import HubstorageClient
 
 # PATHS
-CURRENT_PATH  = os.path.dirname(sys.argv[0])
-FRONTEND_PATH = os.path.join(os.environ.get("PATH", CURRENT_PATH), 'frontend')
+CURRENT_PATH  = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_PATH = os.path.join(CURRENT_PATH, 'frontend')
 
 ALLOWED_HOSTINGS = ['zippyshare', 'mediafire', 'mega.nz']
 
