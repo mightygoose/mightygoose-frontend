@@ -23,9 +23,8 @@ FRONTEND_PATH = os.path.join(CURRENT_PATH, 'frontend')
 ALLOWED_HOSTINGS = ['zippyshare', 'mediafire', 'mega.nz']
 
 #hubstorage collection
-#hc = HubstorageClient(auth=os.environ['STORAGE_KEY'])
-#collection = [item for item in hc.get_project(os.environ['PROJECT_ID']).items.list()]
-collection = []
+hc = HubstorageClient(auth=os.environ['STORAGE_KEY'])
+collection = [item for item in hc.get_project(os.environ['PROJECT_ID']).items.list()]
 
 def get_good():
     return filter(
