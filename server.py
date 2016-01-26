@@ -18,7 +18,7 @@ from hubstorage import HubstorageClient
 
 # PATHS
 CURRENT_PATH  = os.path.dirname(sys.argv[0])
-FRONTEND_PATH = os.path.join(CURRENT_PATH, 'frontend')
+FRONTEND_PATH = os.path.join(os.environ.get("PATH", CURRENT_PATH), 'frontend')
 
 ALLOWED_HOSTINGS = ['zippyshare', 'mediafire', 'mega.nz']
 
