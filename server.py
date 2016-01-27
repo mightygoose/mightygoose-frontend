@@ -1,3 +1,13 @@
+import os
+import sys
+
+# PATHS
+CURRENT_PATH  = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_PATH = os.path.join(CURRENT_PATH, 'frontend')
+APP_PATH = os.path.join(CURRENT_PATH, 'app')
+
+sys.path.append(APP_PATH)
+
 import tornado.ioloop
 import tornado.web
 import tornado.gen
@@ -5,15 +15,10 @@ import tornado.options
 import tornado.httpclient
 from tornado.log import enable_pretty_logging
 
-import os
 import re
 import sys
 import logging
 import base64
-
-import sys
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app'))
-from store import Store
 
 from json import loads
 from json import dumps
@@ -24,9 +29,9 @@ from random import randint
 
 from hubstorage import HubstorageClient
 
-# PATHS
-CURRENT_PATH  = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_PATH = os.path.join(CURRENT_PATH, 'frontend')
+# local dependencies
+from store import Store
+
 
 ALLOWED_HOSTINGS = ['zippyshare', 'mediafire', 'mega.nz']
 
