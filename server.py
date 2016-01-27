@@ -12,7 +12,7 @@ import logging
 import base64
 
 import sys
-sys.path.append('app')
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app'))
 from app import Store
 
 from json import loads
