@@ -11,7 +11,6 @@ import sys
 import logging
 import base64
 
-from app import Store
 import sys
 sys.path.append('app')
 from app import Store
