@@ -13,7 +13,7 @@ import base64
 
 import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app'))
-from app import Store
+from store import Store
 
 from json import loads
 from json import dumps
@@ -34,7 +34,7 @@ ALLOWED_HOSTINGS = ['zippyshare', 'mediafire', 'mega.nz']
 hc = HubstorageClient(auth=os.environ['STORAGE_KEY'])
 collection = []
 
-store = Store.Store()
+store = Store()
 
 def basic_auth(auth_func=lambda *args, **kwargs: True, after_login_func=lambda *args, **kwargs: None, realm='Restricted'):
     def basic_auth_decorator(handler_class):
