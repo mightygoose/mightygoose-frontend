@@ -3,7 +3,7 @@ import sys
 
 # PATHS
 CURRENT_PATH  = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_PATH = os.path.join(CURRENT_PATH, 'frontend')
+FRONTEND_PATH = os.path.join(CURRENT_PATH, 'public')
 APP_PATH = os.path.join(CURRENT_PATH, 'app')
 
 sys.path.append(APP_PATH)

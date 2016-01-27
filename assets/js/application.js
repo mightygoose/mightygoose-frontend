@@ -1,3 +1,17 @@
+require('file?name=../../[name].[ext]!../html/index.html');
+
+require('file?name=../css/[name].[ext]!../css/animation.css');
+require('file?name=../css/[name].[ext]!../css/fontello.css');
+
+require('file?name=../font/[name].[ext]!../font/fontello.eot');
+require('file?name=../font/[name].[ext]!../font/fontello.svg');
+require('file?name=../font/[name].[ext]!../font/fontello.ttf');
+require('file?name=../font/[name].[ext]!../font/fontello.woff');
+
+var Delegate = require('dom-delegate');
+var Router = require('director').Router;
+var _ = require('lodash');
+
 var templates = {
   "short_stat": function(){/*
     <%= count %>
@@ -83,7 +97,7 @@ function template(name, params){
 (function(window, document){
   console.log("application ready");
   window.addEventListener('load', function() {
-    var delegate = new window.domDelegate(document.body);
+    var delegate = new Delegate(document.body);
 
     var $stat_container = document.querySelector("#stat_container");
     var $total_posts_count = document.querySelector("#total_posts_count");

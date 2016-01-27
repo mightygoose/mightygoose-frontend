@@ -14,8 +14,15 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
 
       sudo apt-get update
-      sudo apt-get install -y python-pip git
+      sudo apt-get install -y git
 
-      sudo pip install -r /musfinder/requirements.txt
+      #install node
+      sudo curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
+      . ~/.nvm/nvm.sh
+      nvm install 4.0
+      nvm use stable
+
+      cd /musfinder
+      npm install
   SHELL
 end
