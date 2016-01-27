@@ -125,5 +125,20 @@ function template(name, params){
       $total_posts_count.innerHTML = template("short_stat", JSON.parse(data));
     });
 
+
+    var random = function () { console.log("random"); };
+    var search = function () { console.log("search"); };
+    var statistic = function () { console.log("statistic"); };
+
+    var routes = {
+      '/random': random,
+      '/search': search,
+      '/statistic': statistic
+    };
+
+    var router = Router(routes);
+
+    router.init('random');
+
   }, false);
 })(window, document);

@@ -4,6 +4,7 @@
         <script type="text/javascript" src="http://microajax.googlecode.com/svn/trunk/microajax.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
         <script type="text/javascript" src="https://wzrd.in/standalone/dom-delegate@latest"></script>
+        <script src="https://rawgit.com/flatiron/director/master/build/director.min.js"></script>
 
         <link href="/css/animation.css" rel="stylesheet" />
         <link href="/css/fontello.css" rel="stylesheet" />
@@ -57,13 +58,12 @@
              <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
             <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
           </ul>
-
           <section class="top-bar-section">
             <!-- Left Nav Section -->
             <ul class="left">
-              <li><a href="#">Random post</a></li>
-              <li><a href="#">Search</a></li>
-              <li><a href="#">Statistic</a></li>
+              <li><a href="#/random">Random post</a></li>
+              <li><a href="#/search">Search</a></li>
+              <li><a href="#/statistic">Statistic</a></li>
             </ul>
 
             <!-- Right Nav Section -->
@@ -85,7 +85,7 @@
             </div>
             <div class="row">
                 <a href="#" id="random_post_button" class="button expand page-centered">
-                    Give me random post
+                    Get random post
                     <i id="random_post_spinner" class="demo-icon icon-spin3 animate-spin hidden"></i>
                 </a>
             </div>
