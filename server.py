@@ -12,8 +12,6 @@ import logging
 import base64
 from json import loads
 from json import dumps
-from threading import Thread
-from functools import wraps
 
 import pdb
 
@@ -68,30 +66,20 @@ def check_credentials(user, pwd):
     return user == os.environ['BASE_AUTH_USERNAME'] and pwd == os.environ['BASE_AUTH_PASSWORD']
 
 
-def run_async(func):
-  @wraps(func)
-  def async_func(*args, **kwargs):
-    func_hl = Thread(target = func, args = args, kwargs = kwargs)
-    func_hl.start()
-    return func_hl
-
-  return async_func
-
-@run_async
+@tornado.gen.coroutine
 def update_data():
     global collection
     logging.info("updating statisics")
-    http_client = tornado.httpclient.HTTPClient()
+    http_client = tornado.httpclient.AsyncHTTPClient()
     try:
         request = tornado.httpclient.HTTPRequest(url="https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&filterany=%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D&meta=_ts&nodata=1".format(os.environ['PROJECT_ID'], os.environ['STORAGE_KEY']), connect_timeout=200.0, request_timeout=200.0)
-        response = http_client.fetch(request)
+        response = yield http_client.fetch(request)
         data = loads(response.body)
         collection = map(lambda x: x.get('_key'), data)
     except tornado.httpclient.HTTPError as e:
         print("Http Error: " + str(e))
     except Exception as e:
         print("Error: " + str(e))
-    http_client.close()
     logging.info("statisics updated")
 
 def get_good():
@@ -157,7 +145,7 @@ class RandomBlogPostHandler(tornado.web.RequestHandler):
 
         url = "https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&meta=_ts".format(random_post_key, os.environ['STORAGE_KEY'])
         request = tornado.httpclient.HTTPRequest(url=url, connect_timeout=200.0, request_timeout=200.0)
-        response = yield http_client.fetch(request)
+        response = yield http_client.fetch(url)
         random_post = loads(response.body)
         self.write(dumps(random_post))
 
