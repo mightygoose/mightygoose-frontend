@@ -1,5 +1,6 @@
 import tornado.ioloop
 import tornado.web
+import tornado.gen
 import tornado.options
 import tornado.httpclient
 from tornado.log import enable_pretty_logging
@@ -82,10 +83,10 @@ def update_data():
     logging.info("updating statisics")
     http_client = tornado.httpclient.HTTPClient()
     try:
-        request = tornado.httpclient.HTTPRequest(url="https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&filterany=%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D".format(os.environ['PROJECT_ID'], os.environ['STORAGE_KEY']), connect_timeout=200.0, request_timeout=200.0)
+        request = tornado.httpclient.HTTPRequest(url="https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&filterany=%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D&meta=_ts&nodata=1".format(os.environ['PROJECT_ID'], os.environ['STORAGE_KEY']), connect_timeout=200.0, request_timeout=200.0)
         response = http_client.fetch(request)
         data = loads(response.body)
-        collection = data
+        collection = map(lambda x: x.get('_key'), data)
     except tornado.httpclient.HTTPError as e:
         print("Http Error: " + str(e))
     except Exception as e:
@@ -149,9 +150,15 @@ class EvaluatePostHandler(tornado.web.RequestHandler):
         self.write("true")
 
 class RandomBlogPostHandler(tornado.web.RequestHandler):
+    @tornado.gen.coroutine
     def get(self):
-        good_posts = get_good()
-        random_post = [good_posts[randint(0, len(good_posts) - 1)]]
+        http_client = tornado.httpclient.AsyncHTTPClient()
+        random_post_key = collection[randint(0, len(collection) - 1)]
+
+        url = "https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&meta=_ts".format(random_post_key, os.environ['STORAGE_KEY'])
+        request = tornado.httpclient.HTTPRequest(url=url, connect_timeout=200.0, request_timeout=200.0)
+        response = yield http_client.fetch(request)
+        random_post = loads(response.body)
         self.write(dumps(random_post))
 
 class TagsHandler(tornado.web.RequestHandler):
@@ -161,8 +168,8 @@ class TagsHandler(tornado.web.RequestHandler):
 class StatHandler(tornado.web.RequestHandler):
     def get(self):
         self.write(dumps({
-            "tags": get_tags(),
-            "count": len(get_good())
+            #"tags": get_tags(),
+            "count": len(collection)
         }))
 
 class UpdateHandler(tornado.web.RequestHandler):
