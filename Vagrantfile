@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = "puphpet/ubuntu1404-x64"
 
-  #config.vm.synced_folder ".", "/musfinder", :nfs => true
+  config.vm.synced_folder ".", "/musfinder"
 
   config.vm.network "private_network", ip: "192.168.100.202"
 
