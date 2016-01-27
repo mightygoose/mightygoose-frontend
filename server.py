@@ -12,7 +12,9 @@ import logging
 import base64
 
 from app import Store
-#import app
+import sys
+sys.path.append('app')
+from app import Store
 
 from json import loads
 from json import dumps
