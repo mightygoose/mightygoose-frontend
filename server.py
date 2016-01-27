@@ -10,6 +10,10 @@ import re
 import sys
 import logging
 import base64
+
+from app import Store
+#import app
+
 from json import loads
 from json import dumps
 
@@ -28,6 +32,8 @@ ALLOWED_HOSTINGS = ['zippyshare', 'mediafire', 'mega.nz']
 #hubstorage collection
 hc = HubstorageClient(auth=os.environ['STORAGE_KEY'])
 collection = []
+
+store = Store.Store()
 
 def basic_auth(auth_func=lambda *args, **kwargs: True, after_login_func=lambda *args, **kwargs: None, realm='Restricted'):
     def basic_auth_decorator(handler_class):
@@ -65,30 +71,6 @@ def basic_auth(auth_func=lambda *args, **kwargs: True, after_login_func=lambda *
 def check_credentials(user, pwd):
     return user == os.environ['BASE_AUTH_USERNAME'] and pwd == os.environ['BASE_AUTH_PASSWORD']
 
-
-@tornado.gen.coroutine
-def update_data():
-    global collection
-    logging.info("updating statisics")
-    http_client = tornado.httpclient.AsyncHTTPClient()
-    try:
-        request = tornado.httpclient.HTTPRequest(url="https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&filterany=%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D&meta=_ts&nodata=1".format(os.environ['PROJECT_ID'], os.environ['STORAGE_KEY']), connect_timeout=200.0, request_timeout=200.0)
-        response = yield http_client.fetch(request)
-        data = loads(response.body)
-        collection = map(lambda x: x.get('_key'), data)
-    except tornado.httpclient.HTTPError as e:
-        print("Http Error: " + str(e))
-    except Exception as e:
-        print("Error: " + str(e))
-    logging.info("statisics updated")
-
-def get_good():
-    return filter(
-            lambda item: any(
-                host in item['content'] for host in ALLOWED_HOSTINGS
-            ),
-            collection
-    )
 
 def get_tags():
     tags = {}
@@ -140,13 +122,7 @@ class EvaluatePostHandler(tornado.web.RequestHandler):
 class RandomBlogPostHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def get(self):
-        http_client = tornado.httpclient.AsyncHTTPClient()
-        random_post_key = collection[randint(0, len(collection) - 1)]
-
-        url = "https://storage.scrapinghub.com/items/{0}?apikey={1}&format=json&meta=_key&meta=_ts".format(random_post_key, os.environ['STORAGE_KEY'])
-        request = tornado.httpclient.HTTPRequest(url=url, connect_timeout=200.0, request_timeout=200.0)
-        response = yield http_client.fetch(url)
-        random_post = loads(response.body)
+        random_post = yield store.get_random()
         self.write(dumps(random_post))
 
 class TagsHandler(tornado.web.RequestHandler):
@@ -156,14 +132,17 @@ class TagsHandler(tornado.web.RequestHandler):
 class StatHandler(tornado.web.RequestHandler):
     def get(self):
         self.write(dumps({
-            #"tags": get_tags(),
-            "count": len(collection)
+            "count": len(store.collection)
         }))
 
 class UpdateHandler(tornado.web.RequestHandler):
+    @tornado.gen.coroutine
     def get(self):
-        update_data()
-        self.write('ok. new total count: {0}'.format(len(collection)))
+        yield store.update()
+        self.write(dumps({
+            "status": "ok",
+            "new_count": len(store.collection)
+        }))
 
 def serve():
     return tornado.web.Application([
@@ -179,7 +158,7 @@ def serve():
 
 if __name__ == "__main__":
     enable_pretty_logging()
-    update_data()
+    store.update()
     app = serve()
     app.listen(os.environ.get("PORT", 8888))
     logging.info("starting torando web server")
