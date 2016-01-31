@@ -6,14 +6,20 @@ module.exports = document.registerElement(
     extends: 'div',
     prototype: Object.create(
       base_component.prototype, {
-      created: {value: function() {
-        console.log('stat');
+      create: {value: function() {
+        var $total_posts_count = this.querySelector("#total_posts_count");
+        fetch("/api/stat")
+        .then(function(response){
+          return response.json();
+        }).then(function(json) {
+          $total_posts_count.innerHTML = json.count;
+        });
       }},
-      attached: {value: function() {
+      attach: {value: function() {
       }},
-      detached: {value: function() {
+      detach: {value: function() {
       }},
-      attributeChanged: {value: function(
+      attributeChange: {value: function(
         name, previousValue, value
       ) {
       }}

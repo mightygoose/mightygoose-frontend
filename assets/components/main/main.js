@@ -93,7 +93,7 @@ module.exports = document.registerElement(
     extends: 'body',
     prototype: Object.create(
       base_controller.prototype, {
-      created: {value: function() {
+      create: {value: function() {
 
 
         console.log("application ready");
@@ -114,62 +114,44 @@ module.exports = document.registerElement(
           var router = Router(routes);
 
           var $stat_container = document.querySelector("#stat_container");
-          var $total_posts_count = document.querySelector("#total_posts_count");
           var $posts_container = document.querySelector("#posts_container");
           var $random_post_spinner = document.querySelector("#random_post_spinner");
 
-          delegate.on("click", "#search_button", function(event){
-            event.preventDefault();
-            var $search_form = document.querySelector("#search_form");
-            var post_data = JSON.stringify(_.map(
-              $search_form.querySelectorAll("input[name='tags']:checked"),
-              function(node){ return node.value; }
-            ));
-            microAjax("/api/posts", function(data){
-              $posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
-            }, post_data);
-          });
+          //delegate.on("click", "#search_button", function(event){
+            //event.preventDefault();
+            //var $search_form = document.querySelector("#search_form");
+            //var post_data = JSON.stringify(_.map(
+              //$search_form.querySelectorAll("input[name='tags']:checked"),
+              //function(node){ return node.value; }
+            //));
+            //microAjax("/api/posts", function(data){
+              //$posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
+            //}, post_data);
+          //});
 
           delegate.on("click", "#random_post_button", function(event){
             event.preventDefault();
             $random_post_spinner.classList.remove('hidden');
-            microAjax("/api/post/random", function(data){
-              var posts = JSON.parse(data);
+            fetch("/api/post/random")
+            .then(function(response){
+              return response.json();
+            })
+            .then(function(posts){
               $posts_container.innerHTML = template("posts", {"posts": posts});
               $random_post_spinner.classList.add('hidden');
               router.setRoute('/post/' + posts[0]._key);
             });
           });
 
-          delegate.on("click", "[data-evaluate-post]", function(event){
-            event.preventDefault();
-            //var mark = event.target.dataset.mark;
-            //if(mark){
-              //microAjax("/api/evaluate/" + this.dataset.postId, function(data){
-                //console.log("evaluated");
-              //}, JSON.stringify([mark]));
-            //}
-          });
-
-          microAjax("/api/stat", function(data){
-            $total_posts_count.innerHTML = template("short_stat", JSON.parse(data));
-          });
-
-
-
-
           router.init('random');
 
 
-
-
-
       }},
-      attached: {value: function() {
+      attach: {value: function() {
       }},
-      detached: {value: function() {
+      detach: {value: function() {
       }},
-      attributeChanged: {value: function(
+      attributeChange: {value: function(
         name, previousValue, value
       ) {
       }}
