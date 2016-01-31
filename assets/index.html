@@ -45,7 +45,7 @@
 
         </style>
     </head>
-    <body>
+    <body is="main-controller">
 
         <nav class="top-bar" data-topbar role="navigation">
           <ul class="title-area">
@@ -72,7 +72,7 @@
         </nav>
 
         <section role="main" class="main-container">
-            <div class="row" id="stat_container">
+            <div is="short-stat" class="row" id="stat_container">
                 <div data-alert class="alert-box success radius">
                     Total blog posts count:
                     <strong id="total_posts_count">

@@ -1,12 +1,4 @@
-require('file?name=../../[name].[ext]!../html/index.html');
-
-require('file?name=../css/[name].[ext]!../css/animation.css');
-require('file?name=../css/[name].[ext]!../css/fontello.css');
-
-require('file?name=../font/[name].[ext]!../font/fontello.eot');
-require('file?name=../font/[name].[ext]!../font/fontello.svg');
-require('file?name=../font/[name].[ext]!../font/fontello.ttf');
-require('file?name=../font/[name].[ext]!../font/fontello.woff');
+var base_controller = require('lib/base_controller');
 
 var Delegate = require('dom-delegate');
 var Router = require('director').Router;
@@ -94,65 +86,93 @@ function template(name, params){
 }
 
 
-(function(window, document){
-  console.log("application ready");
-  window.addEventListener('load', function() {
-    var delegate = new Delegate(document.body);
 
-    var $stat_container = document.querySelector("#stat_container");
-    var $total_posts_count = document.querySelector("#total_posts_count");
-    var $posts_container = document.querySelector("#posts_container");
-    var $random_post_spinner = document.querySelector("#random_post_spinner");
-
-    delegate.on("click", "#search_button", function(event){
-      event.preventDefault();
-      var $search_form = document.querySelector("#search_form");
-      var post_data = JSON.stringify(_.map(
-        $search_form.querySelectorAll("input[name='tags']:checked"),
-        function(node){ return node.value; }
-      ));
-      microAjax("/api/posts", function(data){
-        $posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
-      }, post_data);
-    });
-
-    delegate.on("click", "#random_post_button", function(event){
-      event.preventDefault();
-      $random_post_spinner.classList.remove('hidden');
-      microAjax("/api/post/random", function(data){
-        $posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
-        $random_post_spinner.classList.add('hidden');
-      });
-    });
-
-    delegate.on("click", "[data-evaluate-post]", function(event){
-      event.preventDefault();
-      //var mark = event.target.dataset.mark;
-      //if(mark){
-        //microAjax("/api/evaluate/" + this.dataset.postId, function(data){
-          //console.log("evaluated");
-        //}, JSON.stringify([mark]));
-      //}
-    });
-
-    microAjax("/api/stat", function(data){
-      $total_posts_count.innerHTML = template("short_stat", JSON.parse(data));
-    });
+module.exports = document.registerElement(
+  'main-controller',
+  {
+    extends: 'body',
+    prototype: Object.create(
+      base_controller.prototype, {
+      created: {value: function() {
 
 
-    var random = function () { console.log("random"); };
-    var search = function () { console.log("search"); };
-    var statistic = function () { console.log("statistic"); };
+        console.log("application ready");
+          var delegate = new Delegate(document.body);
 
-    var routes = {
-      '/random': random,
-      '/search': search,
-      '/statistic': statistic
-    };
+          var random = function () { console.log("random"); };
+          var search = function () { console.log("search"); };
+          var statistic = function () { console.log("statistic"); };
+          var get_post = function (post_id) { console.log("post id", post_id); };
 
-    var router = Router(routes);
+          var routes = {
+            '/random': random,
+            '/post/?((\w|.)*)': get_post,
+            '/search': search,
+            '/statistic': statistic
+          };
 
-    router.init('random');
+          var router = Router(routes);
 
-  }, false);
-})(window, document);
+          var $stat_container = document.querySelector("#stat_container");
+          var $total_posts_count = document.querySelector("#total_posts_count");
+          var $posts_container = document.querySelector("#posts_container");
+          var $random_post_spinner = document.querySelector("#random_post_spinner");
+
+          delegate.on("click", "#search_button", function(event){
+            event.preventDefault();
+            var $search_form = document.querySelector("#search_form");
+            var post_data = JSON.stringify(_.map(
+              $search_form.querySelectorAll("input[name='tags']:checked"),
+              function(node){ return node.value; }
+            ));
+            microAjax("/api/posts", function(data){
+              $posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
+            }, post_data);
+          });
+
+          delegate.on("click", "#random_post_button", function(event){
+            event.preventDefault();
+            $random_post_spinner.classList.remove('hidden');
+            microAjax("/api/post/random", function(data){
+              var posts = JSON.parse(data);
+              $posts_container.innerHTML = template("posts", {"posts": posts});
+              $random_post_spinner.classList.add('hidden');
+              router.setRoute('/post/' + posts[0]._key);
+            });
+          });
+
+          delegate.on("click", "[data-evaluate-post]", function(event){
+            event.preventDefault();
+            //var mark = event.target.dataset.mark;
+            //if(mark){
+              //microAjax("/api/evaluate/" + this.dataset.postId, function(data){
+                //console.log("evaluated");
+              //}, JSON.stringify([mark]));
+            //}
+          });
+
+          microAjax("/api/stat", function(data){
+            $total_posts_count.innerHTML = template("short_stat", JSON.parse(data));
+          });
+
+
+
+
+          router.init('random');
+
+
+
+
+
+      }},
+      attached: {value: function() {
+      }},
+      detached: {value: function() {
+      }},
+      attributeChanged: {value: function(
+        name, previousValue, value
+      ) {
+      }}
+    })
+  }
+);

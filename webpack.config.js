@@ -2,7 +2,7 @@ var webpack = require("webpack");
 var path = require("path");
 module.exports = {
 	context: __dirname,
-	entry: "./assets/js/application.js",
+	entry: "./assets/application.js",
 	output: {
 		path: path.join(__dirname, "public/assets/js"),
 		publicPath: "assets/js", // relative path for github pages
@@ -15,7 +15,7 @@ module.exports = {
 		],
 	},
 	resolve: {
-		//fallback: path.join(__dirname, "jam")
+                fallback: path.join(__dirname, "assets")
 	},
 	plugins: [
 		new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 20 })
