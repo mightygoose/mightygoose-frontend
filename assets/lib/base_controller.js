@@ -5,7 +5,23 @@ module.exports = document.registerElement(
   {
     prototype: Object.create(
       HTMLElement.prototype, {
-      childComponents: {value: []},
+      childComponents: {value: Object.create(Array.prototype, {
+        querySelector: {value: function(selector){
+          for(var index = 0; index < this.length; index++){
+            if(this[index].matches(selector)){
+              return this[index];
+            }
+          }
+          return null;
+        }},
+        querySelectorAll: {value: function(selector){
+          var output = [];
+          for(var index = 0; index < this.length; index++){
+            this[index].matches(selector) && output.push(this[index]);
+          }
+          return output;
+        }}
+      })},
       componentType: {value: "controller"},
       createdCallback: {value: function() {
         console.log('base controller createdCallback');
