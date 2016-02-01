@@ -24,13 +24,13 @@ module.exports = {
 		],
 	},
 	resolve: {
-                fallback: path.join(__dirname, "assets")
+          modulesDirectories: ["node_modules", "assets"]
 	},
 	plugins: [
           new webpack.ProvidePlugin({
             'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
           }),
-          new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 20 })
+          //new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 20 })
 	],
 	fakeUpdateVersion: 0
 };
