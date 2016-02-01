@@ -95,56 +95,54 @@ module.exports = document.registerElement(
       base_controller.prototype, {
       create: {value: function() {
 
-
         console.log("application ready");
-          var delegate = new Delegate(document.body);
+        var delegate = new Delegate(document.body);
 
-          var random = function () { console.log("random"); };
-          var search = function () { console.log("search"); };
-          var statistic = function () { console.log("statistic"); };
-          var get_post = function (post_id) { console.log("post id", post_id); };
+        var random = function () { console.log("random"); };
+        var search = function () { console.log("search"); };
+        var statistic = function () { console.log("statistic"); };
+        var get_post = function (post_id) { console.log("post id", post_id); };
 
-          var routes = {
-            '/random': random,
-            '/post/?((\w|.)*)': get_post,
-            '/search': search,
-            '/statistic': statistic
-          };
+        var routes = {
+          '/random': random,
+          '/post/?((\w|.)*)': get_post,
+          '/search': search,
+          '/statistic': statistic
+        };
 
-          var router = Router(routes);
+        var router = Router(routes);
 
-          var $stat_container = document.querySelector("#stat_container");
-          var $posts_container = document.querySelector("#posts_container");
-          var $random_post_spinner = document.querySelector("#random_post_spinner");
+        var $stat_container = document.querySelector("#stat_container");
+        var $posts_container = document.querySelector("#posts_container");
+        var $random_post_spinner = document.querySelector("#random_post_spinner");
 
-          //delegate.on("click", "#search_button", function(event){
-            //event.preventDefault();
-            //var $search_form = document.querySelector("#search_form");
-            //var post_data = JSON.stringify(_.map(
-              //$search_form.querySelectorAll("input[name='tags']:checked"),
-              //function(node){ return node.value; }
-            //));
-            //microAjax("/api/posts", function(data){
-              //$posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
-            //}, post_data);
-          //});
+        //delegate.on("click", "#search_button", function(event){
+          //event.preventDefault();
+          //var $search_form = document.querySelector("#search_form");
+          //var post_data = JSON.stringify(_.map(
+            //$search_form.querySelectorAll("input[name='tags']:checked"),
+            //function(node){ return node.value; }
+          //));
+          //microAjax("/api/posts", function(data){
+            //$posts_container.innerHTML = template("posts", {"posts": JSON.parse(data)});
+          //}, post_data);
+        //});
 
-          delegate.on("click", "#random_post_button", function(event){
-            event.preventDefault();
-            $random_post_spinner.classList.remove('hidden');
-            fetch("/api/post/random")
-            .then(function(response){
-              return response.json();
-            })
-            .then(function(posts){
-              $posts_container.innerHTML = template("posts", {"posts": posts});
-              $random_post_spinner.classList.add('hidden');
-              router.setRoute('/post/' + posts[0]._key);
-            });
+        delegate.on("click", "#random_post_button", function(event){
+          event.preventDefault();
+          $random_post_spinner.classList.remove('hidden');
+          fetch("/api/post/random")
+          .then(function(response){
+            return response.json();
+          })
+          .then(function(posts){
+            $posts_container.innerHTML = template("posts", {"posts": posts});
+            $random_post_spinner.classList.add('hidden');
+            router.setRoute('/post/' + posts[0]._key);
           });
+        });
 
-          router.init('random');
-
+        router.init('random');
 
       }},
       attach: {value: function() {
