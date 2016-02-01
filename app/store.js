@@ -1,3 +1,5 @@
+"use strict"
+
 const request = require('koa-request');
 const qs = require('qs');
 const _ = require('lodash');
@@ -11,12 +13,13 @@ const API_KEY = process.env['STORAGE_KEY'];
 const CONNECT_TIMEOUT = 200;
 const REQUEST_TIMEOUT = 200;
 
-function Store(){
+class Store {
+  constructor(){
+    this.collection = [];
+    this.tags = [];
+  }
 
-  this.collection = [];
-  this.tags = [];
-
-  this.update = function(){
+  update(){
     log.info('updating statistics');
     var query_string = qs.stringify({
       "apikey": API_KEY,
@@ -33,9 +36,9 @@ function Store(){
       this.collection = _.map(JSON.parse(response.body), item => item._key);
       log.info('statistics updated');
     });
-  };
+  }
 
-  this.update_tags = function(){
+  update_tags(){
     log.info('updating tags');
     var query_string = qs.stringify({
       "apikey": API_KEY,
@@ -66,9 +69,9 @@ function Store(){
       }, {});
       log.info('tags updated');
     });
-  };
+  }
 
-  this.get_random = () => {
+  get_random(){
     var random_post_key = _.sample(this.collection);
 
     var query_string = qs.stringify({
