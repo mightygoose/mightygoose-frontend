@@ -12,8 +12,8 @@ module.exports = document.registerElement(
       }},
       attachedCallback: {value: function() {
         console.log('base component attachedCallback');
-        this.attach && this.attach();
         fireEvent('component-attached', this);
+        this.attach && this.attach();
       }},
       detachedCallback: {value: function() {
         console.log('base component detachedCallback');

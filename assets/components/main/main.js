@@ -10,7 +10,7 @@ class MainController extends BaseController {
 
     var routes = {
       '/random': function () {
-        $content_section.innerHTML = '<div is="random-post-controller"></div>';
+        $content_section.innerHTML = '<random-post-controller></random-post-controller>';
       },
       '/search': function () {
         $content_section.innerHTML = '<div is="search-posts-controller"></div>';

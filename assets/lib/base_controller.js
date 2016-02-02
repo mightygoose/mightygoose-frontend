@@ -1,40 +1,45 @@
 var fireEvent = require('lib/fire_event');
 
+function createChildComponents(){
+  return Object.create(Array.prototype, {
+    querySelector: {value: function(selector){
+      for(var index = 0; index < this.length; index++){
+        if(this[index].matches(selector)){
+          return this[index];
+        }
+      }
+      return null;
+    }},
+    querySelectorAll: {value: function(selector){
+      var output = [];
+      for(var index = 0; index < this.length; index++){
+        this[index].matches(selector) && output.push(this[index]);
+      }
+      return output;
+    }}
+  });
+}
+
 module.exports = document.registerElement(
   'base-controller',
   {
     prototype: Object.create(
       HTMLElement.prototype, {
-      childComponents: {value: Object.create(Array.prototype, {
-        querySelector: {value: function(selector){
-          for(var index = 0; index < this.length; index++){
-            if(this[index].matches(selector)){
-              return this[index];
-            }
-          }
-          return null;
-        }},
-        querySelectorAll: {value: function(selector){
-          var output = [];
-          for(var index = 0; index < this.length; index++){
-            this[index].matches(selector) && output.push(this[index]);
-          }
-          return output;
-        }}
-      })},
       componentType: {value: "controller"},
       createdCallback: {value: function() {
         console.log('base controller createdCallback');
+        this.childComponents = createChildComponents();
         this.create && this.create();
       }},
       attachedCallback: {value: function() {
         console.log('base controller attachedCallback');
         var self = this;
-        this.attach && this.attach();
         fireEvent('component-attached', this);
         this.addEventListener('component-attached', function(event){
+          event.stopPropagation();
           self.childComponents.push(event.target);
         });
+        this.attach && this.attach();
       }},
       detachedCallback: {value: function() {
         console.log('base controller detachedCallback');

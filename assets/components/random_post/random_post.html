@@ -1,16 +1,17 @@
-<div is="short-stat" class="row" id="stat_container">
-    <div data-alert class="alert-box success radius">
-        Total blog posts count:
-        <strong id="total_posts_count">
-            <i class="demo-icon icon-spin3 animate-spin"></i>
-        </strong>
+<short-stat>
+    <div class="row" id="stat_container">
+        <div data-alert class="alert-box success radius">
+            Total blog posts count:
+            <strong id="total_posts_count">
+                <i class="demo-icon icon-spin3 animate-spin"></i>
+            </strong>
+        </div>
     </div>
-</div>
+</short-stat>
 <div class="row">
     <a href="#" id="random_post_button" class="button expand page-centered">
         Get random post
         <i id="random_post_spinner" class="demo-icon icon-spin3 animate-spin hidden"></i>
     </a>
 </div>
-<div class="row" id="posts_container">
-</div>
+<posts-controller></posts-controller>

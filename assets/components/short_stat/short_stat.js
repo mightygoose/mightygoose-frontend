@@ -1,6 +1,6 @@
-var base_component = require('lib/base_component');
+var BaseComponent = require('lib/base_component');
 
-class ShortStat extends base_component {
+class ShortStat extends BaseComponent {
   create() {
     var $total_posts_count = this.querySelector("#total_posts_count");
     fetch("/api/stat")
@@ -14,6 +14,5 @@ class ShortStat extends base_component {
   detach(){}
   attributeChange(name, previousValue, value){}
 }
-ShortStat.extends = 'div';
 
 module.exports = document.registerElement('short-stat', ShortStat);
