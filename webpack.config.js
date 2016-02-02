@@ -30,6 +30,11 @@ module.exports = {
           new webpack.ProvidePlugin({
             'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
           }),
+          //new webpack.optimize.UglifyJsPlugin({
+            //compress: {
+              //warnings: false
+            //}
+          //})
           //new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 20 })
 	],
 	fakeUpdateVersion: 0

@@ -17,7 +17,10 @@
     "url": "https://github.com/nogizhopaboroda/musfinder/issues"
   },
   "homepage": "https://github.com/nogizhopaboroda/musfinder#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "ejs-loader": "^0.2.1",
+    "raw-loader": "^0.5.1"
+  },
   "dependencies": {
     "babel-core": "^6.4.5",
     "babel-loader": "^6.2.1",

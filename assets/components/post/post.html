@@ -1,0 +1,39 @@
+<div class="panel row">
+  <div class="button-bar" data-evaluate-post data-post-id="">
+    <ul class="button-group radius">
+      <li><a data-mark="good" href="#" class="disabled round button success">Good</a></li>
+    </ul>
+    <ul class="button-group radius">
+      <li><a data-mark="non_music" href="#" class="disabled small button alert">Non-music</a></li>
+      <li><a data-mark="without_link" href="#" class="disabled small button alert">Without link</a></li>
+      <li><a data-mark="broken_link" href="#" class="disabled small button alert">Link broken</a></li>
+      <li><a data-mark="comments_broken" href="#" class="disabled small button alert">Comments broken</a></li>
+      <li><a data-mark="link_in_comments" href="#" class="disabled small button alert">Link in comments</a></li>
+    </ul>
+  </div>
+  <div class="large-4 columns">
+    <% _.forEach(post.images, function(image){ %>
+      <img src="<%= image %>">
+    <% }); %>
+  </div>
+  <div class="large-8 columns">
+    <p>
+      <a href="<%= post.url %>"><%= post.title %></a>
+    </p>
+    <ul class="inline-list">
+      <% _.forEach(post.tags, function(link, tagname){ %>
+        <li><a target="_blank" href="<%= link %>"><%= tagname %></a></li>
+      <% }); %>
+    </ul>
+    <div class="panel callout radius">
+      <h5>content</h5>
+      <%= post.content %>
+    </div>
+    <% if(post.comments.length){ %>
+      <div class="panel callout radius">
+        <h5>comments</h5>
+        <%= post.comments %>
+      </div>
+    <% } %>
+  </div>
+</div>
