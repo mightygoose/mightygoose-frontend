@@ -28,7 +28,7 @@ class Store {
       "nodata": "1"
     }, { arrayFormat: 'repeat' });
     var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D';
-    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`
+    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`;
 
     return new Promise((resolve) => {
       request(url)((error, response) => resolve(response, error));

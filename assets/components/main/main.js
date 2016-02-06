@@ -1,10 +1,16 @@
 const BaseController = require('lib/base_controller');
 const Router = require('director').Router;
 const _ = require('lodash');
+const rivets = require('rivets');
+
+rivets.configure({
+  templateDelimiters: ['{{', '}}'],
+});
 
 class MainController extends BaseController {
   create() {
     console.log("application ready");
+    this.scope.rivets = rivets;
 
     var $content_section = document.querySelector("#content_section");
 
@@ -13,7 +19,7 @@ class MainController extends BaseController {
         $content_section.innerHTML = '<random-post-controller></random-post-controller>';
       },
       '/search': function () {
-        $content_section.innerHTML = '<div is="search-posts-controller"></div>';
+        $content_section.innerHTML = '<search-posts-controller></search-posts-controller>';
       },
       '/post/?((\w|.)*)': function (post_id) {
         console.log("post id", post_id);

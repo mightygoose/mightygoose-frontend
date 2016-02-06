@@ -1,1 +1,24 @@
-<span>Hi</span>
+<form>
+  <div class="row">
+    <div class="large-12 columns">
+        <input type="text" placeholder="Foo" rv-value="filter" rv-on-keyup="filter_tags"/>
+    </div>
+  </div>
+  <div class="row">
+      <div class="large-12 columns">
+          <label>Check these out</label>
+          <ul class="tags-list">
+              <li rv-each-tag="tags" rv-show="tag.visible">
+                  <label><input type="checkbox" rv-checked="tag.checked">{{ tag.key }} ({{ tag.count }})</label>
+              </li>
+          </ul>
+    </div>
+  </div>
+</form>
+<div class="row">
+    <a href="#" id="search_posts_button" class="button expand page-centered">
+        Search
+        <i id="search_posts_spinner" class="demo-icon icon-spin3 animate-spin hidden"></i>
+    </a>
+</div>
+<posts-controller></posts-controller>

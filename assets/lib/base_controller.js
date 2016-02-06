@@ -26,6 +26,7 @@ module.exports = document.registerElement(
     prototype: Object.create(
       HTMLElement.prototype, {
       componentType: {value: "controller"},
+      scope: {value: {}},
       createdCallback: {value: function() {
         console.log('base controller createdCallback');
         this.childComponents = createChildComponents();
