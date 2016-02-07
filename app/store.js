@@ -62,8 +62,25 @@ class Store {
           log.error('error parsing line: ' + value);
         }
         _.each(tags, (value, key) => {
-          result[key] = result[key] || 0;
-          result[key]++;
+          var _key = key
+                     //.toLowerCase()
+                     .replace('*', '')
+                     .replace('genre: ', '')
+                     .replace('label: ', '')
+                     .replace('label: ', '')
+                     .replace('country: ', '')
+                     //.replace('and', '&')
+                     .replace(/^-/, '')
+                     .replace(/^#/, '')
+                     .replace(/^¬/, '')
+                     .replace(/^=/, '')
+                     .replace(/^\./, '')
+                     .replace(/^\+/, '')
+                     .replace(/^\[/, '').replace(/\]$/, '')
+                     .replace(/^\s+/, '')
+                     .replace(/\s{2,}/g, ' ')
+          result[_key] = result[_key] || 0;
+          result[_key]++;
         });
         return result;
       }, {});
