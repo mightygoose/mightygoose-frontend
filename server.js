@@ -4,6 +4,7 @@ const koa = require('koa');
 const route = require('koa-route');
 const serve = require('koa-static');
 const log = require('log-colors');
+const body_parser = require('koa-body-parser');
 
 //code
 var app = koa();
@@ -12,6 +13,8 @@ var store = new Store();
 
 store.update();
 store.update_tags();
+
+app.use(body_parser());
 
 app.use(function *(next){
   var start = new Date;
@@ -42,6 +45,11 @@ app.use(route.get('/api/tags', function *(){
 
 app.use(route.get('/api/post/random', function *(){
   var response = yield store.get_random();
+  this.body = response.body || [];
+}));
+
+app.use(route.post('/api/search/tags', function *(){
+  var response = yield store.get_by_tags(this.request.body);
   this.body = response.body || [];
 }));
 

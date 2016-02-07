@@ -3,7 +3,7 @@
 const request = require('koa-request');
 const qs = require('qs');
 const _ = require('lodash');
-const log = require('log-colors')
+const log = require('log-colors');
 
 
 const DATA_HOST = "https://storage.scrapinghub.com";
@@ -81,6 +81,18 @@ class Store {
     }, { arrayFormat: 'repeat' });
 
     var url = `${DATA_HOST}/items/${random_post_key}?${query_string}`;
+
+    return request(url);
+  }
+
+  get_by_tags(tags){
+    var query_string = qs.stringify({
+      "apikey": API_KEY,
+      "format": "json",
+      "meta": ["_key"]
+    }, { arrayFormat: 'repeat' });
+    var filter_param = '%5B%22tags%22%2C%22matches%22%2C%5B%22(' + _.map(tags, tag => encodeURIComponent(tag)).join('\|') + ')%22%5D%5D';
+    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`;
 
     return request(url);
   }
