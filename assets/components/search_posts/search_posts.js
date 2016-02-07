@@ -7,43 +7,28 @@ const _ = require('lodash');
 class SearchPostsController extends BaseController {
   create() {
     this.innerHTML = template;
-    this.model = {
-      filter: '',
-      filter_tags: function(event, view_model){
-        _.each(view_model.tags, (tag) => {
-          tag.visible = view_model.filter === "" || ~tag.key.indexOf(view_model.filter);
-        });
-      },
-      tags: []
-    };
-    this.scope.rivets.bind(this, this.model);
-    fetch("/api/tags")
-    .then(response => response.json())
-    .then(tags_data => _.map(tags_data, (count, key) => {
-      return {count, key, visible: true, checked: false};
-    }))
-    .then((tags_data) => {
-      this.model.tags = tags_data;
-    });
-
     var $random_post_button = document.querySelector("#search_posts_button");
     $random_post_button.addEventListener("click", (event) => {
       event.preventDefault();
       var $random_post_spinner = document.querySelector("#search_posts_spinner");
       $random_post_spinner.classList.remove('hidden');
-      //fetch("/api/post/random")
-      //.then(response => response.json())
-      //.then((posts) => {
-        //this.childComponents.querySelector('posts-controller').render(posts);
-        //$random_post_spinner.classList.add('hidden');
-        ////router.setRoute('/post/' + posts[0]._key);
-      //});
+      var tags = this.childComponents.querySelector('tag-form').get_tags();
+      fetch("/api/search/tags", {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tags)
+      })
+      .then(response => response.json())
+      .then((posts) => {
+        this.childComponents.querySelector('posts-controller').render(posts);
+        $random_post_spinner.classList.add('hidden');
+      });
     })
 
     console.log('search posts ctrl');
-  }
-  get_tags(){
-    return _.map(_.filter(this.model.tags, {checked: true}), tag => tag.key);
   }
   attach(){}
   detach(){}

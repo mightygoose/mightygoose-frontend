@@ -20,4 +20,5 @@ require('components/random_post/random_post');
 require('components/search_posts/search_posts');
 require('components/post/post');
 require('components/posts_controller/posts_controller');
+require('components/tag_form/tag_form');
 
