@@ -91,7 +91,15 @@ class Store {
       "format": "json",
       "meta": ["_key"]
     }, { arrayFormat: 'repeat' });
-    var filter_param = '%5B%22tags%22%2C%22matches%22%2C%5B%22(' + _.map(tags, tag => encodeURIComponent(tag)).join('\|') + ')%22%5D%5D';
+    var filter_param = encodeURIComponent('["tags","matches",["' + _.map(tags, tag => {
+      return tag
+             .replace('*', '\\\\*')
+             .replace("[", "\\\\[")
+             .replace("]", "\\\\]")
+             .replace("(", "\\\\(")
+             .replace(")", "\\\\)")
+             .replace(/\s{2,}/g, ' ')
+    }).join('|') + '"]]');
     var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`;
 
     return request(url);
