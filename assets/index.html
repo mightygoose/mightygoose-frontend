@@ -8,9 +8,32 @@
         <link href="/assets/css/fontello.css" rel="stylesheet" />
 
         <style>
-            #random_post_spinner {
+            #random_post_spinner, #search_posts_spiner {
                 position: absolute;
                 margin-left: 10px;
+            }
+            .controller-highlighted, .component-highlighted {
+                display: block;
+                padding-bottom: 10px;
+                padding-left: 1px;
+            }
+            .controller-highlighted:after, .component-highlighted:after {
+                font-size: 10px;
+                position: relative;
+                left: 0;
+                bottom: 0;
+            }
+            .controller-highlighted:after {
+                content: 'Controller';
+            }
+            .component-highlighted:after {
+                content: 'Component';
+            }
+            .controller-highlighted {
+                border: 1px solid red;
+            }
+            .component-highlighted {
+                border: 1px solid blue;
             }
 
             .hidden {
