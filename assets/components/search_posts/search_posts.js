@@ -2,13 +2,14 @@ const BaseController = require('lib/base_controller');
 const template = require('raw!./search_posts.html');
 const styles = require('style!css!stylus!./search_posts.styl');
 const _ = require('lodash');
+const Delegate = require('dom-delegate');
 
 
 class SearchPostsController extends BaseController {
   create() {
-    this.innerHTML = template;
-    var $random_post_button = document.querySelector("#search_posts_button");
-    $random_post_button.addEventListener("click", (event) => {
+    console.log('search posts ctrl');
+    var delegate = new Delegate(this);
+    delegate.on("click", "#search_posts_button", (event) => {
       event.preventDefault();
       var $random_post_spinner = document.querySelector("#search_posts_spinner");
       $random_post_spinner.classList.remove('hidden');
@@ -28,9 +29,10 @@ class SearchPostsController extends BaseController {
       });
     })
 
-    console.log('search posts ctrl');
   }
-  attach(){}
+  attach(){
+    this.innerHTML = template;
+  }
   detach(){}
   attributeChange(name, previousValue, value){}
 }

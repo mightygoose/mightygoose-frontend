@@ -7,6 +7,7 @@ const Delegate = require('dom-delegate');
 
 class TagForm extends BaseComponent {
   create() {
+    console.log('tag form');
     this.innerHTML = template;
     var tags_nodes = [];
 
