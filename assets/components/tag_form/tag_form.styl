@@ -40,6 +40,14 @@ tag-form {
       display: none;
     }
   }
+  .tag-list.hide-toggler {
+    ~ .show-short-list {
+      display: none;
+    }
+    ~ .show-all-tags {
+      display: none;
+    }
+  }
   .tag-list:not(.short) {
     ~ .show-all-tags {
       display: none;

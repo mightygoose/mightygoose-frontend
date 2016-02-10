@@ -40,8 +40,10 @@ class TagForm extends BaseComponent {
       var filter = event.target.value;
       if(filter === ''){
         this.$taglist.classList.add("short");
+        this.$taglist.classList.remove("hide-toggler");
       } else {
         this.$taglist.classList.remove("short");
+        this.$taglist.classList.add("hide-toggler");
       }
       _.each(this.$taglist.childNodes, (tag_block) => {
         if(filter === '' || ~tag_block.dataset.value.toLowerCase().indexOf(filter.toLowerCase())){
