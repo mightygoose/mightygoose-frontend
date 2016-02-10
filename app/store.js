@@ -1,4 +1,5 @@
 "use strict"
+const pry = require('pryjs');
 
 const request = require('koa-request');
 const qs = require('qs');
@@ -64,11 +65,10 @@ class Store {
         _.each(tags, (value, key) => {
           var _key = key
                      //.toLowerCase()
-                     .replace('*', '')
-                     .replace('genre: ', '')
-                     .replace('label: ', '')
-                     .replace('label: ', '')
-                     .replace('country: ', '')
+                     .replace(/^\*+/, '').replace(/\*+$/, '')
+                     .replace(/genre: /i, '')
+                     .replace(/label: /i, '')
+                     .replace(/country: /i, '')
                      //.replace('and', '&')
                      .replace(/^-/, '')
                      .replace(/^#/, '')
@@ -106,6 +106,7 @@ class Store {
     var query_string = qs.stringify({
       "apikey": API_KEY,
       "format": "json",
+      "count": 100,
       "meta": ["_key"]
     }, { arrayFormat: 'repeat' });
     var filter_param = encodeURIComponent('["tags","matches",["' + _.map(tags, tag => {
