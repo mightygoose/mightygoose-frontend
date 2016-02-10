@@ -1,18 +1,25 @@
 <form>
   <div class="row">
     <div class="large-12 columns">
-        <input type="text" id="tag_search_input" placeholder="Search for tags"/>
+        <label>
+            Filter tags
+            <input type="text" id="tag_search_input" placeholder="e.g.: punk"/>
+        </label>
     </div>
   </div>
   <div class="row">
-    <ul class="tag-bar">
-    </ul>
+      <div class="large-12 columns">
+          <ul class="tag-bar">
+          </ul>
+      </div>
   </div>
   <div class="row">
       <div class="large-12 columns">
-          <label>Check these out</label>
-          <ul class="tag-list">
+          <span class="tag-list-hint">* Click on tag to add it</span>
+          <ul class="tag-list short">
           </ul>
+          <span class="button success tiny radius show-all-tags">And many others...</span>
+          <span class="button success tiny radius show-short-list">Collapse list</span>
     </div>
   </div>
 </form>

@@ -1,17 +1,62 @@
 tag-form {
-  .tag-list {
+  .show-all-tags, .show-short-list {
+    margin-left: 5px;
+  }
+  .delete-tag {
+    padding: 10px;
+  }
+  .tag-list, .tag-bar {
     margin-left: 0;
     margin-top: 15px;
     list-style: none;
     li {
-      width: 20%;
-      float: left;
+      min-width: 10%;
+      display: inline-block;
     }
     label {
       font-size: 11px;
+      display: inline-block;
+      padding: 0;
+      margin: 5px;
+    }
+    .tag-label {
+      padding: 10px;
+      display: inline-block;
     }
     input {
       margin-right: 5px;
+    }
+  }
+  .tag-list-hint {
+    font-size: 11px;
+    color: #999;
+    margin-left: 5px;
+  }
+  .tag-list.short {
+    .tag-block:nth-of-type(n+41){
+      display: none;
+    }
+    ~ .show-short-list {
+      display: none;
+    }
+  }
+  .tag-list:not(.short) {
+    ~ .show-all-tags {
+      display: none;
+    }
+  }
+  .tag-list .delete-tag {
+    display: none;
+  }
+  .tag-bar .tag-block {
+    .tag-label {
+      padding-right: 0;
+    }
+    .button:hover {
+       color: #333;
+    }
+    .delete-tag:hover {
+      color: white;
     }
   }
 }

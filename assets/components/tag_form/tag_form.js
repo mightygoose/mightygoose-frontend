@@ -15,6 +15,11 @@ class TagForm extends BaseComponent {
     this.$taglist = this.querySelector('.tag-list');
 
     var delegate = new Delegate(this);
+
+    delegate.on("click", ".tag-bar .tag-label", (event) => {
+      event.preventDefault();
+    });
+
     delegate.on("change", ".tag-block", (event, target) => {
       if(event.target.checked){
         this.$tagbar.appendChild(target);
@@ -22,10 +27,24 @@ class TagForm extends BaseComponent {
         this.$taglist.appendChild(target);
       }
     });
+
+    delegate.on("click", ".show-all-tags", (event, target) => {
+      this.$taglist.classList.remove("short");
+    });
+
+    delegate.on("click", ".show-short-list", (event, target) => {
+      this.$taglist.classList.add("short");
+    });
+
     delegate.on("keyup", "#tag_search_input", (event) => {
       var filter = event.target.value;
+      if(filter === ''){
+        this.$taglist.classList.add("short");
+      } else {
+        this.$taglist.classList.remove("short");
+      }
       _.each(this.$taglist.childNodes, (tag_block) => {
-        if(filter === '' || ~tag_block.dataset.value.indexOf(filter)){
+        if(filter === '' || ~tag_block.dataset.value.toLowerCase().indexOf(filter.toLowerCase())){
           tag_block.classList.remove('hidden');
         } else {
           tag_block.classList.add('hidden');
@@ -39,7 +58,8 @@ class TagForm extends BaseComponent {
       this.$taglist.innerHTML = "";
       tags_nodes = [];
       var fragment = document.createDocumentFragment();
-      _.each(tags_data, (count, key) => {
+      _.each(_.shuffle(_.toPairs(tags_data)), (value) => {
+        var [key, count] = value;
         var el = document.createElement("div");
         el.innerHTML = tag_template({count, key});
         var child_el = el.firstChild;
