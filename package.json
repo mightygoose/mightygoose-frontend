@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/nogizhopaboroda/musfinder#readme",
   "devDependencies": {
-    "ejs-loader": "^0.2.1",
-    "raw-loader": "^0.5.1"
   },
   "dependencies": {
+    "ejs-loader": "^0.2.1",
+    "raw-loader": "^0.5.1",
     "babel-core": "^6.4.5",
     "babel-loader": "^6.2.1",
     "babel-plugin-transform-runtime": "^6.4.3",
