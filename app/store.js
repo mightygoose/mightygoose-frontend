@@ -118,7 +118,8 @@ class Store {
              .replace(")", "\\\\)")
              .replace(/\s{2,}/g, ' ')
     }).join('|') + '"]]');
-    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`;
+    var file_hostings_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D';
+    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}&filterany=${file_hostings_param}`;
 
     return request(url);
   }
