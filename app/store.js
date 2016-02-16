@@ -14,6 +14,27 @@ const API_KEY = process.env['STORAGE_KEY'];
 const CONNECT_TIMEOUT = 200;
 const REQUEST_TIMEOUT = 200;
 
+/*
+rusfolder.com
+myupload.dk
+uloz.to
+uploaded.net
+yadi.sk
+copy.com
+
+vk.com
+soundcloud.com
+youtube.com
+
+nitroflare.com - complicated
+gigasize.com - waiting
+filefactory.com - waiting
+turbobit.net - captcha + ip block
+
+
+*/
+const hostings = "zippyshare|mediafire|mega\.nz|rusfolder\.com|myupload\.dk|uloz\.to|uploaded\.net|yadi\.sk|copy\.com|nitroflare\.com|gigasize\.com|filefactory\.com|turbobit\.net|soundcloud\.com";
+
 class Store {
   constructor(){
     this.collection = [];
@@ -28,7 +49,7 @@ class Store {
       "meta": ["_key"],
       "nodata": "1"
     }, { arrayFormat: 'repeat' });
-    var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D';
+    var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(' + hostings + ')%22%5D%5D';
     var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`;
 
     return new Promise((resolve) => {
@@ -49,7 +70,7 @@ class Store {
       "escape": " ",
       "quote": " "
     }, { arrayFormat: 'repeat' });
-    var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D';
+    var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(' + hostings + ')%22%5D%5D';
     var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`
 
     return new Promise((resolve) => {
@@ -118,7 +139,7 @@ class Store {
              .replace(")", "\\\\)")
              .replace(/\s{2,}/g, ' ')
     }).join('|') + '"]]');
-    var file_hostings_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(zippyshare|mediafire|mega\.nz)%22%5D%5D';
+    var file_hostings_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(' + hostings + ')%22%5D%5D';
     var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}&filterany=${file_hostings_param}`;
 
     return request(url);
