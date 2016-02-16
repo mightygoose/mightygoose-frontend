@@ -44,7 +44,12 @@ app.use(route.get('/api/tags', function *(){
 }));
 
 app.use(route.get('/api/post/random', function *(){
-  var response = yield store.get_random();
+  var response = yield store.get_by_id();
+  this.body = response.body || [];
+}));
+
+app.use(route.post('/api/post/by_id', function *(post_id){
+  var response = yield store.get_by_id(this.request.body.id);
   this.body = response.body || [];
 }));
 

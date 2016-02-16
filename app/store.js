@@ -35,6 +35,7 @@ turbobit.net - captcha + ip block
 */
 const hostings = "zippyshare|mediafire|mega\.nz|rusfolder\.com|myupload\.dk|uloz\.to|uploaded\.net|yadi\.sk|copy\.com|nitroflare\.com|gigasize\.com|filefactory\.com|turbobit\.net|soundcloud\.com";
 
+
 class Store {
   constructor(){
     this.collection = [];
@@ -109,16 +110,15 @@ class Store {
     });
   }
 
-  get_random(){
-    var random_post_key = _.sample(this.collection);
-
+  get_by_id(item_id){
+    item_id = item_id || _.sample(this.collection);
     var query_string = qs.stringify({
       "apikey": API_KEY,
       "format": "json",
       "meta": ["_key"]
     }, { arrayFormat: 'repeat' });
 
-    var url = `${DATA_HOST}/items/${random_post_key}?${query_string}`;
+    var url = `${DATA_HOST}/items/${item_id}?${query_string}`;
 
     return request(url);
   }
