@@ -5,6 +5,7 @@ const request = require('koa-request');
 const qs = require('qs');
 const _ = require('lodash');
 const log = require('log-colors');
+const cheerio = require('cheerio');
 
 
 const DATA_HOST = "https://storage.scrapinghub.com";
@@ -120,7 +121,22 @@ class Store {
 
     var url = `${DATA_HOST}/items/${item_id}?${query_string}`;
 
-    return request(url);
+    return new Promise((resolve) => {
+      request(url)((error, response) => resolve(response, error));
+    }).then((response, error) => {
+      var data = JSON.parse(response.body);
+      var $content = cheerio.load(data[0]['content']);
+
+      /* workaround to grab embedded stuff */
+      data[0]['embeded'] = $content("object, iframe").map(function(){
+        return $content(this).wrap('<div>').parent().html();
+      }).get().join('<br>');
+
+      /* workaround: filter trashy images. think of something better */
+      data[0]['images'] = _.filter(data[0]['images'], (src) => !~src.indexOf(".blogblog.com") && !~src.indexOf(".gif"));
+
+      return JSON.stringify(data);
+    });
   }
 
   get_by_tags(tags){
