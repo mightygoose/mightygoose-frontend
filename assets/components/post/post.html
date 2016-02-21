@@ -18,7 +18,7 @@
             <img src="<%= image %>">
             <% }); %>
         </div>
-        <% if(embeded){ %>
+        <% if(typeof embeded !== "undefined" && embeded !== ""){ %>
         <div class="embeded">
             <hr/>
             <%= embeded %>
