@@ -1,7 +1,7 @@
 const BaseComponent = require('lib/base_component');
-const template = require('babel!template-string!./tag_form.html');
+const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./tag_form.html');
 const styles = require('style!css!stylus!./tag_form.styl');
-const tag_template = require('babel!template-string!./tag.html');
+const tag_template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./tag.html');
 const _ = require('lodash');
 const Delegate = require('dom-delegate');
 
