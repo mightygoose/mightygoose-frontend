@@ -1,7 +1,7 @@
 const BaseComponent = require('lib/base_component');
 const template = require('babel!template-string!./tag_form.html');
 const styles = require('style!css!stylus!./tag_form.styl');
-const tag_template = require('ejs!./tag.html');
+const tag_template = require('babel!template-string!./tag.html');
 const _ = require('lodash');
 const Delegate = require('dom-delegate');
 
@@ -47,6 +47,12 @@ class TagForm extends BaseComponent {
       var value = target.value;
       this.$search_by_letter.filter(value);
 
+      if(value === ' '){
+        this.querySelector('.show-more-tags').classList.remove('hidden');
+      } else {
+        this.querySelector('.show-more-tags').classList.add('hidden');
+      }
+
       if(value === ' ' && this.querySelector('#tag_search_input').value === ''){
         this.$tags_limiter.show_more_tags();
       } else {
@@ -60,11 +66,10 @@ class TagForm extends BaseComponent {
 
     delegate.on("keyup", "#tag_search_input", (event, target) => {
       var filter = target.value;
-      if(filter === ''){
-        this.$search_query.filter(false);
+      this.$search_query.filter(filter === '' ? false : filter.toLowerCase());
+      if(filter === '' && this.querySelector('.letter_searcher.all-tags').checked === true){
         this.$tags_limiter.show_more_tags();
       } else {
-        this.$search_query.filter(filter.toLowerCase());
         this.$tags_limiter.show_all_tags();
       }
     });
@@ -78,7 +83,7 @@ class TagForm extends BaseComponent {
       this.$taglist.innerHTML = "";
       tags_nodes = [];
       var fragment = document.createDocumentFragment();
-      _.each(this.tags, (value) => {
+      _.each(_.shuffle(this.tags), (value) => {
         var [key, count] = value;
         var el = document.createElement("div");
         el.innerHTML = tag_template({count, key});

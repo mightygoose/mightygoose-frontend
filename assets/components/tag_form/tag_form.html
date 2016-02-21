@@ -10,34 +10,40 @@
           </ul>
       </div>
   </div>
-  <div class="">
-      <div class="">
-          <ul class="inline-list alphabet-list">
-              <li>
-                  <label>
-                      <input checked class="letter_searcher" type="radio" name="letter_checker" value=" "/>
-                      <span class="alphabet-letter">
-                          all
-                      </span>
-                  </label>
-              </li>
-              ${scope.each_letter(letter => `
-              <li>
-                  <label>
-                      <input class="letter_searcher" type="radio" name="letter_checker" value=" ${letter}"/>
-                      <span class="alphabet-letter">
-                          ${letter}
-                      </span>
-                  </label>
-              </li>
-              `)}
-          </ul>
-          <style is="count-filter" id="tags_limiter" interval="50"></style>
-          <style is="query-filter" id="search_query" operator="*"></style>
-          <style is="query-filter" id="search_by_letter" operator="^"></style>
+  <div class="alphabet-wrapper">
+      <ul class="inline-list alphabet-list">
+          <li>
+              <label>
+                  <input checked class="letter_searcher all-tags" type="radio" name="letter_checker" value=" "/>
+                  <span class="alphabet-letter">
+                      all
+                  </span>
+              </label>
+          </li>
+          ${scope.each_letter(letter => `
+          <li>
+              <label>
+                  <input class="letter_searcher" type="radio" name="letter_checker" value=" ${letter}"/>
+                  <span class="alphabet-letter">
+                      ${letter}
+                  </span>
+              </label>
+          </li>
+          `)}
+      </ul>
+  </div>
+  <div class="row">
+      <style is="count-filter" id="tags_limiter" interval="30"></style>
+      <style is="query-filter" id="search_query" operator="*"></style>
+      <style is="query-filter" id="search_by_letter" operator="^"></style>
+      <div class="large-12 columns">
           <ul id="taglist" class="tag-list">
           </ul>
-          <span class="button success tiny radius show-more-tags">And many others...</span>
-    </div>
+      </div>
+      <div class="large-1 columns large-centered more-tags-row show-more-tags">
+          <div class="more-tags-wrapper">
+              <i class="demo-icon icon-down-small"></i>
+          </div>
+      </div>
   </div>
 </form>
