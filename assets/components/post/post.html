@@ -1,22 +1,28 @@
 <div class="row">
     <div class="panel large-8 columns large-centered">
         <div class="row">
-            <div class="title small-10 columns"><%= title %></div>
-            <div class="url small-2 columns">
-                <a href="<%= url %>">original post link</a>
+            <div class="title small-8 columns"><%= title %></div>
+            <div class="url small-4 columns">
+                <a class="original-post-link" href="<%= url %>">original post link (download there)</a>
             </div>
         </div>
-        <div class="tags">
-            <ul class="inline-list">
+        <div class="row tags">
+            <ul class="inline-list large-12 columns large-centered">
               <% _.forEach(tags, function(link, tagname){ %>
-                <li class="label info"><%= tagname %></li>
+                <li class="label info tag-label"><%= tagname %></li>
               <% }); %>
             </ul>
         </div>
-        <div class="images">
+        <div class="row images">
             <% _.forEach(images, function(image){ %>
             <img src="<%= image %>">
             <% }); %>
         </div>
+        <% if(embeded){ %>
+        <div class="embeded">
+            <hr/>
+            <%= embeded %>
+        </div>
+        <% } %>
     </div>
 </div>
