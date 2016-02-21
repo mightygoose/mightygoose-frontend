@@ -21,4 +21,6 @@ require('components/search_posts/search_posts');
 require('components/post/post');
 require('components/posts_controller/posts_controller');
 require('components/tag_form/tag_form');
+require('components/tag_form/count_filter');
+require('components/tag_form/query_filter');
 
