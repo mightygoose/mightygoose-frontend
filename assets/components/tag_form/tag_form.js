@@ -31,8 +31,8 @@ class TagForm extends BaseComponent {
     }
   }
 
-  show_more_tags(force){
-    this.$search_by_letter.innerHTML = `
+  show_more_tags(force){ //should be 2 methods: show_more and show_current_state
+    this.$tags_limiter.innerHTML = `
       #taglist li:nth-child(n+${this.tags_to_show(force)}) {
         display: none;
       }
@@ -40,13 +40,14 @@ class TagForm extends BaseComponent {
   }
 
   show_all_tags(){
+    this.$tags_limiter.innerHTML = ``;
   }
 
   create() {
     this.tags = [];
     this.tags_to_show = this.tags_to_show_generator(50);
 
-    var letters = ['all'].concat('abcdefghijklmnopqrstuvwxyz1234567890'.split(''));
+    var letters = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
     this.innerHTML = template({
       letters,
@@ -63,6 +64,7 @@ class TagForm extends BaseComponent {
 
     this.$search_query = this.querySelector('#search_query');
     this.$search_by_letter = this.querySelector('#search_by_letter');
+    this.$tags_limiter = this.querySelector('#tags_limiter');
 
     var delegate = new Delegate(this);
 
@@ -80,18 +82,18 @@ class TagForm extends BaseComponent {
 
     delegate.on("change", ".letter_searcher", (event, target) => {
       var value = target.value;
-      if(value === 'all'){
+      this.$search_by_letter.innerHTML = `
+        #taglist li:not([data-search^="${value}"]) {
+          display: none;
+        }
+      `;
+      if(value === ' '){
         if(this.querySelector('#tag_search_input').value === ''){
           this.show_more_tags();
         } else {
-          this.$search_by_letter.innerHTML = ``;
+          this.show_all_tags();
         }
       } else {
-        this.$search_by_letter.innerHTML = `
-          #taglist li:not([data-search^="${value}"]) {
-            display: none;
-          }
-        `;
       }
     });
 
@@ -101,7 +103,7 @@ class TagForm extends BaseComponent {
 
     delegate.on("keyup", "#tag_search_input", (event) => {
       var filter = event.target.value;
-      var show_all = this.querySelector('.letter_searcher[value="all"]').checked;
+      var show_all = this.querySelector('.letter_searcher[value=" "]').checked;
       if(filter === ''){
         if(show_all){
           this.show_more_tags();
@@ -109,7 +111,7 @@ class TagForm extends BaseComponent {
         this.$search_query.innerHTML = ``;
       } else {
         if(show_all){
-          this.$search_by_letter.innerHTML = ``;
+          this.show_all_tags();
         }
         this.$search_query.innerHTML = `
           #taglist li:not([data-search*="${filter.toLowerCase()}"]) {

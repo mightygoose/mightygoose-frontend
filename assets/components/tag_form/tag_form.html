@@ -12,13 +12,19 @@
   </div>
   <div class="">
       <div class="">
-          ${scope.each_letter(letter => `
-          `)}
           <ul class="inline-list alphabet-list">
+              <li>
+                  <label>
+                      <input checked class="letter_searcher" type="radio" name="letter_checker" value=" "/>
+                      <span class="alphabet-letter">
+                          all
+                      </span>
+                  </label>
+              </li>
               ${scope.each_letter(letter => `
               <li>
                   <label>
-                      <input ${letter === 'all' ? "checked" : ""} class="letter_searcher" type="radio" name="letter_checker" value="${letter}"/>
+                      <input class="letter_searcher" type="radio" name="letter_checker" value=" ${letter}"/>
                       <span class="alphabet-letter">
                           ${letter}
                       </span>
@@ -26,6 +32,7 @@
               </li>
               `)}
           </ul>
+          <style id="tags_limiter"></style>
           <style id="search_query"></style>
           <style id="search_by_letter"></style>
           <ul id="taglist" class="tag-list">
