@@ -1,10 +1,7 @@
 <form>
   <div class="row">
     <div class="large-12 columns">
-        <label>
-            Filter tags
-            <input type="text" id="tag_search_input" placeholder="e.g.: punk"/>
-        </label>
+        <input type="text" id="tag_search_input" placeholder="e.g.: punk"/>
     </div>
   </div>
   <div class="row">
@@ -13,21 +10,22 @@
           </ul>
       </div>
   </div>
-  <div class="row">
-      <div class="large-12 columns">
+  <div class="">
+      <div class="">
           ${scope.each_letter(letter => `
           `)}
-          <ul class="large-12 columns inline-list">
+          <ul class="inline-list alphabet-list">
               ${scope.each_letter(letter => `
               <li>
                   <label>
                       <input ${letter === 'all' ? "checked" : ""} class="letter_searcher" type="radio" name="letter_checker" value="${letter}"/>
-                      ${letter}
+                      <span class="alphabet-letter">
+                          ${letter}
+                      </span>
                   </label>
               </li>
               `)}
           </ul>
-          <span class="tag-list-hint">* Click on tag to add it</span>
           <style id="search_query"></style>
           <style id="search_by_letter"></style>
           <ul id="taglist" class="tag-list">
