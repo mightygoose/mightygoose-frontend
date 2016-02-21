@@ -17,7 +17,8 @@
     "url": "https://github.com/nogizhopaboroda/musfinder/issues"
   },
   "homepage": "https://github.com/nogizhopaboroda/musfinder#readme",
-  "devDependencies": {},
+  "devDependencies": {
+  },
   "dependencies": {
     "babel-core": "^6.4.5",
     "babel-loader": "^6.2.1",
@@ -46,6 +47,7 @@
     "rivets": "^0.8.1",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.5.1",
+    "template-string-loader": "0.0.3",
     "webpack": "^1.12.12",
     "whatwg-fetch": "^0.11.0"
   }

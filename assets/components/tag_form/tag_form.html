@@ -15,11 +15,24 @@
   </div>
   <div class="row">
       <div class="large-12 columns">
-          <span class="tag-list-hint">* Click on tag to add it</span>
-          <ul class="tag-list short">
+          ${scope.each_letter(letter => `
+          `)}
+          <ul class="large-12 columns inline-list">
+              ${scope.each_letter(letter => `
+              <li>
+                  <label>
+                      <input ${letter === 'all' ? "checked" : ""} class="letter_searcher" type="radio" name="letter_checker" value="${letter}"/>
+                      ${letter}
+                  </label>
+              </li>
+              `)}
           </ul>
-          <span class="button success tiny radius show-all-tags">And many others...</span>
-          <span class="button success tiny radius show-short-list">Collapse list</span>
+          <span class="tag-list-hint">* Click on tag to add it</span>
+          <style id="search_query"></style>
+          <style id="search_by_letter"></style>
+          <ul id="taglist" class="tag-list">
+          </ul>
+          <span class="button success tiny radius show-more-tags">And many others...</span>
     </div>
   </div>
 </form>
