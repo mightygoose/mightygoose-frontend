@@ -1,3 +1,4 @@
+require('newrelic');
 //requirements
 const Store = require('./app/store');
 const koa = require('koa');
