@@ -1,11 +1,19 @@
-require('newrelic');
+if(process.env['NODE_ENV'] === 'production'){
+  require('newrelic');
+}
+
+const pry = require('pryjs');
+
 //requirements
-const Store = require('./app/store');
 const koa = require('koa');
+const request = require('koa-request');
 const route = require('koa-route');
 const serve = require('koa-static');
-const log = require('log-colors');
 const body_parser = require('koa-body-parser');
+
+const Store = require('./app/store');
+const log = require('log-colors');
+const urllib = require('url');
 
 //code
 var app = koa();
@@ -71,6 +79,31 @@ app.use(route.get('/api/update_tags', function *(){
   this.body = JSON.stringify(store.tags);
 }));
 
+app.use(route.post('/api/mixcloud/get_tracks', function *(){
+  var url_params = urllib.parse(this.request.body.url);
+  var mix_key = url_params.pathname;
+  if(!url_params.host.includes('mixcloud.com')){
+    this.body = JSON.stringify({
+      "error": "not a mixcloud link"
+    });
+    return false;
+  }
+  if(!/^\/.*\/.{1,}(\/)?/.test(mix_key)){
+    this.body = JSON.stringify({
+      "error": "link is not valid"
+    });
+    return false;
+  }
+  var options = {
+    url: 'https://www.mixcloud.com/player/details/',
+    qs: {
+      "key": mix_key
+    },
+    headers: { 'User-Agent': this.request.header['user-agent'] }
+  };
+  var response = yield request(options);
+  this.body = response.body || {};
+}));
 
 //static
 app.use(serve(__dirname + '/public'));
