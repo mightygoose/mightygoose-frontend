@@ -28,6 +28,11 @@ class MainController extends BaseController {
       '/post/?((\w|.)*)': function (post_id) {
         console.log("post id", post_id);
       },
+      '/mixcloud': function () {
+        //document.querySelector("#mixcloud-link").classList.add("active-menu-item");
+        //document.querySelector("#random-post-link").classList.remove("active-menu-item");
+        $content_section.innerHTML = '<mixcloud-controller></mixcloud-controller>';
+      },
       '/statistic': function () {
         console.log("statistic");
       }

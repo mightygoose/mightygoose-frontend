@@ -80,7 +80,7 @@ app.use(route.get('/api/update_tags', function *(){
 }));
 
 app.use(route.post('/api/mixcloud/get_tracks', function *(){
-  var url_params = urllib.parse(this.request.body.url);
+  var url_params = urllib.parse(JSON.parse(this.request.body).url);
   var mix_key = url_params.pathname;
   if(!url_params.host.includes('mixcloud.com')){
     this.body = JSON.stringify({

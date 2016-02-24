@@ -41,12 +41,12 @@ module.exports = document.registerElement(
         this.childComponents.splice(index, 1);
       }},
       createdCallback: {value: function() {
-        console.log('base element createdCallback');
+        //console.log('base element createdCallback');
         this.childComponents = createChildComponents();
         this.create && this.create();
       }},
       attachedCallback: {value: function() {
-        console.log('base element attachedCallback');
+        //console.log('base element attachedCallback');
         var self = this;
         fireEvent('component-attached', this);
         this.addEventListener('component-attached', function(event){

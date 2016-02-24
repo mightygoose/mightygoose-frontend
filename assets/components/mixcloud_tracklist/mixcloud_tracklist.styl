@@ -1,0 +1,46 @@
+mixcloud-tracklist {
+  .info-block {
+    margin-top: 25px;
+  }
+  .track-list {
+    margin-top: 20px;
+  }
+  .track-line {
+    padding: 10px 0;
+    font-weight: 300;
+  }
+  .track-line:not(:nth-last-child(1)) {
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .search-link {
+    color: #333;
+    &:before {
+      position: absolute;
+      bottom: 100%;
+      margin-bottom: 5px;
+      font-size: 10px;
+      white-space: nowrap;
+      padding: 5px;
+      border: 1px solid #d8d8d8;
+      background: white;
+      border-radius: 3px;
+      color: #333;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.5s linear;
+    }
+    &:hover:before {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  .vk-link:before {
+    content: 'search at vk.com';
+  }
+  .sk-link:before {
+    content: 'search at soundcloud.com';
+  }
+  .mk-link:before {
+    content: 'search at mixcloud.com';
+  }
+}

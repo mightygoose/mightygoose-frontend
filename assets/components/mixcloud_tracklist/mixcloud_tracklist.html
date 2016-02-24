@@ -1,0 +1,46 @@
+<div class="row info-block">
+    <div class="large-4 columns">
+        <img src="${scope.image}"/>
+    </div>
+    <div class="large-8 columns">
+        <div class="row">
+            <div class="small-12 columns">
+                <h3>
+                    ${scope.title}
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 columns">
+                ${scope.each_artist((artist) =>`
+                <h6>${artist}</h6>
+                `)}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="large-12 columns track-list">
+        ${scope.each_track((track) =>`
+        <div class="row track-line">
+            <div class="small-4 columns">${track.artist}</div>
+            <div class="small-4 columns">${track.title}</div>
+            <div class="small-1 columns">
+                <a class="search-link vk-link" target="_blank" href="https://vk.com/audio?q=${track.artist} - ${track.title}">
+                    <i class="demo-icon icon-vkontakte"></i>
+                </a>
+            </div>
+            <div class="small-1 columns">
+                <a class="search-link sk-link" target="_blank" href="https://soundcloud.com/search/sounds?q=${track.artist} - ${track.title}">
+                    <i class="demo-icon icon-soundcloud"></i>
+                </a>
+            </div>
+            <div class="small-1 columns">
+                <a class="search-link mk-link" target="_blank" href="https://www.mixcloud.com${track.track_url}">
+                    <i class="demo-icon icon-mixcloud-logo-black"></i>
+                </a>
+            </div>
+        </div>
+        `)}
+    </div>
+</div>
