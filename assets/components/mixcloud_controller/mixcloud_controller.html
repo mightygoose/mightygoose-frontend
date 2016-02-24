@@ -1,9 +1,15 @@
 <div class="row">
     <div class="large-12 columns">
-        <form id="mixcloud_url_form" name="mixcloud_url_form">
+        <form id="mixcloud_url_form" name="mixcloud_url_form" id="mixcloud_url_input">
             <label>Copypaste mixcloud link here</label>
             <input class="mg-input" type="text" name="url" id="mixcloud_url_input" placeholder="https://www.mixcloud.com/user/mix/"/>
         </form>
     </div>
 </div>
-<mixcloud-tracklist/>
+<mixcloud-tracklist>
+    <div class="row hidden" id="mixcloud_tracklist_preloader">
+        <div class="small-2 columns small-centered">
+            <i class="demo-icon icon-spin3 animate-spin mixcloud-tracklist-preloader"></i>
+        </div>
+    </div>
+</mixcloud-tracklist>

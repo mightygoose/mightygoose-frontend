@@ -8,4 +8,32 @@ mixcloud-controller {
   .mg-input::-webkit-input-placeholder {
     color: #bfbfbf;
   }
+  #mixcloud_url_form.valid {
+    .mg-input {
+      border-color: #ffd800;
+    }
+  }
+  #mixcloud_url_form.invalid {
+    position: relative;
+    &:before {
+      content: 'invalid link';
+      position: absolute;
+      top: 100%;
+      font-size: 10px;
+      color: white;
+      background: #ff5252;
+      left: 15px;
+      margin-top: -2px;
+      padding: 2px 15px;
+      border-radius: 3px;
+    }
+    .mg-input {
+      border-color: #FF5252;
+    }
+  }
+  .mixcloud-tracklist-preloader {
+    font-size: 50px;
+    margin-top: 50px;
+    color: #ffd800;
+  }
 }
