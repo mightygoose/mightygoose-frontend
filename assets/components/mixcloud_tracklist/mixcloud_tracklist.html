@@ -21,8 +21,15 @@
 </div>
 <div class="row">
     <div class="large-12 columns track-list">
+        <div class="row track-line">
+            <div class="small-1 columns">Starts</div>
+            <div class="small-4 columns">Artist</div>
+            <div class="small-4 columns">Song</div>
+            <div class="small-2 columns">Search</div>
+        </div>
         ${scope.each_track((track) =>`
         <div class="row track-line">
+            <div class="small-1 columns">${scope.format_position(track.start_time)}</div>
             <div class="small-4 columns">${track.artist}</div>
             <div class="small-4 columns">${track.title}</div>
             <div class="small-1 columns">
@@ -40,6 +47,11 @@
                     <i class="demo-icon icon-mixcloud-logo-black"></i>
                 </a>
             </div>
+        </div>
+        `, (track) =>`
+        <div class="row track-line">
+            <div class="small-1 columns">${scope.format_position(track.start_time)}</div>
+            <div class="small-11 columns">${track.chapter}</div>
         </div>
         `)}
     </div>
