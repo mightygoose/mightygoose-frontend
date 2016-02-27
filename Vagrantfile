@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
 
       sudo apt-get update
-      sudo apt-get install -y git
+      sudo apt-get install -y git python-pip postgresql-9.4
 
       #install node
       sudo curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
