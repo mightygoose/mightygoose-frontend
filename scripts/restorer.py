@@ -102,6 +102,9 @@ for item in data:
         has_tracklist.append(item)
 
 
+    #remove comments
+    item['comments'] = []
+
     #append
     filtered_items.append(item)
 
