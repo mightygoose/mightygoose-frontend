@@ -20,8 +20,6 @@ var app = koa();
 var collection = [];
 var store = new Store();
 
-store.update();
-store.update_tags();
 
 app.use(body_parser());
 
@@ -43,40 +41,27 @@ app.use(function *(next){
 
 
 app.use(route.get('/api/stat', function *(){
-  this.body = JSON.stringify({
-    'count': store.collection.length
-  });
+  this.body = JSON.stringify(yield store.get_stat());
 }));
 
 app.use(route.get('/api/tags', function *(){
-  this.body = JSON.stringify(store.tags);
+  var response = yield store.get_tags();
+  this.body = response;
 }));
 
 app.use(route.get('/api/post/random', function *(){
-  var response = yield store.get_by_id();
-  this.body = response || [];
+  var response = yield store.get_random();
+  this.body = response;
 }));
 
-app.use(route.post('/api/post/by_id', function *(post_id){
-  var response = yield store.get_by_id(this.request.body.id);
-  this.body = response || [];
+app.use(route.get('/api/post/:post_id', function *(post_id){
+  var response = yield store.get_by_id(post_id);
+  this.body = response;
 }));
 
 app.use(route.post('/api/search/tags', function *(){
   var response = yield store.get_by_tags(this.request.body);
-  this.body = response.body || [];
-}));
-
-app.use(route.get('/api/update_stat', function *(){
-  yield store.update();
-  this.body = JSON.stringify({
-    'count': store.collection.length
-  });
-}));
-
-app.use(route.get('/api/update_tags', function *(){
-  yield store.update_tags();
-  this.body = JSON.stringify(store.tags);
+  this.body = response;
 }));
 
 app.use(route.post('/api/mixcloud/get_tracks', function *(){

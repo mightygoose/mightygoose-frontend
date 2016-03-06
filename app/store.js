@@ -6,159 +6,89 @@ const qs = require('qs');
 const _ = require('lodash');
 const log = require('log-colors');
 const cheerio = require('cheerio');
+const massive = require("massive");
 
 
-const DATA_HOST = "https://storage.scrapinghub.com";
-const PROJECT_ID = process.env['PROJECT_ID'];
-const API_KEY = process.env['STORAGE_KEY'];
+const DB_HOST = process.env['DB_HOST'];
+const DB_PORT = process.env['DB_PORT'];
+const DB_USER = process.env['DB_USER'];
+const DB_PASSWD = process.env['DB_PASSWD'];
+const DB_NAME = process.env['DB_NAME'];
 
 const CONNECT_TIMEOUT = 200;
 const REQUEST_TIMEOUT = 200;
-
-/*
-rusfolder.com
-myupload.dk
-uloz.to
-uploaded.net
-yadi.sk
-copy.com
-
-vk.com
-soundcloud.com
-youtube.com
-
-nitroflare.com - complicated
-gigasize.com - waiting
-filefactory.com - waiting
-turbobit.net - captcha + ip block
-
-
-*/
-const hostings = "zippyshare|mediafire|mega\.nz|rusfolder\.com|myupload\.dk|uloz\.to|uploaded\.net|yadi\.sk|copy\.com|nitroflare\.com|gigasize\.com|filefactory\.com|turbobit\.net|soundcloud\.com";
 
 
 class Store {
   constructor(){
     this.collection = [];
     this.tags = [];
-  }
 
-  update(){
-    log.info('updating statistics');
-    var query_string = qs.stringify({
-      "apikey": API_KEY,
-      "format": "json",
-      "meta": ["_key"],
-      "nodata": "1"
-    }, { arrayFormat: 'repeat' });
-    var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(' + hostings + ')%22%5D%5D';
-    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`;
-
-    return new Promise((resolve) => {
-      request(url)((error, response) => resolve(response, error));
-    }).then((response, error) => {
-      this.collection = _.map(JSON.parse(response.body), item => item._key);
-      log.info('statistics updated');
+    log.info('connecting to db');
+    massive.connect({
+      connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}/${DB_NAME}`
+    }, (err, db) => {
+      log.info('connected to db');
+      this.db = db;
     });
   }
 
-  update_tags(){
-    log.info('updating tags');
-    var query_string = qs.stringify({
-      "apikey": API_KEY,
-      "format": "csv",
-      "fields": "tags",
-      "include_headers": "0",
-      "escape": " ",
-      "quote": " "
-    }, { arrayFormat: 'repeat' });
-    var filter_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(' + hostings + ')%22%5D%5D';
-    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}`
-
+  get_stat(){
     return new Promise((resolve) => {
-      request(url)((error, response) => resolve(response, error));
+      this.db.run("select count(*) from items", (err,stat) => {
+        resolve(stat, err);
+      });
     }).then((response, error) => {
-      this.tags = _.reduce(response.body.split('\n'), (result, value, key) => {
-        if(value === ''){ return result; }
-        try {
-          var tags = JSON.parse(value);
-        } catch(e) {
-          log.error('error parsing line: ' + value);
-        }
-        _.each(tags, (value, key) => {
-          var _key = key
-                     //.toLowerCase()
-                     .replace(/^\*+/, '').replace(/\*+$/, '')
-                     .replace(/genre: /i, '')
-                     .replace(/label: /i, '')
-                     .replace(/country: /i, '')
-                     //.replace('and', '&')
-                     .replace(/^-/, '')
-                     .replace(/^#/, '')
-                     .replace(/^¬/, '')
-                     .replace(/^=/, '')
-                     .replace(/^\./, '')
-                     .replace(/^\+/, '')
-                     .replace(/^\[/, '').replace(/\]$/, '')
-                     .replace(/^\s+/, '')
-                     .replace(/\s{2,}/g, ' ')
-          result[_key] = result[_key] || 0;
-          result[_key]++;
-        });
-        return result;
-      }, {});
-      log.info('tags updated');
+      return response[0];
+    });
+  }
+
+  get_random(){
+    return new Promise((resolve) => {
+      this.db.run("select * from items order by random() limit 1", (err,stat) => {
+        resolve(stat, err);
+      });
+    }).then((response, error) => {
+      return response;
     });
   }
 
   get_by_id(item_id){
-    item_id = item_id || _.sample(this.collection);
-    var query_string = qs.stringify({
-      "apikey": API_KEY,
-      "format": "json",
-      "meta": ["_key"]
-    }, { arrayFormat: 'repeat' });
-
-    var url = `${DATA_HOST}/items/${item_id}?${query_string}`;
-
     return new Promise((resolve) => {
-      request(url)((error, response) => resolve(response, error));
+      this.db.run("select * from items where id=$1", [item_id], (err,stat) => {
+        resolve(stat, err);
+      });
     }).then((response, error) => {
-      var data = JSON.parse(response.body);
-      var $content = cheerio.load(data[0]['content']);
+      return response;
+    });
+  }
 
-      /* workaround to grab embedded stuff */
-      data[0]['embeded'] = $content("object, iframe").map(function(){
-        return $content(this).wrap('<div>').parent().html();
-      }).get().join('<br>');
-
-      /* workaround: filter trashy images. think of something better */
-      data[0]['images'] = _.filter(data[0]['images'], (src) => !~src.indexOf(".blogblog.com") && !~src.indexOf(".gif"));
-
-      return JSON.stringify(data);
+  get_tags(){
+    return new Promise((resolve) => {
+      this.db.run("select tags from items", (err,stat) => {
+        resolve(stat, err);
+      });
+    }).then((response, error) => {
+      return  _.reduce(response, (result, item) => {
+        _.each(item['tags'], (value) => {
+          result[value] = result[value] || 0;
+          result[value]++;
+        });
+        return result;
+      }, {});
     });
   }
 
   get_by_tags(tags){
-    var query_string = qs.stringify({
-      "apikey": API_KEY,
-      "format": "json",
-      "count": 100,
-      "meta": ["_key"]
-    }, { arrayFormat: 'repeat' });
-    var filter_param = encodeURIComponent('["tags","matches",["' + _.map(tags, tag => {
-      return tag
-             .replace('*', '\\\\*')
-             .replace("[", "\\\\[")
-             .replace("]", "\\\\]")
-             .replace("(", "\\\\(")
-             .replace(")", "\\\\)")
-             .replace(/\s{2,}/g, ' ')
-    }).join('|') + '"]]');
-    var file_hostings_param = '%5B%22content%22%2C%22matches%22%2C%5B%22(' + hostings + ')%22%5D%5D';
-    var url = `${DATA_HOST}/items/${PROJECT_ID}?${query_string}&filterany=${filter_param}&filterany=${file_hostings_param}`;
-
-    return request(url);
+    return new Promise((resolve) => {
+      var tags_str = _.map(tags, tag => `'${tag}'`).join(', ')
+      var query = `SELECT * FROM items WHERE tags ?| array[${tags_str}]`;
+      this.db.run(query, (err,items) => {
+        resolve(items, err);
+      });
+    }).then((response, error) => {
+      return response;
+    });
   }
 }
 
