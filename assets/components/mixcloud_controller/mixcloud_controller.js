@@ -1,6 +1,6 @@
 const BaseController = require('lib/base_controller');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
-const styles = require('style!css!stylus!./mixcloud_controller.styl');
+const styles = require('./mixcloud_controller.styl');
 const Delegate = require('dom-delegate');
 const _ = require('lodash');
 

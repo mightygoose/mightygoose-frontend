@@ -1,5 +1,6 @@
 const BaseController = require('lib/base_controller');
 const Router = require('director').Router;
+const styles = require('./main.styl');
 const _ = require('lodash');
 const rivets = require('rivets');
 

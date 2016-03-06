@@ -1,6 +1,6 @@
 const BaseComponent = require('lib/base_component');
 const template = require('ejs!./post.html');
-const styles = require('style!css!stylus!./post.styl');
+const styles = require('./post.styl');
 
 class PostItem extends BaseComponent {
   render(data){

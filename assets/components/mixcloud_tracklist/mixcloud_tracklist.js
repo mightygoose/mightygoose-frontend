@@ -1,6 +1,6 @@
 const BaseComponent = require('lib/base_component');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_tracklist.html');
-const styles = require('style!css!stylus!./mixcloud_tracklist.styl');
+const styles = require('./mixcloud_tracklist.styl');
 const _ = require('lodash');
 
 class MixcloudTracklist extends BaseComponent {

@@ -1,6 +1,6 @@
 const BaseController = require('lib/base_controller');
 const template = require('raw!./search_posts.html');
-const styles = require('style!css!stylus!./search_posts.styl');
+const styles = require('./search_posts.styl');
 const _ = require('lodash');
 const Delegate = require('dom-delegate');
 
