@@ -10,6 +10,9 @@ require('file?name=../font/[name].[ext]!font/fontello.ttf');
 require('file?name=../font/[name].[ext]!font/fontello.woff');
 /**/
 
+/* fonts */
+var icons = require("icons");
+
 /* polyfills */
 require('document-register-element');
 
