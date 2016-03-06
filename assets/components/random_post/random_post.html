@@ -1,28 +1,30 @@
 <short-stat>
-    <div class="row" id="stat_container">
-        <div class="large-12 columns">
-            <div data-alert class="alert-box success radius text-center">
+    <div class="messages-wrapper" id="stat_container">
+        <div class="row primary-message-wrapper">
+            <div class="primary-message">
                 Yo! We have
                 <strong id="total_posts_count">
                     <i class="demo-icon icon-spin3 animate-spin"></i>
                 </strong>
                 awesome, carefully stollen from different blogs, posts for you.
-                <br/>
+            </div>
+        </div>
+        <div class="row secondary-message-wrapper">
+            <div class="secondary-message">
                 Just get the random one and check it out.
-                <br/>
                 Download links are included.
             </div>
         </div>
     </div>
 </short-stat>
-<div class="row">
-    <div class="large-12 columns">
-        <a href="#" id="random_post_button" class="button expand page-centered">
+<div class="post-block-wrapper">
+    <div class="row button-row">
+        <a href="#" id="random_post_button" class="button">
             Get random post
             <i id="random_post_spinner" class="demo-icon icon-spin3 animate-spin hidden"></i>
         </a>
     </div>
-</div>
-<div class="row">
-    <posts-controller></posts-controller>
+    <div class="row post-row">
+        <posts-controller></posts-controller>
+    </div>
 </div>

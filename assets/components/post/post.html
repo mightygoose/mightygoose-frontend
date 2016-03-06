@@ -1,28 +1,36 @@
-<div class="row">
-    <div class="panel large-8 columns large-centered">
-        <div class="row">
-            <div class="title small-8 columns"><%= title %></div>
-            <div class="url small-4 columns">
-                <a class="original-post-link" href="<%= url %>">original post link (download there)</a>
+<article class="row">
+    <div class="post-item-wrapper">
+        <div class="item-left">
+            <div class="row images">
+                <% _.forEach(images, function(image){ %>
+                <img src="<%= image %>">
+                <% }); %>
             </div>
         </div>
-        <div class="row tags">
-            <ul class="inline-list large-12 columns large-centered">
-              <% _.forEach(tags, function(tagname, index){ %>
-                <li class="label info tag-label"><%= tagname %></li>
-              <% }); %>
-            </ul>
+        <div class="item-right">
+            <div class="item-content-wrapper">
+                <div class="row item-title">
+                    <h4><%= title %></h4>
+                </div>
+                <div class="row item-tags">
+                    <ul class="tags-list">
+                        <% _.forEach(tags, function(tagname, index){ %>
+                        <li class="tag-label"><%= tagname %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <div class="row item-links">
+                    <a class="original-post-link" target="_blank" href="<%= url %>">Original post link</a>
+                </div>
+                <div class="row item-tracklist">
+                </div>
+                <% if(typeof embeded !== "undefined" && embeded !== ""){ %>
+                <div class="embeded">
+                    <hr/>
+                    <%= embeded %>
+                </div>
+                <% } %>
+            </div>
         </div>
-        <div class="row images">
-            <% _.forEach(images, function(image){ %>
-            <img src="<%= image %>">
-            <% }); %>
-        </div>
-        <% if(typeof embeded !== "undefined" && embeded !== ""){ %>
-        <div class="embeded">
-            <hr/>
-            <%= embeded %>
-        </div>
-        <% } %>
     </div>
-</div>
+</article>

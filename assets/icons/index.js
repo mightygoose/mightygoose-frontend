@@ -9,7 +9,7 @@ const icons_map = {
 
 style_inject(icon_font.css);
 style_inject(Object.keys(icons_map).map((value) => `
-  .mg-icon.${value}:before {
+  .mg-icon.icon-${value}:before {
     content: '${icons_map[value].unicode}'
   }
 `).join(''));

@@ -1,6 +1,7 @@
 const BaseController = require('lib/base_controller');
 const Delegate = require('dom-delegate');
 const template = require('ejs!./random_post.html');
+const styles = require('./random_post.styl');
 
 
 class RandomPostController extends BaseController {
@@ -16,6 +17,7 @@ class RandomPostController extends BaseController {
       .then(response => response.json())
       .then((posts) => {
         this.childComponents.querySelector('posts-controller').render(posts);
+        this.classList.add('with-post');
         $random_post_spinner.classList.add('hidden');
         //router.setRoute('/post/' + posts[0]._key);
       });

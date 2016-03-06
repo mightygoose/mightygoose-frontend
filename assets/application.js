@@ -1,5 +1,5 @@
 /* copy files */
-require('file?name=../../[name].[ext]!index.html');
+require('file?name=../../index.[ext]!application.html');
 
 require('file?name=../css/[name].[ext]!css/animation.css');
 require('file?name=../css/[name].[ext]!css/fontello.css');
