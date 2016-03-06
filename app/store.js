@@ -15,6 +15,8 @@ const DB_USER = process.env['DB_USER'];
 const DB_PASSWD = process.env['DB_PASSWD'];
 const DB_NAME = process.env['DB_NAME'];
 
+const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
+
 const CONNECT_TIMEOUT = 200;
 const REQUEST_TIMEOUT = 200;
 
@@ -88,6 +90,20 @@ class Store {
       });
     }).then((response, error) => {
       return response;
+    });
+  }
+
+  get_discogs_info(discogs_object){
+    return new Promise((resolve) => {
+      var url = `${discogs_object.resource_url}?token=${DISCOGS_TOKEN}`;
+      request({
+        url: url,
+        headers: {
+          'User-Agent': 'request'
+        }
+      })((error, response) => resolve(response, error));
+    }).then((response, error) => {
+      return response.body;
     });
   }
 }

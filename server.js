@@ -90,6 +90,11 @@ app.use(route.post('/api/mixcloud/get_tracks', function *(){
   this.body = response.body || {};
 }));
 
+app.use(route.post('/api/discogs_info', function *(){
+  var response = yield store.get_discogs_info(this.request.body);
+  this.body = response;
+}));
+
 //static
 app.use(serve(__dirname + '/public'));
 
