@@ -1,0 +1,18 @@
+<ul class="item-track-list">
+  ${scope.each_track(track => `
+  <li class="track-list-track">
+      <span class="position">
+          ${track.position}.
+      </span>
+      <span class="artist">
+          ${track.artist}
+      </span>
+      <span class="separator">
+          –
+      </span>
+      <span class="title">
+          ${track.title}
+      </span>
+  </li>
+  `)}
+</ul>

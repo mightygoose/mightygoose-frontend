@@ -28,4 +28,5 @@ require('components/tag_form/count_filter');
 require('components/tag_form/query_filter');
 require('components/mixcloud_controller/mixcloud_controller');
 require('components/mixcloud_tracklist/mixcloud_tracklist');
+require('components/tracklist/tracklist');
 

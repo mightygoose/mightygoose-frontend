@@ -28,7 +28,7 @@ post-item {
     vertical-align: top;
   }
   .item-content-wrapper {
-    padding: 0px 2em;
+    padding: 0 0 0 2em;
     text-align: left;
   }
   .item-title {
@@ -64,11 +64,25 @@ post-item {
   .item-links {
     margin: 2em 0;
   }
+  .item-block {
+    padding: 1em 0;
+    background-image: linear-gradient(to right, $color-gray-border 50%, rgba(255,255,255,0) 0%);
+    background-position: top;
+    background-size: 15px 1px;
+    background-repeat: repeat-x;
+    &:not(:last-child) {
+    }
+  }
   .original-post-link {
     padding: 0.5em 1em;
     font-size: 0.65em;
     background: $color-yellow-primary;
     color: $color-black;
     text-decoration: underline;
+  }
+  .item-embed-content {
+    iframe, object, embed {
+      width: 100%;
+    }
   }
 }

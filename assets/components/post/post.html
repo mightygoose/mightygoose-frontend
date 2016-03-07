@@ -22,13 +22,16 @@
                 <div class="row item-links">
                     <a class="original-post-link" target="_blank" href="<%= url %>">Original post link</a>
                 </div>
-                <div class="row item-tracklist">
+                <div class="row item-block item-tracklist">
                 </div>
-                <% if(typeof embeded !== "undefined" && embeded !== ""){ %>
-                <div class="embeded">
-                    <hr/>
-                    <%= embeded %>
+                <% if(typeof embed !== "undefined" && embed.length > 0){ %>
+                <% _.forEach(embed, function(embed_content){ %>
+                <div class="row item-block embeded">
+                    <div class="item-embed-content">
+                        <%= embed_content %>
+                    </div>
                 </div>
+                <% }); %>
                 <% } %>
             </div>
         </div>
