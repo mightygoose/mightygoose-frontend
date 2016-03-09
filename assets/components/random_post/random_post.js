@@ -11,14 +11,12 @@ class RandomPostController extends BaseController {
     var delegate = new Delegate(this);
     delegate.on("click", "#random_post_button", (event) => {
       event.preventDefault();
-      var $random_post_spinner = document.querySelector("#random_post_spinner");
-      $random_post_spinner.classList.remove('hidden');
+      this.querySelector("mighty-preloader").show();
       fetch("/api/post/random")
       .then(response => response.json())
       .then((posts) => {
         this.childComponents.querySelector('posts-controller').render(posts);
         this.classList.add('with-post');
-        $random_post_spinner.classList.add('hidden');
         //router.setRoute('/post/' + posts[0]._key);
       });
     });

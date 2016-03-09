@@ -1,0 +1,44 @@
+@import '~application.styl';
+
+mighty-preloader {
+  color: $color-gray;
+  .preloader-wrapper {
+    animation: preloader 1.5s ease-in;
+    animation-delay: 0.5s;
+    animation-iteration-count: infinite;
+    width: 3em;
+    height: 3em;
+    position: relative;
+    display: inline-block;
+    border: 0.25em solid;
+    border-radius: 3em;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    &.hidden {
+      opacity: 0;
+    }
+  }
+  .preloader-inner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 1em;
+    height: 1em;
+    font-size: 1.6em;
+  }
+
+  @keyframes preloader {
+    0% {
+      border-color: $color-gray;
+    }
+    50% {
+      border-color: transparent;
+    }
+    100% {
+      border-color: $color-gray;
+    }
+  }
+}

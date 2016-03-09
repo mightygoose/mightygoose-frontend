@@ -23,6 +23,9 @@
                     <a class="original-post-link" target="_blank" href="<%= url %>">Original post link</a>
                 </div>
                 <div class="row item-block item-tracklist">
+                    <track-list>
+                        <mighty-preloader/>
+                    </track-list>
                 </div>
                 <% if(typeof embed !== "undefined" && embed.length > 0){ %>
                 <% _.forEach(embed, function(embed_content){ %>

@@ -4,11 +4,12 @@ const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!tem
 const styles = require('./tracklist.styl');
 
 class TrackList extends BaseComponent {
-  render(data){
+  render(data, additional){
     this.innerHTML = template({
       each_track(tpl){
         return _.reduce(data, (accum, track) => accum.concat(tpl(track)), "");
-      }
+      },
+      additional
     });
   }
   create(){
