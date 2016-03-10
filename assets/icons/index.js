@@ -5,7 +5,8 @@ const styles = require('./index.styl');
 
 const icons_map = {
   logo: require('./svg/logo.svg'),
-  discogs_logo: require('./svg/discogs_logo.svg')
+  discogs_logo: require('./svg/discogs_logo.svg'),
+  arrow_down: require('./svg/arrow_down.svg')
 }
 
 style_inject(icon_font.css);

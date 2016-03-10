@@ -11,8 +11,6 @@ class SearchPostsController extends BaseController {
     var delegate = new Delegate(this);
     delegate.on("click", "#search_posts_button", (event) => {
       event.preventDefault();
-      var $random_post_spinner = document.querySelector("#search_posts_spinner");
-      $random_post_spinner.classList.remove('hidden');
       var tags = this.childComponents.querySelector('tag-form').get_tags();
       fetch("/api/search/tags", {
         method: 'post',
@@ -25,7 +23,6 @@ class SearchPostsController extends BaseController {
       .then(response => response.json())
       .then((posts) => {
         this.childComponents.querySelector('posts-controller').render(posts);
-        $random_post_spinner.classList.add('hidden');
       });
     })
 

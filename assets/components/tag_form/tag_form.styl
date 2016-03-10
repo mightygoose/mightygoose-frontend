@@ -1,10 +1,14 @@
 tag-form {
-
+  .search-input-wrapper {
+    text-align: center;
+  }
   #tag_search_input {
     border-radius: 3px;
     height: 50px;
     border: 3px solid #f1f1f1;
     box-shadow: none;
+    width: 80%;
+    font-size: 1em;
   }
   #tag_search_input::-webkit-input-placeholder {
     color: #bfbfbf;
@@ -38,7 +42,7 @@ tag-form {
       color: #999;
     }
     input {
-      margin-right: 5px;
+      display: none;
     }
   }
   .tag-list-hint {
@@ -62,6 +66,9 @@ tag-form {
       display: none;
     }
   }
+  .tag-list .tag-wrapper {
+    cursor: pointer;
+  }
   .tag-list .delete-tag {
     display: none;
   }
@@ -82,6 +89,7 @@ tag-form {
     .delete-tag {
       color: #929292;
       padding-right: 15px;
+      cursor: pointer;
     }
     .delete-tag:hover {
       color: #333;
@@ -96,16 +104,23 @@ tag-form {
   .alphabet-list {
     display: inline-block;
     margin: 0;
+    list-style: none;
     .letter_searcher {
       display: none;
     }
     li {
       margin: 0;
+      display: inline-block;
+      float: left;
     }
     li label {
       padding: 10px;
       text-transform: uppercase;
-      font-weight: 500;
+      display: inline-block;
+      font-size: 0.7em;
+      font-family: "Roboto Condenced", sans-serif;
+      font-weight: 700;
+      cursor: pointer;
     }
     li .alphabet-letter {
       color: white;
@@ -116,6 +131,7 @@ tag-form {
   }
   .more-tags-row {
     margin-bottom: 50px;
+    text-align: center;
   }
   .more-tags-wrapper {
     height: 30px;
@@ -128,10 +144,14 @@ tag-form {
     i {
       position: absolute;
       width: 100%;
-      font-size: 20px;
-      text-align: center;
-      top: 5px;
-      color: white;
+      font-size: 0.8em;
+      height: 1em;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      color: #fff;
+      margin: auto;
     }
   }
 }
