@@ -1,17 +1,8 @@
 /* copy files */
 require('file?name=../../index.[ext]!application.html');
 
-require('file?name=../css/[name].[ext]!css/animation.css');
-require('file?name=../css/[name].[ext]!css/fontello.css');
-
-require('file?name=../font/[name].[ext]!font/fontello.eot');
-require('file?name=../font/[name].[ext]!font/fontello.svg');
-require('file?name=../font/[name].[ext]!font/fontello.ttf');
-require('file?name=../font/[name].[ext]!font/fontello.woff');
-/**/
-
 /* fonts */
-var icons = require("icons");
+require("icons");
 
 /* polyfills */
 require('document-register-element');
