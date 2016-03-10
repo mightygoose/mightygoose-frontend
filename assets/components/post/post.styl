@@ -15,11 +15,33 @@ post-item {
     width: 40%;
     display: inline-block;
   }
-  .images {
+  .main-image {
     width: auto;
     img {
       width: 100%;
       height: auto;
+    }
+  }
+  .thumbnails {
+    width: 100%;
+    display: inline-block;
+    margin-top: 1em;
+    img {
+      width: 45%;
+      height: auto;
+      opacity: 0.2;
+      cursor: pointer;
+      margin-bottom: 0.5em;
+      transition: opacity 0.2s ease-in;
+      &:hover {
+        opacity: 1;
+      }
+      &:nth-child(odd){
+        float: left;
+      }
+      &:nth-child(even){
+        float: right;
+      }
     }
   }
   .item-right {

@@ -1,11 +1,16 @@
 <article class="row">
     <div class="post-item-wrapper">
         <div class="item-left">
-            <div class="row images">
+            <div class="row main-image">
+                <img src="<%= _.first(images) %>">
+            </div>
+            <% if(images.length > 1){ %>
+            <div class="row thumbnails">
                 <% _.forEach(images, function(image){ %>
                 <img src="<%= image %>">
                 <% }); %>
             </div>
+            <% } %>
         </div>
         <div class="item-right">
             <div class="item-content-wrapper">
