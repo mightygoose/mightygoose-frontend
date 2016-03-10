@@ -1,17 +1,11 @@
 const BaseController = require('lib/base_controller');
 const Router = require('director').Router;
 const styles = require('./main.styl');
-const _ = require('lodash');
-const rivets = require('rivets');
 
-rivets.configure({
-  templateDelimiters: ['{{', '}}'],
-});
 
 class MainController extends BaseController {
   create() {
     console.log("application ready");
-    this.scope.rivets = rivets;
 
     var $content_section = document.querySelector("#content_section");
 
