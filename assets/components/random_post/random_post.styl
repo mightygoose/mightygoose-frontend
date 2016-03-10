@@ -33,6 +33,10 @@ random-post-controller {
     position: relative;
     transition: margin-top 1s ease;
   }
+  .preloader-row {
+    margin-top: 3em;
+    text-align: center;
+  }
   .post-row {
     position: absolute;
     background: $color-black;
@@ -40,9 +44,24 @@ random-post-controller {
     transform: translateY(100%);
     transition: transform 1s ease;
   }
-  .preloader-row {
-    margin-top: 3em;
-    text-align: center;
+  .next-button {
+    position: fixed;
+    top: 20em;
+    right: 3em;
+    text-transform: uppercase;
+    font-family: "Roboto Condenced", sans-serif;
+    font-weight: 700;
+    font-size: 0.7em;
+    color: #837b7b;
+    opacity: 0;
+    cursor: pointer;
+    span {
+      opacity: 0.3;
+      transition: opacity 0.2s ease-in;
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 
   &.with-post {
@@ -61,6 +80,20 @@ random-post-controller {
     .post-row {
       transform: translateY(0);
       transition: transform 1s ease;
+    }
+    .next-button {
+      opacity: 1;
+      transition: opacity 1s;
+      transition-delay: 1s;
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0.3
     }
   }
 }

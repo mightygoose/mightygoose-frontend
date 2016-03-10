@@ -9,7 +9,7 @@ class RandomPostController extends BaseController {
     console.log('random post ctrl');
 
     var delegate = new Delegate(this);
-    delegate.on("click", "#random_post_button", (event) => {
+    delegate.on("click", ".random_post_button", (event) => {
       event.preventDefault();
       this.querySelector("mighty-preloader").show();
       fetch("/api/post/random")
