@@ -1,4 +1,14 @@
-var fireEvent = require('lib/fire_event');
+function fireEvent(eventName, target){
+  target = target || document.body;
+  var event;
+  if(window.Event){
+    event = new Event(eventName, {"bubbles":true, "cancelable":true});
+  } else {
+    event = document.createEvent('Event');
+    event.initEvent(eventName, true, true);
+  }
+  target.dispatchEvent(event);
+}
 
 function createChildComponents(){
   return Object.create(Array.prototype, {
@@ -40,6 +50,9 @@ module.exports = document.registerElement(
         var index = this.childComponents.indexOf(childComponent);
         this.childComponents.splice(index, 1);
       }},
+      trigger: {value: function(eventName){
+        fireEvent(eventName, this);
+      }},
       createdCallback: {value: function() {
         //console.log('base element createdCallback');
         this.childComponents = createChildComponents();
@@ -48,7 +61,7 @@ module.exports = document.registerElement(
       attachedCallback: {value: function() {
         //console.log('base element attachedCallback');
         var self = this;
-        fireEvent('component-attached', this);
+        this.trigger('component-attached');
         this.addEventListener('component-attached', function(event){
           event.stopPropagation();
           event.target.parentComponent = self;
@@ -60,6 +73,17 @@ module.exports = document.registerElement(
         console.log('base element detachedCallback');
         this.parentComponent.removeChildComponent(this);
         this.detach && this.detach();
+      }},
+      attributeChangedCallback: {value: function(name, previousValue, value) {
+        console.log('base element attributeChangedCallback');
+        if (previousValue == null) {
+          console.log('got a new attribute ', name, ' with value ', value);
+        } else if (value == null) {
+          console.log('somebody removed ', name, ' its value was ', previousValue);
+        } else {
+          console.log(name, ' changed from ', previousValue, ' to ', value);
+        }
+        this.attributeChange && this.attributeChange();
       }},
     })
   }
