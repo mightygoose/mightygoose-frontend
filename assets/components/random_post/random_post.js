@@ -57,7 +57,7 @@ class RandomPostController extends BaseController {
     }
   }
   attributeChange(name, previousValue, value){
-    if(name === 'post_id' && value){
+    if(name === 'post_id' && value && value !== ''){
       this.load_by_id(+value);
     }
   }
