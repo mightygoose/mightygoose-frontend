@@ -14,7 +14,6 @@ module.exports = {
 	},
 	module: {
           loaders: [
-                  //{ test: /\.svg$/,    loader: "file-loader?prefix=font/" },
             {
               test: /\.js?$/,
               exclude: /(node_modules|bower_components)/,
@@ -26,6 +25,7 @@ module.exports = {
             },
             {
               test: /\.styl?$/,
+              exclude: /main\.styl?$/,
               loader: 'style!css!postcss-loader!stylus'
             },
             {

@@ -1,6 +1,8 @@
+//critical css
+require('file?name=../../main.css!stylus!./main.styl');
+
 const BaseController = require('lib/base_controller');
 const Router = require('director').Router;
-const styles = require('./main.styl');
 
 
 class MainController extends BaseController {
