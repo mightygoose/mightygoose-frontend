@@ -10,7 +10,7 @@ const request = require('koa-request');
 const route = require('koa-route');
 const serve = require('koa-static');
 const body_parser = require('koa-body-parser');
-const gzip = require('koa-gzip'); //replace with koa-compress!
+const compress = require('koa-compress');
 
 const Store = require('./app/store');
 const log = require('log-colors');
@@ -22,7 +22,11 @@ var store = new Store();
 
 
 app.use(body_parser());
-app.use(gzip());
+
+app.use(compress({
+  threshold: 2048,
+  flush: require('zlib').Z_SYNC_FLUSH
+}));
 
 app.use(function *(next){
   var start = new Date;
