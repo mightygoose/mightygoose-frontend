@@ -23,5 +23,6 @@ require.ensure([], () => {
   require('components/mixcloud_tracklist/mixcloud_tracklist');
   require('components/tracklist/tracklist');
   require('components/preloader/preloader');
+  require('components/embed_container/embed_container');
 })
 

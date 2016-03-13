@@ -32,15 +32,17 @@
                         <mighty-preloader/>
                     </track-list>
                 </div>
-                <% if(typeof embed !== "undefined" && embed.length > 0){ %>
-                <% _.forEach(embed, function(embed_content){ %>
-                <div class="row item-block embeded">
-                    <div class="item-embed-content">
-                        <%= embed_content %>
-                    </div>
+                <div class="post-embeds-container">
+                    <% if(typeof embed !== "undefined" && embed.length > 0){ %>
+                    <% _.forEach(embed, function(embed_content){ %>
+                    <embed-container class="row item-block embeded">
+                        <div class="item-embed-content">
+                            <%= embed_content %>
+                        <div>
+                    </embed-container>
+                    <% }); %>
+                    <% } %>
                 </div>
-                <% }); %>
-                <% } %>
             </div>
         </div>
     </div>
