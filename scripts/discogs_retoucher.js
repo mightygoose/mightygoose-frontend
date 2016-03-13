@@ -1,6 +1,4 @@
 var btc = require('bloom-text-compare');
-
-
 var _ = require('lodash');
 
 
@@ -14,6 +12,10 @@ stream.on('data', function(data) {
 stream.on('end', function(data) {
   var item = JSON.parse(content);
   //console.log(item);
+  if(!item.discogs.title) {
+    console.log(JSON.stringify(item));
+    return;
+  }
   var title1 = item.title.replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
   var title2 = item.discogs.title.replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
   var hash1 = btc.hash(title1.split(' '));
