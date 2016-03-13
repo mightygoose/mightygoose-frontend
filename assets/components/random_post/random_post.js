@@ -48,18 +48,13 @@ class RandomPostController extends BaseController {
       this.$preloader.show();
       this.next();
     });
+    this.innerHTML = template();
   }
   attach(){
-    this.innerHTML = template();
     var post_id = this.getAttribute('post_id');
-    if(post_id){
+    if(post_id && post_id !== ''){
       this.load_by_id(+post_id);
     }
-  }
-  detach(){
-    this.removeAttribute('post_id');
-    this.removeAttribute('class');
-    this.innerHTML = '';
   }
   attributeChange(name, previousValue, value){
     if(name === 'post_id' && value){

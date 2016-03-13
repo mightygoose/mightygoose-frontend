@@ -70,12 +70,12 @@ module.exports = document.registerElement(
         this.attach && this.attach();
       }},
       detachedCallback: {value: function() {
-        console.log('base element detachedCallback');
+        //console.log('base element detachedCallback');
         this.parentComponent.removeChildComponent(this);
         this.detach && this.detach();
       }},
       attributeChangedCallback: {value: function(name, previousValue, value) {
-        console.log('base element attributeChangedCallback');
+        //console.log('base element attributeChangedCallback');
         this.attributeChange && this.attributeChange(name, previousValue, value);
       }},
     })

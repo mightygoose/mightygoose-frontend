@@ -8,9 +8,9 @@ const Router = require('director').Router;
 class MainController extends BaseController {
   create() {
     console.log("application ready");
+    var self = this;
 
     var $content_section = document.querySelector("#content_section");
-    var $random_post = document.createElement('random-post-controller');
 
     var routes = {
       '/search': function () {
@@ -20,19 +20,16 @@ class MainController extends BaseController {
       },
       '/post': {
         //think of something better here!
-        on(){
+        on(post_id = ''){
           document.querySelector("#random-post-link").classList.add("active-menu-item");
           document.querySelector("#search-link").classList.remove("active-menu-item");
-          $content_section.innerHTML = '';
-          $content_section.appendChild($random_post);
+          $content_section.innerHTML = `<random-post-controller post_id="${post_id}"/>`;
         },
-        '/random': function (next) {
-          next();
+        '/random': function () {
         },
-        '/:post_id': function (post_id, next) {
-          $random_post.setAttribute('post_id', post_id);
-          if(!$random_post.parentNode){
-            next();
+        '/:post_id': function (post_id) {
+          if(self.childComponents.querySelector('random-post-controller')){
+            return false;
           }
         }
       },
@@ -47,7 +44,7 @@ class MainController extends BaseController {
     };
 
 
-    var router = Router(routes).configure({ recurse: 'backward', async: true });
+    var router = Router(routes).configure({ recurse: 'backward'});
     router.init('post/random');
 
     this.addEventListener('post-rendered', ({target: controller}) => {
