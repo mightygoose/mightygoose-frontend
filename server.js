@@ -10,6 +10,7 @@ const request = require('koa-request');
 const route = require('koa-route');
 const serve = require('koa-static');
 const body_parser = require('koa-body-parser');
+const gzip = require('koa-gzip'); //replace with koa-compress!
 
 const Store = require('./app/store');
 const log = require('log-colors');
@@ -17,11 +18,11 @@ const urllib = require('url');
 
 //code
 var app = koa();
-var collection = [];
 var store = new Store();
 
 
 app.use(body_parser());
+app.use(gzip());
 
 app.use(function *(next){
   var start = new Date;
@@ -39,6 +40,7 @@ app.use(function *(next){
   log.info(`${this.method} ${this.url} - ${ms} ms`);
 });
 
+//app endpoints
 
 app.use(route.get('/api/stat', function *(){
   this.body = JSON.stringify(yield store.get_stat());
