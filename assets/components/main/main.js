@@ -10,20 +10,31 @@ class MainController extends BaseController {
     console.log("application ready");
 
     var $content_section = document.querySelector("#content_section");
+    var $random_post = document.createElement('random-post-controller');
 
     var routes = {
-      '/random': function () {
-        document.querySelector("#random-post-link").classList.add("active-menu-item");
-        document.querySelector("#search-link").classList.remove("active-menu-item");
-        $content_section.innerHTML = '<random-post-controller></random-post-controller>';
-      },
       '/search': function () {
         document.querySelector("#search-link").classList.add("active-menu-item");
         document.querySelector("#random-post-link").classList.remove("active-menu-item");
         $content_section.innerHTML = '<search-posts-controller></search-posts-controller>';
       },
-      '/post/?((\w|.)*)': function (post_id) {
-        console.log("post id", post_id);
+      '/post': {
+        //think of something better here!
+        on(){
+          document.querySelector("#random-post-link").classList.add("active-menu-item");
+          document.querySelector("#search-link").classList.remove("active-menu-item");
+          $content_section.innerHTML = '';
+          $content_section.appendChild($random_post);
+        },
+        '/random': function (next) {
+          next();
+        },
+        '/:post_id': function (post_id, next) {
+          $random_post.setAttribute('post_id', post_id);
+          if(!$random_post.parentNode){
+            next();
+          }
+        }
       },
       '/mixcloud': function () {
         //document.querySelector("#mixcloud-link").classList.add("active-menu-item");
@@ -35,8 +46,13 @@ class MainController extends BaseController {
       }
     };
 
-    var router = Router(routes);
-    router.init('random');
+
+    var router = Router(routes).configure({ recurse: 'backward', async: true });
+    router.init('post/random');
+
+    this.addEventListener('post-rendered', ({target: controller}) => {
+      router.setRoute(`/post/${controller.current_post_id}`);
+    });
   }
   attach(){}
   detach(){}
