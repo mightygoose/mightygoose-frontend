@@ -9,6 +9,7 @@ const koa = require('koa');
 const request = require('koa-request');
 const route = require('koa-route');
 const serve = require('koa-static');
+const send = require('koa-send');
 const body_parser = require('koa-body-parser');
 const compress = require('koa-compress');
 
@@ -103,6 +104,9 @@ app.use(route.post('/api/discogs_info', function *(){
 
 //static
 app.use(serve(__dirname + '/public'));
+app.use(function *(){
+  yield send(this, 'public/index.html');
+});
 
 
 app.listen(process.env['PORT'] || 3000);
