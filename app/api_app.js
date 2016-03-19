@@ -6,7 +6,7 @@ const urllib = require('url');
 const Store = require('./store');
 
 var app = koa();
-var store = new Store();
+global.store = new Store(); // bad!
 
 app.use(body_parser());
 
