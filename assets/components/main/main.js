@@ -1,5 +1,5 @@
 //critical css
-require('file?name=../../main.css!stylus!./main.styl');
+require('file?name=../../assets/main.css!stylus!./main.styl');
 
 const BaseController = require('lib/base_controller');
 const Router = require('director').Router;

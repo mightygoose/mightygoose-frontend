@@ -8,10 +8,11 @@ const pry = require('pryjs');
 const koa = require('koa');
 const request = require('koa-request');
 const route = require('koa-route');
-const serve = require('koa-static');
+const serve = require('koa-serve');
 const send = require('koa-send');
 const body_parser = require('koa-body-parser');
 const compress = require('koa-compress');
+//const mount = require('koa-mount');
 
 const Store = require('./app/store');
 const log = require('log-colors');
@@ -102,9 +103,11 @@ app.use(route.post('/api/discogs_info', function *(){
   this.body = response;
 }));
 
+
 //static
-app.use(serve(__dirname + '/public'));
+app.use(serve('assets', __dirname + '/public'));
 app.use(function *(){
+  console.log('ask index');
   yield send(this, 'public/index.html');
 });
 
