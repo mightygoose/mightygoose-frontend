@@ -6,7 +6,7 @@ class PostItem extends BaseComponent {
   render(data){
     this.innerHTML = template(data);
     if(data.discogs){
-      this.querySelector('mighty-preloader').show();
+      this.querySelector('mighty-preloader').classList.remove('hidden');
       fetch("/api/discogs_info", {
         method: 'post',
         headers: {
