@@ -46,8 +46,12 @@ class MainController extends BaseController {
     };
 
 
-    var router = Router(routes).configure({ recurse: 'backward'});
-    router.init('post/random');
+    var router = Router(routes).configure({ recurse: 'backward', html5history: true });
+    if(router.getPath() === '/'){
+      router.init('/post/random');
+    } else {
+      router.init();
+    }
 
     this.addEventListener('post-rendered', ({target: controller}) => {
       router.setRoute(`/post/${controller.current_post_id}`);
