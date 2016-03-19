@@ -1,5 +1,5 @@
 /* copy files */
-require('file?name=../../index.[ext]!application.html');
+require('file?name=../../index.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!application.html');
 
 /* fonts */
 require("icons");
