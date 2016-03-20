@@ -6,24 +6,47 @@ const styles = require('./random_post.styl');
 
 class RandomPostController extends BaseController {
   get current_post_id(){
-    return this.state.current_post_data.id;
+    var [...keys] = this.state.queue.keys();
+    return keys[this.state.queue.size - 1];
+  }
+  get prev_post_id(){
+    var [...keys] = this.state.queue.keys();
+    return keys[this.state.queue.size - 2];
   }
 
   load_by_id(post_id = "random"){
-    if(post_id === this.current_post_id){ return; }
-
-    fetch(`/api/post/${post_id}`)
-    .then(response => response.json())
-    .then((posts) => {
-      this.state.current_post_data = posts[0];
-      this.state.cache[this.state.current_post_data.id] = posts;
+    return new Promise((resolve, reject) => {
+      if(post_id === this.current_post_id){
+        reject();
+        return;
+      }
+      if(this.state.queue.has(post_id)){
+        console.log('item from cache');
+        resolve(this.state.queue.get(post_id));
+        return;
+      }
+      fetch(`/api/post/${post_id}`)
+      .then(response => response.json())
+      .then((posts) => resolve(posts))
+    }).then((posts) => {
+      var current_post_id = posts[0].id;
+      this.state.queue.set(current_post_id, posts);
       this.$posts_controller.render(posts);
       this.classList.add('with-post');
       this.trigger('post-rendered');
+      return;
     });
   }
 
   prev(){
+    this.load_by_id(this.prev_post_id || this.current_post_id)
+      .then(() => {
+        this.state.queue.delete(this.current_post_id);
+        this.trigger('post-rendered');
+      })
+      .catch(() => {
+        console.log('unable to load prev post');
+      });
   }
   next(){
     this.load_by_id();
@@ -32,8 +55,7 @@ class RandomPostController extends BaseController {
   create() {
     console.log('random post ctrl');
     this.state = {
-      cache: {},
-      current_post_data: {}
+      queue: new Map(),
     };
     var delegate = new Delegate(this);
 
@@ -57,8 +79,8 @@ class RandomPostController extends BaseController {
     }
   }
   attributeChange(name, previousValue, value){
-    if(name === 'post_id' && value && value !== ''){
-      this.load_by_id(+value);
+    if(name === 'post_id' && previousValue !== '' && value && value !== ''){
+      this.load_by_id(+value).catch(() => {});
     }
   }
 }
