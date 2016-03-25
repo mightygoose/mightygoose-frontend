@@ -2,30 +2,30 @@
     <div class="post-item-wrapper">
         <div class="item-left">
             <div class="row main-image">
-                <img src="<%= _.first(images) %>">
+                <img src="${scope.main_image}">
             </div>
-            <% if(images.length > 1){ %>
+            ${scope.images.length > 1 ? `
             <div class="row thumbnails">
-                <% _.forEach(images, function(image){ %>
-                <img src="<%= image %>">
-                <% }); %>
+                ${scope.each(scope.images, image => `
+                <img src="${image}">
+                `)}
             </div>
-            <% } %>
+            ` : ''}
         </div>
         <div class="item-right">
             <div class="item-content-wrapper">
                 <div class="row item-title">
-                    <h4><%= title %></h4>
+                    <h4>${scope.title}</h4>
                 </div>
                 <div class="row item-tags">
                     <ul class="tags-list">
-                        <% _.forEach(tags, function(tagname, index){ %>
-                        <li class="tag-label"><%= tagname %></li>
-                        <% }); %>
+                        ${scope.each(scope.tags, tag => `
+                        <li class="tag-label">${tag}</li>
+                        `)}
                     </ul>
                 </div>
                 <div class="row item-links">
-                    <a class="original-post-link" target="_blank" href="<%= url %>">Original post link</a>
+                    <a class="original-post-link" target="_blank" href="${scope.url}">Original post link</a>
                 </div>
                 <div class="row item-block item-tracklist">
                     <track-list>
@@ -33,15 +33,34 @@
                     </track-list>
                 </div>
                 <div class="post-embeds-container">
-                    <% if(typeof embed !== "undefined" && embed.length > 0){ %>
-                    <% _.forEach(embed, function(embed_content){ %>
-                    <embed-container class="row item-block embeded">
-                        <div class="item-embed-content">
-                            <%= embed_content %>
-                        <div>
-                    </embed-container>
-                    <% }); %>
-                    <% } %>
+                    ${(scope.embed && scope.embed.length) ? `
+                        ${scope.each(scope.embed, embed_content => `
+                        <embed-container class="row item-block embeded">
+                            <div class="item-embed-content">
+                                ${embed_content}
+                            <div>
+                        </embed-container>
+                        `)}
+                    ` : ''}
+                </div>
+                <div class="row item-block social-block">
+                    <label class="social-block-label">Share:</label>
+                    <share-button class="mg-icon icon-vk share-button"
+                                  network="vk"
+                                  url="${scope.post_share_link}"
+                                  title="${scope.title}"
+                                  image="${scope.main_image}"
+                                  description="${scope.tags.join(', ')}">
+                    </share-button>
+                    <share-button class="mg-icon icon-facebook share-button"
+                                  network="fb"
+                                  url="${scope.post_share_link}">
+                    </share-button>
+                    <share-button class="mg-icon icon-twitter share-button"
+                                  network="tw"
+                                  url="${scope.post_share_link}"
+                                  title="${scope.title}">
+                    </share-button>
                 </div>
             </div>
         </div>

@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 25.2 34.5" style="enable-background:new 0 0 25.2 34.5;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#333333;}
-</style>
-<path class="st0" d="M23.2,4c-0.8-0.2-2.3,1-3.4,1.2c-1.1,0.2-1.9-0.2-1.9,0.8h0c0,0,0.9,8.6,1.3,12.2c1.3,10.3-2.4,16.4-8.5,16.4
-	c-8.4,0-10.2-6.3-10.7-9.2c-0.2-1.1,0.5-1.1,1.7-0.7c0.4,0.1,0.9,0.1,1.4,0.1c2.7,0,2.2-2.2,6.8-2.4c1,0,2,0.2,2.9,0.6
-	c2,0.8,3-0.5,3.2-1.5c0.2-1,0.3-2.3,0.4-3.5c0-3.4-0.9-12.3-0.9-12.3h0c0-1-0.7-4.1,1.9-4.9C20-0.1,23-0.5,23,0.9c0,1.4,0,1,1.4,2.1
-	C25.8,4.2,25.3,4.5,23.2,4z M21.8,1.6c0-0.2-0.1-0.3-0.3-0.3c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0.1,0.3,0.3,0.3
-	C21.6,1.9,21.8,1.8,21.8,1.6z"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1262px" height="1731px" viewBox="0 0 1262 1731" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.5.2 (25235) - http://www.bohemiancoding.com/sketch -->
+    <title>logo</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="logo" sketch:type="MSLayerGroup" transform="translate(-48.000000, -49.000000)" fill="#333333">
+            <path d="M1210,250 C1170,240 1095,300 1040,310 C985,320 945,300 945,350 L945,350 C945,350 990,780 1010,960 C1075,1475 890,1780 585,1780 C165,1780 75,1465 50,1320 C40,1265 75,1265 135,1285 C155,1290 180,1290 205,1290 C340,1290 315,1180 545,1170 C595,1170 645,1180 690,1200 C790,1240 840,1175 850,1125 C860,1075 865,1010 870,950 C870,780 825,335 825,335 L825,335 C825,285 790,130 920,90 C1050,45 1200,25 1200,95 C1200,165 1200,145 1270,200 C1340,260 1315,275 1210,250 L1210,250 Z M1140,130 C1140,120 1135,115 1125,115 C1115,115 1110,120 1110,130 C1110,140 1115,145 1125,145 C1130,145 1140,140 1140,130 L1140,130 Z" id="Shape" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
 </svg>

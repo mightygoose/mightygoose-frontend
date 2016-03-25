@@ -1,10 +1,24 @@
 const BaseComponent = require('lib/base_component');
-const template = require('ejs!./post.html');
+const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./post.html');
 const styles = require('./post.styl');
+const _ = require('lodash');
 
 class PostItem extends BaseComponent {
   render(data){
-    this.innerHTML = template(data);
+    let {
+      id, title, url, tags, embed,
+      images, images: [main_image, ...rest_images],
+      discogs
+    } = data;
+
+    this.innerHTML = template({
+      title, url, main_image, images, tags, embed,
+      each(list, tpl){
+        return _.reduce(list, (accum, item) => accum.concat(tpl(item)), "");
+      },
+      post_share_link: `${window.location.origin}/post/${id}`
+    });
+
     if(data.discogs){
       this.querySelector('mighty-preloader').classList.remove('hidden');
       fetch("/api/discogs_info", {

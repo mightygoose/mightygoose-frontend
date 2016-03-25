@@ -1,0 +1,52 @@
+@import '~application.styl';
+
+$vk-main-color = #4c75a3;
+$vk-border-color = #cfdae6;
+
+$facebook-main-color = #3b579d;
+$facebook-border-color = #c8d0e3;
+
+$twitter-main-color = #5ea9dd;
+$twitter-border-color = #cfe5f5;
+
+.share-button {
+  height: 2em;
+  width: 2em;
+  display: inline-block;
+  border-radius: 2em;
+  border: 1px solid;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  transition-property: color, border-color, background-color;
+  &:before {
+    line-height: 2em;
+  }
+  &.mg-icon:hover {
+    color: $color-white-primary;
+  }
+  &.icon-vk {
+    color: $vk-main-color;
+    border-color: $vk-border-color;
+    &:hover {
+      border-color: $vk-main-color;
+      background-color: $vk-main-color;
+    }
+  }
+  &.icon-facebook {
+    color: $facebook-main-color;
+    border-color: $facebook-border-color;
+    &:hover {
+      border-color: $facebook-main-color;
+      background-color: $facebook-main-color;
+    }
+  }
+  &.icon-twitter {
+    color: $twitter-main-color;
+    border-color: $twitter-border-color;
+    &:hover {
+      border-color: $twitter-main-color;
+      background-color: $twitter-main-color;
+    }
+  }
+}

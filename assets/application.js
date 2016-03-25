@@ -25,5 +25,6 @@ require.ensure([], () => {
   require('components/tracklist/tracklist');
   require('components/preloader/preloader');
   require('components/embed_container/embed_container');
+  require('components/share_button/share_button');
 })
 
