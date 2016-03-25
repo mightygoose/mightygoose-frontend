@@ -2,8 +2,16 @@
 require('file?name=../../index.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!application.html');
 require('file?name=../../item_og_tags.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/og_tags/item.html');
 
-/* fonts */
+/* iconic fonts */
 require("icons");
+
+/* google fonts */
+const web_font = require('webfontloader');
+web_font.load({
+  google: {
+    families: ['Roboto:300,400', 'Roboto+Condensed:700']
+  }
+});
 
 /* polyfills */
 require('document-register-element');
