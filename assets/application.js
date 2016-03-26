@@ -11,6 +11,9 @@ require('document-register-element');
 /* components */
 require('components/main/main');
 
+/* lazy load styles */
+require('components/lazy_load/lazy_load');
+
 require.ensure([], () => {
   require('components/short_stat/short_stat');
   require('components/random_post/random_post');
