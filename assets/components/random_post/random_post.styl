@@ -101,6 +101,11 @@ random-post-controller {
       }
     }
   }
+  @media (max-width: $breakpoints.$tablet) {
+    .next-button, .prev-button {
+      display: none;
+    }
+  }
 
   @keyframes fade-in {
     0% {
