@@ -58,6 +58,7 @@
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.5.1",
     "template-string-loader": "0.0.3",
+    "tocca": "^0.2.0",
     "url-loader": "^0.5.7",
     "video-embed": "^0.2.0",
     "webpack": "^1.12.12",

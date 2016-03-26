@@ -70,9 +70,16 @@ class RandomPostController extends BaseController {
       this.$preloader.show();
       this.next();
     });
-    delegate.on("click", ".prev-button", (event) => {
-      this.prev();
+
+    delegate.on("click", ".prev-button", () => this.prev());
+
+    delegate.on("swipeleft", ".post-row", () => this.next());
+    delegate.on("swiperight", ".post-row", () => this.prev());
+    document.addEventListener("keydown", ({keyCode}) => {
+      (keyCode === 37) && this.prev();
+      (keyCode === 39) && this.next();
     });
+
     this.innerHTML = template();
   }
   attach(){

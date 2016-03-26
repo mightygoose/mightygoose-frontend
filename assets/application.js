@@ -14,6 +14,9 @@ require('components/main/main');
 /* lazy load styles */
 require('components/lazy_load/lazy_load');
 
+/* mobile events */
+require('tocca');
+
 require.ensure([], () => {
   require('components/short_stat/short_stat');
   require('components/random_post/random_post');
