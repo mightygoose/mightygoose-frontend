@@ -5,11 +5,11 @@ class LazyLoad extends BaseComponent {
     var src = this.getAttribute('src');
     console.log(`lazy loading ${src}`);
     let cb = () => {
-      //this.setAttribute('href', src);
+      this.setAttribute('href', src);
     };
     let raf = requestAnimationFrame || mozRequestAnimationFrame ||
         webkitRequestAnimationFrame || msRequestAnimationFrame;
-    raf ? raf(cb) : window.addEventListener('load', cb);
+    window.addEventListener('load', cb);
   }
 }
 LazyLoad.extends = 'link';
