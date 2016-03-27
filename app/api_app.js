@@ -4,6 +4,7 @@ const request = require('koa-request');
 const body_parser = require('koa-body-parser');
 const urllib = require('url');
 const Store = require('./store');
+const pry = require('pryjs');
 
 var app = koa();
 global.store = new Store(); // bad!
@@ -63,6 +64,13 @@ app.use(route.post('/mixcloud/get_tracks', function *(){
 app.use(route.post('/discogs_info', function *(){
   var response = yield store.get_discogs_info(this.request.body);
   this.body = response;
+}));
+
+
+
+app.use(route.post('/add_post', function *(){
+  console.log(this.request.body);
+  this.body = 'ok';
 }));
 
 
