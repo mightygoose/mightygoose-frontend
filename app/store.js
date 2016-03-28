@@ -7,6 +7,7 @@ const _ = require('lodash');
 const log = require('log-colors');
 const cheerio = require('cheerio');
 const massive = require("massive");
+const btc = require('bloom-text-compare');
 
 
 const DB_HOST = process.env['DB_HOST'];
@@ -153,11 +154,25 @@ class Store {
             .toLowerCase());
 
           var prepared_discogs_title = discogs_data['title'].replace(/[^0-9a-zA-Z ]+/ig, '').toLowerCase();
+
+          var title1 = item['title'].replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
+          var title2 = item['discogs']['title'].replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
+
+          var hash1 = btc.hash(title1.split(' '));
+          var hash2 = btc.hash(title2.split(' '));
+
+          var distance = btc.compare(hash1, hash2);
+
+          item['discogs_title_similarity'] = distance;
+
           if(prepared_item_title === prepared_discogs_title){
             item['badges'].push('discogs-title-match-after-clean');
+          } else if(distance > 0.5) {
+            item['badges'].push('discogs-title-similarity-good');
           } else {
             item['badges'].push('discogs-title-doesnt-match');
-            status = "bad"; //?retoucher goes here
+            item['badges'].push('discogs-title-similarity-bad');
+            status = "bad";
           }
         }
       }
