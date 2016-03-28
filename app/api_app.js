@@ -69,8 +69,8 @@ app.use(route.post('/discogs_info', function *(){
 
 
 app.use(route.post('/add_post', function *(){
-  console.log(this.request.body);
-  this.body = 'ok';
+  var response = yield store.add_post(this.request.body);
+  this.body = JSON.stringify(response);
 }));
 
 
