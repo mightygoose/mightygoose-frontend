@@ -125,7 +125,7 @@ class Store {
     }).then((response, error) => {
       var body = response.body;
       var status = "good";
-      item['badges'] = JSON.parse(item['badges'])
+      item['badges'] = JSON.parse(item['badges']);
 
       if (!error && response.statusCode == 200) {
         var results = JSON.parse(body)['results'];
@@ -133,8 +133,7 @@ class Store {
         if(results.length == 0 || !discogs_data){
             item['badges'].push('discogs-no-results');
             item['discogs'] = [];
-            console.log(item['title'], item['badges']);
-            return ["bad", item['badges']];
+            return ["bad", item];
         }
 
         item['discogs'] = discogs_data;
@@ -175,8 +174,50 @@ class Store {
             status = "bad";
           }
         }
+
+        if(!_.isEqual(item['discogs'], [])){
+          item['title'] = item['discogs']['title'];
+          item['tags'] = _.uniq(JSON.parse(item['tags']).concat(item['discogs']['genre']).concat(item['discogs']['style']));
+          item['discogs'] = {
+            "resource_url": item['discogs']['resource_url'],
+            "type": item['discogs']['type'],
+            "id": item['discogs']['id']
+          };
+        }
+
       }
-      console.log(item['title'], item['badges']);
+      return [status, item];
+    }).then((response, error) => {
+      var status = response[0];
+      var item = response[1];
+
+      var table = "bad_items";
+      if(status === "good"){
+        var table = "items";
+      }
+
+      var query_string = [
+        `INSERT INTO ${table}`,
+        `("sh_key","sh_type","badges","discogs","embed","images","tags","title","url") `,
+        `VALUES (`,
+        [
+          `'${item['sh_key']}'`,
+          `'${item['crawler_name']}'`,
+          `'${JSON.stringify(item['badges'])}'`,
+          `'${JSON.stringify(item['discogs'])}'`,
+          `'${item['embed']}'`,
+          `'${item['images'].replace(/'/ig, "''")}'`,
+          `'${JSON.stringify(item['tags']).replace(/'/ig, "''")}'`,
+          `'${item['title'].replace(/'/ig, "''")}'`,
+          `'${item['url']}'`
+        ].join(', '),
+        `);`
+      ].join('');
+
+      this.db.run(query_string, (err, items) => {
+        log.info(`item add to table ${table}`);
+      });
+
       return [status, item['badges']];
     });
   }
