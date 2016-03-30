@@ -1,4 +1,4 @@
-var BaseComponent = require('lib/base_component');
+const BaseComponent = require('ascesis').BaseComponent;
 
 class ShortStat extends BaseComponent {
   create() {

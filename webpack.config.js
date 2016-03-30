@@ -38,7 +38,10 @@ module.exports = {
           return [autoprefixer];
         },
 	resolve: {
-          modulesDirectories: ["node_modules", "assets"]
+          modulesDirectories: ["node_modules", "assets"],
+          alias: {
+            "ascesis": path.join(__dirname, "assets/lib/ascesis")
+          }
 	},
 	plugins: [
           new webpack.ProvidePlugin({

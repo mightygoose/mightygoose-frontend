@@ -1,4 +1,4 @@
-const BaseComponent = require('lib/base_component');
+const BaseComponent = require('ascesis').BaseComponent;
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./tag_form.html');
 const styles = require('./tag_form.styl');
 const tag_template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./tag.html');

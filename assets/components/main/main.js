@@ -1,7 +1,7 @@
 //critical css
 require('file?name=../../assets/main.css!stylus!./main.styl');
 
-const BaseController = require('lib/base_controller');
+const BaseController = require('ascesis').BaseController;
 const Router = require('director').Router;
 
 

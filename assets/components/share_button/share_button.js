@@ -1,4 +1,4 @@
-const BaseComponent = require('lib/base_component');
+const BaseComponent = require('ascesis').BaseComponent;
 const styles = require('./share_button.styl');
 
 class ShareButton extends BaseComponent {

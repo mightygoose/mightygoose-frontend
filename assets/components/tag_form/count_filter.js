@@ -1,4 +1,4 @@
-const BaseComponent = require('lib/base_component');
+const BaseComponent = require('ascesis').BaseComponent;
 
 
 //needs to be refactored

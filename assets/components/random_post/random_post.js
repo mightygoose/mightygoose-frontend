@@ -1,4 +1,4 @@
-const BaseController = require('lib/base_controller');
+const BaseController = require('ascesis').BaseController;
 const Delegate = require('dom-delegate');
 const template = require('ejs!./random_post.html');
 const styles = require('./random_post.styl');

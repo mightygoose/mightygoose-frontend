@@ -1,4 +1,4 @@
-const BaseController = require('lib/base_controller');
+const BaseController = require('ascesis').BaseController;
 
 class PostsController extends BaseController {
   create() {

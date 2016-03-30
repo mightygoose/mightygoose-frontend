@@ -1,4 +1,4 @@
-const BaseComponent = require('lib/base_component');
+const BaseComponent = require('ascesis').BaseComponent;
 const videoEmbed = require('video-embed');
 
 class EmbedContainer extends BaseComponent {
