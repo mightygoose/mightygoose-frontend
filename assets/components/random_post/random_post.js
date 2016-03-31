@@ -80,7 +80,7 @@ class RandomPostController extends BaseController {
       (keyCode === 39) && this.next();
     });
 
-    this.innerHTML = template();
+    this.html(template());
   }
   attach(){
     var post_id = this.getAttribute('post_id');

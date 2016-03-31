@@ -61,6 +61,16 @@
     trigger: {value: function(eventName){
       fireEvent(eventName, this);
     }},
+    html: {value: function(html_string){
+      var fragment = document.createDocumentFragment();
+      var temp_container = document.createElement('div');
+      temp_container.innerHTML = html_string;
+      while(temp_container.firstChild){
+        fragment.appendChild(temp_container.firstChild);
+      }
+      this.innerHTML = "";
+      this.appendChild(fragment);
+    }},
     createdCallback: {value: function() {
       this.childComponents = createChildComponents();
       this.create && this.create();
