@@ -1,1 +1,1 @@
-console.log(process.env['DB_PORT']);
+console.log("i'm worker");
