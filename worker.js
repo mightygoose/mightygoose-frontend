@@ -1,1 +1,1 @@
-console.log('worker test');
+console.log(process.env['DB_PORT']);
