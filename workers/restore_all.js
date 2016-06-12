@@ -12,6 +12,7 @@ const DB_PASSWD = process.env['DB_PASSWD'];
 const DB_NAME = process.env['DB_NAME'];
 
 const TABLE = 'items';
+const LIMIT = 4000;
 
 
 var connect = () => {
@@ -41,7 +42,7 @@ spawn(function*(){
     })
   }
 
-  var result = yield query(`select id from ${TABLE} where s_digital is null and itunes is null`);
+  var result = yield query(`select id from ${TABLE} where s_digital is null and itunes is null limit ${LIMIT}`);
   log.info(`processing ${result.length} items`);
 
   for(var item of result){
