@@ -1,6 +1,6 @@
 const massive = require("massive");
 const log = require('log-colors');
-const spawn = require('spawn');
+const spawn = require('spawn.js');
 
 const itunes_restorer = require('restorers/itunes');
 const s_digital_restorer = require('restorers/7digital');
