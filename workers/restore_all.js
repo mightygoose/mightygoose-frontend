@@ -11,6 +11,8 @@ const DB_USER = process.env['DB_USER'];
 const DB_PASSWD = process.env['DB_PASSWD'];
 const DB_NAME = process.env['DB_NAME'];
 
+const TABLE = 'items';
+
 
 var connect = () => {
   return new Promise((resolve, reject) => {
@@ -33,22 +35,19 @@ spawn(function*(){
     })
   }
 
-  var result = yield query("select id from items where s_digital is null and itunes is null limit 10");
+  var result = yield query(`select id from ${TABLE} where s_digital is null and itunes is null limit 10`);
+  log.info(`processing ${result.length} items`);
 
   for(var item of result){
-    var item_data = yield query(`select * from items where id = ${item.id}`);
+    var item_data = yield query(`select * from ${TABLE} where id = ${item.id}`);
     var restored_data = yield [
       yield itunes_restorer(item_data[0]),
-      //yield s_digital_restorer(item_data[0])
+      yield s_digital_restorer(item_data[0])
     ];
 
-    var itunes_data = restored_data;
+    var restored_data = restored_data;
     console.log(item_data[0].title);
-    console.log(itunes_data);
-    //var s_digital_data = restored_data[1];
-    //console.log(item_data[0].title);
-    //console.log(`${itunes_data[0].artistName} - ${itunes_data[0].collectionName}`);
-    //console.log(`${s_digital_data[0].release.artist.name} - ${s_digital_data[0].release.title}`);
+    console.log(restored_data);
   }
 
   process.exit(0);
