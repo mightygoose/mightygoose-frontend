@@ -28,10 +28,16 @@ spawn(function*(){
   log.info('connected to db');
 
   var query = (q) => {
-    return new Promise((resolve) => {
-      db.run(q, (err,stat) => {
+    return new Promise((resolve, reject) => {
+      db.run(q, (err, stat) => {
+        if(err){
+          reject(err);
+          return;
+        }
         resolve(stat, err);
       });
+    }).catch((e) => {
+      log.error(`${e}, QUERY: ${q}`);
     })
   }
 
@@ -49,12 +55,12 @@ spawn(function*(){
       var itunes_data = restored_data[0];
       var s_digital_data = restored_data[1];
       var values = [
-        `itunes = '${JSON.stringify(itunes_data)}'`,
-        `s_digital = '${JSON.stringify(s_digital_data)}'`
+        `itunes = '${JSON.stringify(itunes_data).replace(/'/ig, "''")}'`,
+        `s_digital = '${JSON.stringify(s_digital_data).replace(/'/ig, "''")}'`
       ].join(', ');
       var query_text = `UPDATE ${TABLE} set ${values} WHERE id = ${item.id}`;
-      yield query(query_text);
-      log.info(`item #${item.id} updated`);
+      var query_result = yield query(query_text);
+      query_result && log.info(`item #${item.id} updated`);
     } catch(e) {
       log.info(`could not process item #${item.id}`);
     }
