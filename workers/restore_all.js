@@ -1,9 +1,9 @@
 const massive = require("massive");
 const log = require('log-colors');
-const spawn = require('spawn.js');
+const spawn = require('lib/spawn');
 
-const itunes_restorer = require('restorers/itunes');
-const s_digital_restorer = require('restorers/7digital');
+const itunes_restorer = require('lib/restorers/itunes');
+const s_digital_restorer = require('lib/restorers/7digital');
 
 const DB_HOST = process.env['DB_HOST'];
 const DB_PORT = process.env['DB_PORT'];
