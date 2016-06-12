@@ -39,14 +39,16 @@ spawn(function*(){
     var item_data = yield query(`select * from items where id = ${item.id}`);
     var restored_data = yield [
       yield itunes_restorer(item_data[0]),
-      yield s_digital_restorer(item_data[0])
+      //yield s_digital_restorer(item_data[0])
     ];
 
-    var itunes_data = restored_data[0];
-    var s_digital_data = restored_data[1];
+    var itunes_data = restored_data;
     console.log(item_data[0].title);
-    console.log(`${itunes_data[0].artistName} - ${itunes_data[0].collectionName}`);
-    console.log(`${s_digital_data[0].release.artist.name} - ${s_digital_data[0].release.title}`);
+    console.log(itunes_data);
+    //var s_digital_data = restored_data[1];
+    //console.log(item_data[0].title);
+    //console.log(`${itunes_data[0].artistName} - ${itunes_data[0].collectionName}`);
+    //console.log(`${s_digital_data[0].release.artist.name} - ${s_digital_data[0].release.title}`);
   }
 
   process.exit(0);
