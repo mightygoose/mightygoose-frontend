@@ -62,7 +62,7 @@ spawn(function*(){
       var query_result = yield query(query_text);
       query_result && log.info(`item #${item.id} updated`);
     } catch(e) {
-      log.info(`could not process item #${item.id}`);
+      log.info(`could not process item #${item.id}, ERROR: ${e.stack}`);
     }
   }
 
