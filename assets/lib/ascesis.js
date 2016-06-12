@@ -91,7 +91,7 @@
     }},
     attributeChangedCallback: {value: function(name, previousValue, value) {
       this.attributeChange && this.attributeChange(name, previousValue, value);
-    }},
+    }}
   });
 
   var BaseComponent = function(){};
