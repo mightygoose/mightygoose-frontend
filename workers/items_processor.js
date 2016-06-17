@@ -21,36 +21,47 @@ const RABBITMQ_URL = process.env['RABBITMQ_URL'];
 
 const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
 
-
-//DB
-log.info('connecting to queue');
-var queue = jackrabbit(RABBITMQ_URL)
-.on('connected', function() {
-  log.info('connected to queue');
-})
-.on('error', function(err) {
-  log.info('queue error: ', err);
-})
-.on('disconnected', function() {
-  log.info('disconnected from queue. exiting.');
-  process.exit(0);
-});
-
-//Q
-log.info('connecting to db');
 var db;
-massive.connect({
-  connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}/${DB_NAME}`
-}, (err, _db) => {
-  log.info('connected to db');
-  db = _db;
-});
 
+spawn(function*(){
 
-queue
+  var connections = yield Promise.all([
+    //DB
+    new Promise((resolve) => {
+      log.info('connecting to db');
+      massive.connect({
+        connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}/${DB_NAME}`
+      }, (err, _db) => {
+        log.info('connected to db');
+        resolve(_db);
+      });
+    }),
+    //Q
+    new Promise((resolve) => {
+      log.info('connecting to queue');
+      var queue = jackrabbit(RABBITMQ_URL)
+      .on('connected', function() {
+        log.info('connected to queue');
+        resolve(queue);
+      })
+      .on('error', function(err) {
+        log.info('queue error: ', err);
+      })
+      .on('disconnected', function() {
+        log.info('disconnected from queue. exiting.');
+        process.exit(0);
+      });
+    }),
+  ]);
+
+  db = connections[0];
+  var queue = connections[1];
+
+  queue
   .default()
   .queue({ name: 'item' })
   .consume(processItem, { noAck: true });
+});
 
 function processItem(item) {
   spawn(function*(){
