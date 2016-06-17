@@ -4,7 +4,7 @@ const jackrabbit = require('jackrabbit');
 const log = require('log-colors');
 const spawn = require('lib/spawn');
 const qs = require('qs');
-const request = require('koa-request');
+const request = require('request');
 const btc = require('bloom-text-compare');
 const cheerio = require('cheerio');
 const _ = require('lodash');
@@ -66,85 +66,89 @@ spawn(function*(){
 function processItem(item) {
   spawn(function*(){
 
-    var response = yield new Promise((resolve) => {
+    var body = yield new Promise((resolve) => {
       var query_string = qs.stringify({
         'type' : 'album',
         'token' : DISCOGS_TOKEN
       });
       var url = 'https://api.discogs.com/database/search?' + query_string + '&q=' + encodeURI(item['title']);
-      console.log(url);
       request({
         url: url,
         headers: {
           'User-Agent': 'request'
         }
-      })((error, response) => resolve(response, error));
-    });
-    response = yield new Promise((resolve) => resolve(true)).then(() => {
-      var body = response.body;
+      }, (error, header, response) => {
+        if(error){
+          reject(error);
+          return;
+        }
+        resolve(response);
+      });
+    })
+    .then(response => JSON.parse(response));
+
+    var response = (() => {
       var status = "good";
       item['badges'] = JSON.parse(item['badges']);
 
-      if (response.statusCode == 200) {
-        var results = JSON.parse(body)['results'];
-        var discogs_data = results[0];
-        if(results.length == 0 || !discogs_data){
-            item['badges'].push('discogs-no-results');
-            item['discogs'] = [];
-            return ["bad", item];
-        }
-
-        item['discogs'] = discogs_data;
-        if(item['title'] === discogs_data['title']){
-          item['badges'].push('discogs-title-exact-match')
-        }
-        else {
-          var prepared_item_title = _.trim(
-            item['title']
-            .replace(/\(\d{4}\)/ig, '')
-            .replace(/\[\d{4}\]/ig, '')
-            .replace(/\d{0,4}kbps/ig, '')
-            .replace(/\(\)/ig, '')
-            .replace(/\[\]/ig, '')
-            .replace(/(\/.*)/ig, '')
-            .replace(/[^0-9a-zA-Z ]+/ig, '')
-            .toLowerCase());
-
-          var prepared_discogs_title = discogs_data['title'].replace(/[^0-9a-zA-Z ]+/ig, '').toLowerCase();
-
-          var title1 = item['title'].replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
-          var title2 = item['discogs']['title'].replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
-
-          var hash1 = btc.hash(title1.split(' '));
-          var hash2 = btc.hash(title2.split(' '));
-
-          var distance = btc.compare(hash1, hash2);
-
-          item['discogs_title_similarity'] = distance;
-
-          if(prepared_item_title === prepared_discogs_title){
-            item['badges'].push('discogs-title-match-after-clean');
-          } else if(distance > 0.5) {
-            item['badges'].push('discogs-title-similarity-good');
-          } else {
-            item['badges'].push('discogs-title-doesnt-match');
-            item['badges'].push('discogs-title-similarity-bad');
-            status = "bad";
-          }
-        }
-
-        if(!_.isEqual(item['discogs'], [])){
-          item['title'] = item['discogs']['title'];
-          item['tags'] = _.uniq(JSON.parse(item['tags']).concat(item['discogs']['genre']).concat(item['discogs']['style']));
-          item['discogs'] = {
-            "resource_url": item['discogs']['resource_url'],
-            "type": item['discogs']['type'],
-            "id": item['discogs']['id']
-          };
-        }
-
+      var results = body['results'];
+      var discogs_data = results[0];
+      if(results.length == 0 || !discogs_data){
+          item['badges'].push('discogs-no-results');
+          item['discogs'] = [];
+          return ["bad", item];
       }
-    });
+
+      item['discogs'] = discogs_data;
+      if(item['title'] === discogs_data['title']){
+        item['badges'].push('discogs-title-exact-match')
+      }
+      else {
+        var prepared_item_title = _.trim(
+          item['title']
+          .replace(/\(\d{4}\)/ig, '')
+          .replace(/\[\d{4}\]/ig, '')
+          .replace(/\d{0,4}kbps/ig, '')
+          .replace(/\(\)/ig, '')
+          .replace(/\[\]/ig, '')
+          .replace(/(\/.*)/ig, '')
+          .replace(/[^0-9a-zA-Z ]+/ig, '')
+          .toLowerCase());
+
+        var prepared_discogs_title = discogs_data['title'].replace(/[^0-9a-zA-Z ]+/ig, '').toLowerCase();
+
+        var title1 = item['title'].replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
+        var title2 = item['discogs']['title'].replace(/[^a-zA-Z0-9 ]/ig, '').toLowerCase();
+
+        var hash1 = btc.hash(title1.split(' '));
+        var hash2 = btc.hash(title2.split(' '));
+
+        var distance = btc.compare(hash1, hash2);
+
+        item['discogs_title_similarity'] = distance;
+
+        if(prepared_item_title === prepared_discogs_title){
+          item['badges'].push('discogs-title-match-after-clean');
+        } else if(distance > 0.5) {
+          item['badges'].push('discogs-title-similarity-good');
+        } else {
+          item['badges'].push('discogs-title-doesnt-match');
+          item['badges'].push('discogs-title-similarity-bad');
+          status = "bad";
+        }
+      }
+
+      if(!_.isEqual(item['discogs'], [])){
+        item['title'] = item['discogs']['title'];
+        item['tags'] = _.uniq(JSON.parse(item['tags']).concat(item['discogs']['genre']).concat(item['discogs']['style']));
+        item['discogs'] = {
+          "resource_url": item['discogs']['resource_url'],
+          "type": item['discogs']['type'],
+          "id": item['discogs']['id']
+        };
+      }
+      return [status, item];
+    })();
     response = yield new Promise((resolve) => {
       var status = response[0];
       var item = response[1];
@@ -173,7 +177,7 @@ function processItem(item) {
       ].join('');
 
       db.run(query_string, (err, items) => {
-        log.info(`item add to table ${table}`);
+        log.info(`item added to table ${table}`);
         resolve([status, item['badges']]);
       });
 
