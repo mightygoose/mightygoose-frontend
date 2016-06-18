@@ -2,13 +2,10 @@
 const pry = require('pryjs');
 
 const request = require('koa-request');
-const qs = require('qs');
 const _ = require('lodash');
 const log = require('log-colors');
 const jackrabbit = require('jackrabbit');
-const cheerio = require('cheerio');
 const massive = require("massive");
-const btc = require('bloom-text-compare');
 
 
 const DB_HOST = process.env['DB_HOST'];
@@ -18,6 +15,7 @@ const DB_PASSWD = process.env['DB_PASSWD'];
 const DB_NAME = process.env['DB_NAME'];
 
 const RABBITMQ_URL = process.env['RABBITMQ_URL'];
+const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
 
 const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
 
@@ -128,7 +126,7 @@ class Store {
     return new Promise((resolve) => {
       this.queue
         .default()
-        .publish(item, { key: 'item' })
+        .publish(item, { key: RABBITMQ_CHANNEL })
         .on('drain', () => resolve(true));
     }).then(() => {
       log.info(`${item.crawler_name} crawler item #${item.sh_key} added to queue`);
