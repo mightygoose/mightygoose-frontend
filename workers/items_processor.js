@@ -71,6 +71,7 @@ spawn(function*(){
 function process_item(item) {
   spawn(function*(){
 
+    console.log(`got item #${item.sh_key}`);
     var discogs_data = yield discogs_restorer(item);
     var prepared_data = decorate_with_discogs_data(item, discogs_data);
 
@@ -81,26 +82,44 @@ function process_item(item) {
       var table = "items";
     }
 
-    var query_string = [
-      `INSERT INTO ${table}`,
-      `("sh_key","sh_type","badges","discogs","embed","images","tags","title","url") `,
-      `VALUES (`,
-      [
-        `'${item['sh_key']}'`,
-        `'${item['crawler_name']}'`,
-        `'${JSON.stringify(item['badges'])}'`,
-        `'${JSON.stringify(item['discogs'])}'`,
-        `'${item['embed']}'`,
-        `'${item['images'].replace(/'/ig, "''")}'`,
-        `'${JSON.stringify(item['tags']).replace(/'/ig, "''")}'`,
-        `'${item['title'].replace(/'/ig, "''")}'`,
-        `'${item['url']}'`
-      ].join(', '),
-      `);`
-    ].join('');
+    var additional_data = yield [
+      yield itunes_restorer(item),
+      yield deezer_restorer(item)
+    ];
+    var itunes_data = additional_data[0];
+    var deezer_data = additional_data[1];
 
+    var fields_string = [
+      "sh_key", "sh_type", "badges", "discogs", "embed", "images", "tags", "title", "url"
+    ]
+    .concat(!_.isUndefined(itunes_data) ? "itunes" : [])
+    .concat(!_.isUndefined(deezer_data) ? "deezer" : [])
+    .map(field => `"${field}"`)
+    .join(',');
+
+    var values_string = [
+      item['sh_key'],
+      item['crawler_name'],
+      JSON.stringify(item['badges']),
+      JSON.stringify(item['discogs']),
+      item['embed'],
+      item['images'].replace(/'/ig, "''"),
+      JSON.stringify(item['tags']).replace(/'/ig, "''"),
+      item['title'].replace(/'/ig, "''"),
+      item['url']
+    ]
+    .concat(!_.isUndefined(itunes_data) ? JSON.stringify(itunes_data).replace(/'/ig, "''") : [])
+    .concat(!_.isUndefined(deezer_data) ? JSON.stringify(deezer_data).replace(/'/ig, "''") : [])
+    .map(value => `'${value}'`)
+    .join(',');
+
+    var query_string = ` INSERT INTO ${table} (${fields_string}) VALUES (${values_string});`;
+
+    console.log(query_string);
+    return;
     var query_result = yield new Promise((resolve) => {
       db.run(query_string, (err, items) => {
+        console.log(err);
         log.info(`item added to table ${table}`);
         resolve([status, item['badges']]);
       });
