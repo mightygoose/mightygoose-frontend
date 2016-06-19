@@ -6,6 +6,7 @@ const _ = require('lodash');
 const log = require('log-colors');
 const jackrabbit = require('jackrabbit');
 const massive = require("massive");
+const url = require('url');
 
 
 const DB_HOST = process.env['DB_HOST'];
@@ -68,6 +69,17 @@ class Store {
       });
     }).then((response, error) => {
       return response;
+    });
+  }
+
+  get_random_blogspot_urls(limit){
+    limit || (limit = 10);
+    return new Promise((resolve) => {
+      this.db.run(`select url from items where sh_type='BlogPostItem' order by random() limit ${limit}`, (err,stat) => {
+        resolve(stat, err);
+      });
+    }).then((response, error) => {
+      return response.map((item) => url.resolve(item.url, '/'));
     });
   }
 

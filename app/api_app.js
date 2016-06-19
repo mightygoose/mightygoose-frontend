@@ -11,6 +11,11 @@ global.store = new Store(); // bad!
 
 app.use(body_parser());
 
+app.use(route.get('/crawler/get_urls', function *(){
+  var response = yield store.get_random_blogspot_urls(this.query.limit);
+  this.body = response;
+}));
+
 app.use(route.get('/stat', function *(){
   this.body = JSON.stringify(yield store.get_stat());
 }));
@@ -65,7 +70,6 @@ app.use(route.post('/discogs_info', function *(){
   var response = yield store.get_discogs_info(this.request.body);
   this.body = response;
 }));
-
 
 
 app.use(route.post('/add_post', function *(){
