@@ -23,6 +23,11 @@ const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
 const CONNECT_TIMEOUT = 200;
 const REQUEST_TIMEOUT = 200;
 
+//local workaround for queue drain listeners
+if(process.env['NODE_ENV'] !== 'production'){
+  require('events').EventEmitter.defaultMaxListeners = 100;
+}
+
 
 class Store {
   constructor(){
