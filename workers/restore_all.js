@@ -13,7 +13,7 @@ const DB_PASSWD = process.env['DB_PASSWD'];
 const DB_NAME = process.env['DB_NAME'];
 
 const TABLE = 'items';
-const LIMIT = 10000;
+const LIMIT = 20000;
 
 
 var connect = () => {
