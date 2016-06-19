@@ -113,13 +113,11 @@ function process_item(item) {
     .map(value => `'${value}'`)
     .join(',');
 
-    var query_string = ` INSERT INTO ${table} (${fields_string}) VALUES (${values_string});`;
+    var query_string = `INSERT INTO ${table} (${fields_string}) VALUES (${values_string});`;
 
-    console.log(query_string);
-    return;
     var query_result = yield new Promise((resolve) => {
       db.run(query_string, (err, items) => {
-        console.log(err);
+        if(err){ log.error(err); }
         log.info(`item added to table ${table}`);
         resolve([status, item['badges']]);
       });
