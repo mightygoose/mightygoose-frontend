@@ -115,6 +115,10 @@ function process_item(item) {
 
     var query_string = `INSERT INTO ${table} (${fields_string}) VALUES (${values_string});`;
 
+    if(process.env['NODE_ENV'] !== 'production'){
+      log.info(query_string);
+      return;
+    }
     var query_result = yield new Promise((resolve) => {
       db.run(query_string, (err, items) => {
         if(err){ log.error(err); }
