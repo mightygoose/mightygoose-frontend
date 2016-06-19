@@ -46,7 +46,9 @@ class Store {
     })
     .on('disconnected', function() {
       log.info('disconnected from queue');
-    });
+    }).default();
+
+    //var q = this.queue.queue({ name: RABBITMQ_CHANNEL, durable: true });
   }
 
   get_stat(){
@@ -125,7 +127,6 @@ class Store {
   add_post(item){
     return new Promise((resolve) => {
       this.queue
-        .default()
         .publish(item, { key: RABBITMQ_CHANNEL })
         .on('drain', () => resolve(true));
     }).then(() => {
