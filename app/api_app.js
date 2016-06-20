@@ -35,6 +35,18 @@ app.use(route.get('/post/:post_id', function *(post_id){
   this.body = response;
 }));
 
+app.use(route.get('/search/autocomplete', function *(post_id){
+  var query = this.query.q;
+  if(!query || query.length < 3){
+    this.body = JSON.stringify({
+      "error": "wrong query"
+    });
+    return false;
+  }
+  var response = yield store.autocomplete_search(query);
+  this.body = response;
+}));
+
 app.use(route.post('/search/tags', function *(){
   var response = yield store.get_by_tags(this.request.body);
   this.body = response;

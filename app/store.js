@@ -126,6 +126,30 @@ class Store {
     });
   }
 
+  autocomplete_search(search_query){
+    return new Promise((resolve) => {
+      var query = `
+        SELECT json_build_object(
+            'items', ARRAY(
+              SELECT json_build_object('id', id, 'title',title,'image',images->0)
+              FROM items
+              WHERE title ILIKE '%${search_query}%' ORDER BY title
+            ),
+            'tags_count', (
+              SELECT COUNT(id)
+              FROM items
+              WHERE tags::text ILIKE '%${search_query}%'
+            )
+        )
+      `;
+      this.db.run(query, (err,items) => {
+        resolve(items, err);
+      });
+    }).then((response, error) => {
+      return response;
+    });
+  }
+
   get_discogs_info(discogs_object){
     return new Promise((resolve) => {
       var url = `${discogs_object.resource_url}?token=${DISCOGS_TOKEN}`;
