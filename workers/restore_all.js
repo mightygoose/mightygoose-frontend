@@ -59,6 +59,8 @@ spawn(function*(){
       var itunes_data = restored_data[0];
       var deezer_data = restored_data[1];
       //var s_digital_data = restored_data[1];
+      console.log(itunes_data);
+      console.log(deezer_data);
       var values = [
         `itunes = '${JSON.stringify(itunes_data).replace(/'/ig, "''")}'`,
         `deezer = '${JSON.stringify(deezer_data).replace(/'/ig, "''")}'`,
