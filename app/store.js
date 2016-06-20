@@ -140,13 +140,13 @@ class Store {
               FROM items
               WHERE tags::text ILIKE '%${search_query}%'
             )
-        )
+        ) as object
       `;
       this.db.run(query, (err,items) => {
         resolve(items, err);
       });
     }).then((response, error) => {
-      return response;
+      return response[0].object;
     });
   }
 
