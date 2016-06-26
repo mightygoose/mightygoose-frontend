@@ -33,5 +33,6 @@ require.ensure([], () => {
   require('components/preloader/preloader');
   require('components/embed_container/embed_container');
   require('components/share_button/share_button');
+  require('components/autocomplete/autocomplete');
 })
 
