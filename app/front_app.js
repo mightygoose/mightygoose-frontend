@@ -3,9 +3,17 @@ const koa = require('koa');
 const serve = require('koa-serve');
 const route = require('koa-route');
 const log = require('log-colors');
+const aws = require('aws-sdk');
 const pry = require('pryjs');
 
 const GA_TRACKING_CODE = process.env['GA_TRACKING_CODE'] || '';
+
+const AWS_ACCESS_KEY_ID = process.env['AWS_ACCESS_KEY_ID'];
+const AWS_SECRET_ACCESS_KEY = process.env['AWS_SECRET_ACCESS_KEY'];
+const S3_BUCKET = process.env['S3_BUCKET'];
+
+const s3 = new aws.S3();
+
 
 var front_app = koa();
 var assets_dir = path.join(__dirname, '..', 'public');
@@ -28,6 +36,21 @@ if(process.env['NODE_ENV'] === 'production'){
 }
 
 front_app.use(serve('assets', assets_dir));
+
+front_app.use(route.get('/sitemap.xml', function *(){
+  log.info('render sitemap');
+  var params = {Bucket: S3_BUCKET, Key: "sitemap.xml"};
+  var sitemap_content = yield new Promise((resolve, reject) => {
+    s3.getObject(params, function(err, data) {
+      if(err){
+        reject(err);
+        return;
+      }
+      resolve(data);
+    });
+  })
+  this.body = sitemap_content.Body.toString();
+}));
 
 front_app.use(route.get('/post/random', function *(post_id){
   log.info('render random post page');
