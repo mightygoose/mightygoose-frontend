@@ -40,7 +40,7 @@ spawn(function*(){
   log.info(`got ${items.length} items`);
 
   log.info(`processing items`);
-  for(var counter = 0; counter < Math.ceil(items.length / 50000); counter++){
+  for(var counter = 0; counter <= Math.ceil(items.length / 50000); counter++){
     var sitemap = sm.createSitemap ({
       hostname: 'http://mightygoose.com',
       cacheTime: 600000
