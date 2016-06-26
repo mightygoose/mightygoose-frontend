@@ -37,9 +37,9 @@ if(process.env['NODE_ENV'] === 'production'){
 
 front_app.use(serve('assets', assets_dir));
 
-front_app.use(route.get('/sitemap.xml', function *(){
+front_app.use(route.get('/sitemaps/:sitemap_file', function *(){
   log.info('render sitemap');
-  var params = {Bucket: S3_BUCKET, Key: "sitemap.xml"};
+  var params = {Bucket: S3_BUCKET, Key: `${sitemap_file}`};
   var sitemap_content = yield new Promise((resolve, reject) => {
     s3.getObject(params, function(err, data) {
       if(err){

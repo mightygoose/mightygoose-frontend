@@ -39,44 +39,50 @@ spawn(function*(){
 
   log.info(`got ${items.length} items`);
 
-  var sitemap = sm.createSitemap ({
-    hostname: 'http://mightygoose.com',
-    cacheTime: 600000
-  });
-
   log.info(`processing items`);
-  items.forEach((item) => {
-    sitemap.add({url: `/post/${item.id}`, changefreq: 'monthly'});
-  });
-
-  log.info(`generating xml content`);
-  var xml_body = yield new Promise((resolve, reject) => {
-    sitemap.toXML(function (err, xml){
-      if(err){
-        reject(err);
-        return;
-      }
-      resolve(xml);
+  for(var counter = 0; counter < Math.ceil(items.length / 50000); counter++){
+    var sitemap = sm.createSitemap ({
+      hostname: 'http://mightygoose.com',
+      cacheTime: 600000
     });
-  });
 
-  log.info(`saving sitemap file`);
-  var s3_result = yield new Promise((resolve, reject) => {
-    s3.putObject({
-      Bucket: S3_BUCKET,
-      Key: 'sitemap.xml',
-      Body: xml_body
-    }, function(err){
-      if(err){
-        reject(err);
-        return;
-      }
-      resolve(true);
+    log.info(`crating sitemap #${counter}`);
+
+    var items_portion = items.splice(0, 50000);
+
+    items_portion.forEach((item) => {
+      sitemap.add({url: `/post/${item.id}`, changefreq: 'monthly'});
     });
-  }).catch((e) => {
-    log.error(`couldn't save sitemap file, error: ${e}`);
-    process.exit(0);
-  });
+
+    log.info(`generating xml content`);
+    var xml_body = yield new Promise((resolve, reject) => {
+      sitemap.toXML(function (err, xml){
+        if(err){
+          reject(err);
+          return;
+        }
+        resolve(xml);
+      });
+    });
+
+    log.info(`saving sitemap file`);
+    var s3_result = yield new Promise((resolve, reject) => {
+      s3.putObject({
+        Bucket: S3_BUCKET,
+        Key: `sitemap_${counter}.xml`,
+        Body: xml_body
+      }, function(err){
+        if(err){
+          reject(err);
+          return;
+        }
+        resolve(true);
+      });
+    }).catch((e) => {
+      log.error(`couldn't save sitemap file, error: ${e}`);
+      process.exit(0);
+    });
+  }
 
   log.info(`sitemap updated`);
   process.exit(0);
