@@ -1,6 +1,7 @@
 /* copy files */
 require('file?name=../../index.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!application.html');
 require('file?name=../../item_og_tags.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/og_tags/item.html');
+require('file?name=../../item_jsonld.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/jsonld/jsonld.html');
 
 /* fonts */
 require("icons");

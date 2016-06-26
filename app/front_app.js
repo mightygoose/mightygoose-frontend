@@ -3,6 +3,7 @@ const koa = require('koa');
 const serve = require('koa-serve');
 const route = require('koa-route');
 const log = require('log-colors');
+const pry = require('pryjs');
 
 const GA_TRACKING_CODE = process.env['GA_TRACKING_CODE'] || '';
 
@@ -30,7 +31,10 @@ front_app.use(serve('assets', assets_dir));
 
 front_app.use(route.get('/post/random', function *(post_id){
   log.info('render random post page');
-  this.body = render('../public/index.html', {og_tags: "", GA_TRACKING_CODE});
+  this.body = render('../public/index.html', {
+    GA_TRACKING_CODE,
+    request_href: this.request.href
+  });
 }));
 
 front_app.use(route.get('/post/:post_id', function *(post_id){
@@ -42,12 +46,25 @@ front_app.use(route.get('/post/:post_id', function *(post_id){
     description: item_data.tags.join(', '),
     image: item_data.images[0]
   });
-  this.body = render('../public/index.html', {og_tags, GA_TRACKING_CODE});
+  var title_parts = item_data.title.split(' - ');
+  var jsonld = render('../public/item_jsonld.html', {
+    artist: title_parts[0],
+    album: title_parts[1]
+  });
+  this.body = render('../public/index.html', {
+    og_tags,
+    jsonld,
+    GA_TRACKING_CODE,
+    request_href: this.request.href
+  });
 }));
 
 front_app.use(function *(){
   log.info('render default');
-  this.body = render('../public/index.html', {og_tags: "", GA_TRACKING_CODE});
+  this.body = render('../public/index.html', {
+    GA_TRACKING_CODE,
+    request_href: this.request.href
+  });
 });
 
 module.exports = front_app;
