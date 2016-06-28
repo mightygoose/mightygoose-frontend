@@ -78,7 +78,8 @@ front_app.use(route.get('/post/:post_id', function *(post_id){
     og_tags,
     jsonld,
     GA_TRACKING_CODE,
-    request_href: this.request.href
+    request_href: this.request.href,
+    title: item_data.title
   });
 }));
 
