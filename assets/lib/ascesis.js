@@ -10,7 +10,7 @@
   }
 }(this, function(){
 
-  function fireEvent(eventName, target){
+  function fireEvent(eventName, target, eventData){
     target = target || document.body;
     var event;
     if(window.Event){
@@ -19,6 +19,7 @@
       event = document.createEvent('Event');
       event.initEvent(eventName, true, true);
     }
+    event.eventData = eventData || null;
     target.dispatchEvent(event);
   }
 
@@ -58,8 +59,8 @@
       var index = this.childComponents.indexOf(childComponent);
       this.childComponents.splice(index, 1);
     }},
-    trigger: {value: function(eventName){
-      fireEvent(eventName, this);
+    trigger: {value: function(eventName, eventData){
+      fireEvent(eventName, this, eventData);
     }},
     html: {value: function(html_string){
       var fragment = document.createDocumentFragment();

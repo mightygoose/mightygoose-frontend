@@ -12,7 +12,7 @@ class Autocomplete extends BaseComponent {
   create(){
     console.log('autocomplete created');
     this.html(template());
-    var input = document.getElementById("myinput");
+    var input = this.querySelector('input');
     horsey(input, {
       suggestions: _.debounce((value, done) => {
         if(value.length < 3){
@@ -49,7 +49,7 @@ class Autocomplete extends BaseComponent {
       limit: 20
     });
     input.addEventListener('horsey-selected', (event) => {
-      //debugger;
+      this.trigger('mg-autocomplete-item-selected', event.detail);
     });
   }
 }

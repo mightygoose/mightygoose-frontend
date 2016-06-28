@@ -8,28 +8,12 @@ const Delegate = require('dom-delegate');
 class SearchPostsController extends BaseController {
   create() {
     console.log('search posts ctrl');
-    var delegate = new Delegate(this);
-    delegate.on("click", "#search_posts_button", (event) => {
-      event.preventDefault();
-      var tags = this.childComponents.querySelector('tag-form').get_tags();
-      fetch("/api/search/tags", {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(tags)
-      })
-      .then(response => response.json())
-      .then((posts) => {
-        this.childComponents.querySelector('posts-controller').render(posts);
-      });
-    })
-
+    this.html(template);
+    this.addEventListener('mg-autocomplete-item-selected', (event) => {
+      console.log('item selected', event.eventData);
+    });
   }
-  attach(){
-    this.innerHTML = template;
-  }
+  attach(){}
   detach(){}
   attributeChange(name, previousValue, value){}
 }
