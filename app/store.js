@@ -126,6 +126,22 @@ class Store {
     });
   }
 
+  get_by_tag(tag){
+    return new Promise((resolve) => {
+      var query = `SELECT array_to_json(ARRAY(
+          SELECT id
+          FROM items
+          WHERE lower(tags::text) LIKE '%${tag.toLowerCase()}%'
+          ORDER BY random()
+      )) as ids`;
+      this.db.run(query, (err,items) => {
+        resolve(items, err);
+      });
+    }).then((response, error) => {
+      return response[0].ids;
+    });
+  }
+
   autocomplete_search(search_query){
     return new Promise((resolve) => {
       var query = `
@@ -133,12 +149,12 @@ class Store {
             'items', ARRAY(
               SELECT json_build_object('id', id, 'title',title,'image',images->0)
               FROM items
-              WHERE title ILIKE '%${search_query}%' ORDER BY title
+              WHERE lower(title) LIKE '%${search_query.toLowerCase()}%' ORDER BY title
             ),
             'tags_count', (
               SELECT COUNT(id)
               FROM items
-              WHERE tags::text ILIKE '%${search_query}%'
+              WHERE lower(tags::text) LIKE '%${search_query.toLowerCase()}%'
             )
         ) as object
       `;

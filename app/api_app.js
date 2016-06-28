@@ -52,6 +52,12 @@ app.use(route.post('/search/tags', function *(){
   this.body = response;
 }));
 
+app.use(route.get('/search/tag', function *(){
+  var query = this.query.q;
+  var response = yield store.get_by_tag(query);
+  this.body = response;
+}));
+
 app.use(route.post('/mixcloud/get_tracks', function *(){
   var url_params = urllib.parse(JSON.parse(this.request.body).url);
   var mix_key = url_params.pathname;
