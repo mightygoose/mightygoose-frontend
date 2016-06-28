@@ -14,7 +14,7 @@ class MainController extends BaseController {
 
     var routes = {
       '/search': function () {
-        document.querySelector("#search-link").classList.add("active-menu-item");
+        //document.querySelector("#search-link").classList.add("active-menu-item");
         document.querySelector("#random-post-link").classList.remove("active-menu-item");
         $content_section.innerHTML = '<search-posts-controller></search-posts-controller>';
       },
@@ -22,7 +22,7 @@ class MainController extends BaseController {
         //think of something better here!
         on(post_id = ''){
           document.querySelector("#random-post-link").classList.add("active-menu-item");
-          document.querySelector("#search-link").classList.remove("active-menu-item");
+          //document.querySelector("#search-link").classList.remove("active-menu-item");
           $content_section.innerHTML = `<random-post-controller post_id="${post_id}"/>`;
         },
         '/random': function () {
