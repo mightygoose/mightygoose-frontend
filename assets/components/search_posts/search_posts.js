@@ -10,10 +10,31 @@ class SearchPostsController extends BaseController {
     console.log('search posts ctrl');
     this.html(template);
     this.addEventListener('mg-autocomplete-item-selected', (event) => {
-      console.log('item selected', event.eventData);
+      var {eventData: data} = event;
+      if(data.type !== 'tags_suggestion'){
+        fetch(`/api/post/${data.id}`)
+        .then((response) => response.json())
+        .then((posts) => {
+          this.childComponents.querySelector('posts-controller').render(posts);
+        });
+      } else {
+        fetch(`/api/search/tag?q=${data.autocomplete_value}`)
+        .then((response) => response.json())
+        .then((ids) => {
+          //showcase
+          fetch(`/api/post/${ids[0]}`)
+          .then((response) => response.json())
+          .then((posts) => {
+            this.childComponents.querySelector('posts-controller').render(posts);
+          });
+        });
+      }
     });
+
   }
-  attach(){}
+  attach(){
+    //debugger;
+  }
   detach(){}
   attributeChange(name, previousValue, value){}
 }

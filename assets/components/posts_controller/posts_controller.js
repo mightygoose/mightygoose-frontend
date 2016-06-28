@@ -4,8 +4,8 @@ class PostsController extends BaseController {
   create() {
     console.log('posts ctrl');
   }
-  render(posts){
-    this.innerHTML = "";
+  render(posts, append){
+    append || (this.innerHTML = "");
     var fragment = document.createDocumentFragment();
     posts.forEach((post) => {
       var post_item = document.createElement("post-item");
