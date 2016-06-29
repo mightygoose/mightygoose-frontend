@@ -22,7 +22,7 @@ class SearchPostsController extends BaseController {
       this.preloader.hide();
     });
   }
-  create() {
+  attach(){
     console.log('search posts ctrl');
 
     this.posts = [];
@@ -34,7 +34,7 @@ class SearchPostsController extends BaseController {
         this.posts = [data.id];
         this.render_first()
       } else {
-        fetch(`/api/search/tag?q=${data.autocomplete_value}`)
+        fetch(`/api/search/tag?q=${data.title}`)
         .then((response) => response.json())
         .then((ids) => {
           this.posts = ids;
@@ -50,7 +50,6 @@ class SearchPostsController extends BaseController {
     });
 
   }
-  attach(){}
   detach(){}
   attributeChange(name, previousValue, value){}
 }

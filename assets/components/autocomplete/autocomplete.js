@@ -1,15 +1,17 @@
 const BaseComponent = require('ascesis').BaseComponent;
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./autocomplete.html');
 const _ = require('lodash');
-
 const horsey = require('horsey');
+
 const horsey_styles = require('style!css!horsey/dist/horsey.css');
-//const styles = require('./post.styl');
+
+const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./autocomplete.html');
+const styles = require('./autocomplete.styl');
+
 
 class Autocomplete extends BaseComponent {
   render(data){
   }
-  create(){
+  attach(){
     console.log('autocomplete created');
     this.html(template());
     var input = this.querySelector('input');
@@ -19,6 +21,9 @@ class Autocomplete extends BaseComponent {
           done([]);
           return;
         }
+        (this.preloader || (
+          this.preloader = this.childComponents.querySelector('mighty-preloader')
+        )).show();
         fetch(`/api/search/autocomplete?q=${value}`)
         .then((response) => response.json())
         .then((response) => {
@@ -27,24 +32,29 @@ class Autocomplete extends BaseComponent {
             ? {
               type: 'tags_suggestion',
               count: response.tags_count,
-              autocomplete_value: value
+              title: value
             }
             : []
           ).concat(response.items)
         })
         .then(done)
+        .then(() => this.preloader.hide())
       }, 300),
       render(li, suggestion) {
+        li.classList.add('mg-autocomplete-item');
         if(suggestion.type === 'tags_suggestion'){
           li.innerHTML = `
-            <span>tags contain ${suggestion.autocomplete_value} : ${suggestion.count}</span>
+            <span>tags contain ${suggestion.title} : ${suggestion.count}</span>
           `;
         } else {
           li.innerHTML = `
-            <img class="autofruit" style="width: 20px; height: 20px;" src="${suggestion.image}" />
+            <img class="mg-autocomplete-image" src="${suggestion.image}" />
             <span>${suggestion.title}</span>
           `;
         }
+      },
+      set(suggestion){
+        input.value = suggestion.title;
       },
       limit: 20
     });

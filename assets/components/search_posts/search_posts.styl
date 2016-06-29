@@ -1,19 +1,22 @@
 @import '~application.styl';
 
 search-posts-controller {
-  .search-results-row {
+  .autocomplete-row {
     text-align: center;
-    background: $color-black;
-    margin-top: 2em;
   }
   .preloader-row {
     text-align: center;
     font-size: 0.8em;
   }
-  mighty-preloader {
+  .search-preloader {
     display: inline-block;
+    .preloader-wrapper {
+      margin: 1em 0;
+    }
   }
-  .preloader-wrapper {
-    margin: 1em 0;
+  .search-results-row {
+    text-align: center;
+    background: $color-black;
+    margin-top: 2em;
   }
 }
