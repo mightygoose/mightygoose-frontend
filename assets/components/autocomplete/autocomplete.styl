@@ -1,0 +1,44 @@
+@import '~application.styl';
+
+mg-autocomplete {
+  input {
+    border-radius: 3px;
+    height: 2.5em;
+    border: 3px solid $color-gray-light;
+    box-shadow: none;
+    width: 100%;
+    font-size: 1em;
+    padding: 0.3em 1em;
+  }
+  input::-webkit-input-placeholder {
+    color: $color-gray;
+  }
+  .autocomplete-wrapper {
+    width: 80%;
+    display: inline-block;
+    position: relative;
+  }
+  mighty-preloader {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 2em;
+    height: 70%;
+    margin: auto;
+    font-size: 0.5em;
+  }
+}
+
+.sey-list {
+  width: 80%;
+}
+
+.mg-autocomplete-item {
+  height: 1em;
+}
+
+.mg-autocomplete-image {
+  width: 1em;
+  height: 1em;
+}
