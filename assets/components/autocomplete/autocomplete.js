@@ -43,7 +43,7 @@ class Autocomplete extends BaseComponent {
       }, 300),
       render(li, suggestion) {
         li.classList.add('mg-autocomplete-item');
-        li.innerHTML = item_template(suggestion);
+        li.innerHTML = item_template(_.assign({}, suggestion, { input_value: input.value }));
       },
       set(suggestion){
         input.value = suggestion.title;

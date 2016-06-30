@@ -7,6 +7,11 @@ ${scope.type === 'tags_suggestion'
     <span>(${scope.count})</span>
 ` : `
     <img class="mg-autocomplete-image" src="${scope.image}"/>
-    <span>${scope.title}</span>
+    <span>
+        ${scope.title.replace(
+            new RegExp(`(${scope.input_value})`, 'gi'),
+            '<mark>$&</mark>'
+        )}
+    </span>
 `}
 
