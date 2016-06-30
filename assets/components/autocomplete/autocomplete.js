@@ -5,6 +5,7 @@ const horsey = require('horsey');
 const horsey_styles = require('style!css!horsey/dist/horsey.css');
 
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./autocomplete.html');
+const item_template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./autocomplete_item.html');
 const styles = require('./autocomplete.styl');
 
 
@@ -42,16 +43,7 @@ class Autocomplete extends BaseComponent {
       }, 300),
       render(li, suggestion) {
         li.classList.add('mg-autocomplete-item');
-        if(suggestion.type === 'tags_suggestion'){
-          li.innerHTML = `
-            <span>tags contain ${suggestion.title} : ${suggestion.count}</span>
-          `;
-        } else {
-          li.innerHTML = `
-            <img class="mg-autocomplete-image" src="${suggestion.image}" />
-            <span>${suggestion.title}</span>
-          `;
-        }
+        li.innerHTML = item_template(suggestion);
       },
       set(suggestion){
         input.value = suggestion.title;

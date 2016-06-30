@@ -1,0 +1,12 @@
+${scope.type === 'tags_suggestion'
+? `
+    <span>
+        posts where tag contains
+        <i><b>${scope.title}</b></i>
+    </span>
+    <span>(${scope.count})</span>
+` : `
+    <img class="mg-autocomplete-image" src="${scope.image}"/>
+    <span>${scope.title}</span>
+`}
+
