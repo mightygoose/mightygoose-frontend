@@ -1,6 +1,7 @@
 ${(() => !scope.additional ? '' : `
 <a href="${scope.additional.uri}" target="_blank" class="mg-icon icon-discogs_logo"></a>
 `)()}
+${scope.format === 'full' ? `
 <ul class="item-track-list">
   ${scope.each_track(track => `
   <li class="track-list-track">
@@ -19,3 +20,4 @@ ${(() => !scope.additional ? '' : `
   </li>
   `)}
 </ul>
+` : ''}

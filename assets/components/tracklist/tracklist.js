@@ -5,12 +5,13 @@ const styles = require('./tracklist.styl');
 
 class TrackList extends BaseComponent {
   render(data, additional){
-    this.innerHTML = template({
+    this.html(template({
       each_track(tpl){
         return _.reduce(data, (accum, track) => accum.concat(tpl(track)), "");
       },
+      format: this.getAttribute('format'),
       additional
-    });
+    }));
   }
   create(){
     console.log('tracklist created');

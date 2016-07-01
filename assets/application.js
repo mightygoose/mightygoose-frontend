@@ -34,5 +34,6 @@ require.ensure([], () => {
   require('components/embed_container/embed_container');
   require('components/share_button/share_button');
   require('components/autocomplete/autocomplete');
+  require('components/deezer-widget/deezer-widget');
 })
 

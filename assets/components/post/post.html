@@ -28,19 +28,13 @@
                     <a class="original-post-link" target="_blank" href="${scope.url}">Original post link</a>
                 </div>
                 <div class="row item-block item-tracklist">
-                    ${scope.type === 'discogs' ? `
-                    <track-list>
+                    <track-list format="${scope.type === 'discogs' ? 'full' : 'short'}">
                         <mighty-preloader/>
                     </track-list>
-                    ` : `
-                    <track-list format="short">
-                        <mighty-preloader/>
-                    </track-list>
-                    `}
+                </div>
+                <div class="row item-block">
                     ${scope.type === 'deezer' ? `
-                    <deezer-widget>
-                        deezer
-                    </deezer-widget>
+                    <deezer-widget album-id="${scope.deezer.id}"/>
                     ` : ''}
                     ${scope.type === 'itunes' ? `
                     <itunes-widget>
