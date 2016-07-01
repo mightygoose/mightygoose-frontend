@@ -28,9 +28,25 @@
                     <a class="original-post-link" target="_blank" href="${scope.url}">Original post link</a>
                 </div>
                 <div class="row item-block item-tracklist">
+                    ${scope.type === 'discogs' ? `
                     <track-list>
                         <mighty-preloader/>
                     </track-list>
+                    ` : `
+                    <track-list format="short">
+                        <mighty-preloader/>
+                    </track-list>
+                    `}
+                    ${scope.type === 'deezer' ? `
+                    <deezer-widget>
+                        deezer
+                    </deezer-widget>
+                    ` : ''}
+                    ${scope.type === 'itunes' ? `
+                    <itunes-widget>
+                        itunes
+                    </itunes-widget>
+                    ` : ''}
                 </div>
                 <div class="post-embeds-container">
                     ${(scope.embed && scope.embed.length) ? `

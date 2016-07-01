@@ -69,7 +69,13 @@ class Store {
 
   get_random(){
     return new Promise((resolve) => {
-      this.db.run("select * from items order by random() limit 1", (err,stat) => {
+      this.db.run(`
+          SELECT *
+          FROM items
+          WHERE itunes->'similarity' > '0.52' OR deezer->'similarity' > '0.52'
+          ORDER BY random()
+          LIMIT 1
+      `, (err,stat) => {
         resolve(stat, err);
       });
     }).then((response, error) => {

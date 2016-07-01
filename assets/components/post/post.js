@@ -8,16 +8,27 @@ class PostItem extends BaseComponent {
     let {
       id, title, url, tags, embed,
       images, images: [main_image, ...rest_images],
-      discogs
+      discogs, deezer, itunes
     } = data;
 
-    this.innerHTML = template({
-      title, url, main_image, images, tags, embed,
+    /* calculate on backend! */
+    let type;
+    if(!(deezer || itunes)){
+      type = "discogs";
+    } else if((deezer || {similarity: 0}).similarity >= (itunes || {similarity: 0}).similarity){
+      type = "deezer";
+    } else {
+      type = "itunes";
+    }
+    /**/
+
+    this.html(template({
+      title, url, main_image, images, tags, embed, type, deezer, itunes,
       each(list, tpl){
         return _.reduce(list, (accum, item) => accum.concat(tpl(item)), "");
       },
       post_share_link: `${window.location.origin}/post/${id}`
-    });
+    }));
 
     if(data.discogs){
       this.querySelector('mighty-preloader').classList.remove('hidden');
