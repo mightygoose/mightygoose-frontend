@@ -21,7 +21,7 @@ class DeezerWidget extends BaseComponent {
       success(data){
         self.render(data);
       }
-    })
+    });
   }
 }
 

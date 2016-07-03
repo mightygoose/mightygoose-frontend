@@ -1,0 +1,23 @@
+<ul class="item-track-list">
+  ${scope.each_track(track => `
+  <li class="track-list-track">
+      <span class="play-pause-button-wrapper">
+          <span class="play-pause-button mg-icon icon-play">
+              <audio src="${track.previewUrl}" preload="none"></audio>
+          </span>
+      </span>
+      <span class="position">
+          ${track.trackNumber}.
+      </span>
+      <span class="artist">
+          ${track.artistName}
+      </span>
+      <span class="separator">
+          –
+      </span>
+      <span class="title">
+          ${track.trackCensoredName}
+      </span>
+  </li>
+  `)}
+</ul>

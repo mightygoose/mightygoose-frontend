@@ -37,9 +37,7 @@
                     <deezer-widget album-id="${scope.deezer.id}"/>
                     ` : ''}
                     ${scope.type === 'itunes' ? `
-                    <itunes-widget>
-                        itunes
-                    </itunes-widget>
+                    <itunes-widget album-id="${scope.itunes.collection_id}"/>
                     ` : ''}
                 </div>
                 <div class="post-embeds-container">

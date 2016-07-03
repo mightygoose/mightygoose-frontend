@@ -2,7 +2,6 @@ const BaseController = require('ascesis').BaseController;
 const template = require('raw!./search_posts.html');
 const styles = require('./search_posts.styl');
 const _ = require('lodash');
-const Delegate = require('dom-delegate');
 
 
 class SearchPostsController extends BaseController {
