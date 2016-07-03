@@ -1,6 +1,7 @@
 const BaseController = require('ascesis').BaseController;
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
 const styles = require('./mixcloud_controller.styl');
+
 const Delegate = require('dom-delegate');
 const _ = require('lodash');
 
@@ -41,14 +42,20 @@ class MixcloudController extends BaseController {
     var delegate = new Delegate(this);
 
     console.log('mixcloud ctrl');
-    this.innerHTML = template();
+    this.html(template());
 
     this.$loader = this.querySelector('#mixcloud_tracklist_preloader');
     this.$mixcloud_url_form = this.querySelector('#mixcloud_url_form');
     this.$mixcloud_url_input = this.querySelector('#mixcloud_url_input');
 
-    delegate.on('paste', '#mixcloud_url_input', _.debounce(_.bind(this.changeInputHandler, this), 500));
-    delegate.on('keyup', '#mixcloud_url_input', _.throttle(_.bind(this.changeInputHandler, this), 100));
+    let url_match = location.search.match(/^\?url=(.*)/);
+    if(url_match){
+      this.$mixcloud_url_input.value = url_match[1];
+      this.changeInputHandler(null, this.$mixcloud_url_input);
+    }
+
+    //delegate.on('paste', '#mixcloud_url_input', _.debounce(_.bind(this.changeInputHandler, this), 500));
+    delegate.on('keyup', '#mixcloud_url_input', _.debounce(_.bind(this.changeInputHandler, this), 300));
   }
   attach(){
   }

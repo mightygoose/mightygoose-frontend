@@ -1,19 +1,85 @@
+@import '~application.styl';
+
 mixcloud-tracklist {
+  text-align: center;
+  display: block;
+  width: 100%;
   .info-block {
-    margin-top: 25px;
+    margin-top: 1em;
+    width: 80%;
+    text-align: left;
+    display: inline-block;
   }
+  .mixcloud-set-picture {
+    width: 33%;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .mixcloud-set-info {
+    width: 66%;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .mixcloud-set-keywords span {
+    display: block;
+    margin-top: 1.2em;
+    font-size: 0.8em;
+    font-weight: 300;
+  }
+
   .track-list {
-    margin-top: 20px;
+    margin-top: 1em;
+    display: inline-table;
+    width: 80%;
+    text-align: left;
+    border-collapse: collapse;
+  }
+  .tracklist-header {
+    height: 2em;
+    span {
+      font-weight: 600;
+    }
   }
   .track-line {
-    padding: 10px 0;
     font-weight: 300;
+    display: table-row;
+    height: 1.8em;
+    > span {
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 0.8em;
+    }
   }
   .track-line:not(:nth-last-child(1)) {
     border-bottom: 1px solid #f1f1f1;
   }
+
+  .play-pause-button-wrapper {
+    width: 1.6em;
+  }
+
+  .play-pause-button {
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 1em;
+    cursor: pointer;
+    color: $color-gray-track-label;
+    &:before {
+      font-size: 0.6em;
+    }
+  }
+
+  .play-pause-button.icon-play:before {
+    margin-left: 2px;
+  }
+
   .search-link {
     color: #333;
+    position: relative;
     &:before {
       position: absolute;
       bottom: 100%;

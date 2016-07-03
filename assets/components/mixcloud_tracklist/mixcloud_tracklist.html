@@ -1,58 +1,54 @@
 <div class="row info-block">
-    <div class="large-4 columns">
+    <div class="mixcloud-set-picture">
         <img src="${scope.image}"/>
     </div>
-    <div class="large-8 columns">
-        <div class="row">
-            <div class="small-12 columns">
-                <h3>
-                    ${scope.title}
-                </h3>
-            </div>
+    <div class="mixcloud-set-info">
+        <div class="row mixcloud-set-title">
+            <span>
+                ${scope.title}
+            </span>
         </div>
-        <div class="row">
-            <div class="small-12 columns">
-                ${scope.each_artist((artist) =>`
-                <h6>${artist}</h6>
-                `)}
-            </div>
+        <div class="row mixcloud-set-keywords">
+            ${scope.each_artist((artist) =>`
+            <span>${artist}</span>
+            `)}
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="large-12 columns track-list">
-        <div class="row track-line">
-            <div class="small-1 columns">Starts</div>
-            <div class="small-4 columns">Artist</div>
-            <div class="small-4 columns">Song</div>
-            <div class="small-2 columns">Search</div>
-        </div>
-        ${scope.each_track((track) =>`
-        <div class="row track-line">
-            <div class="small-1 columns">${scope.format_position(track.start_time)}</div>
-            <div class="small-4 columns">${track.artist}</div>
-            <div class="small-4 columns">${track.title}</div>
-            <div class="small-1 columns">
-                <a class="search-link vk-link" target="_blank" href="https://vk.com/audio?q=${track.artist} - ${track.title}">
-                    <i class="demo-icon icon-vkontakte"></i>
-                </a>
-            </div>
-            <div class="small-1 columns">
-                <a class="search-link sk-link" target="_blank" href="https://soundcloud.com/search/sounds?q=${track.artist} - ${track.title}">
-                    <i class="demo-icon icon-soundcloud"></i>
-                </a>
-            </div>
-            <div class="small-1 columns">
-                <a class="search-link mk-link" target="_blank" href="https://www.mixcloud.com${track.track_url}">
-                    <i class="demo-icon icon-mixcloud-logo-black"></i>
-                </a>
-            </div>
-        </div>
-        `, (track) =>`
-        <div class="row track-line">
-            <div class="small-1 columns">${scope.format_position(track.start_time)}</div>
-            <div class="small-11 columns">${track.chapter}</div>
-        </div>
-        `)}
+<div class="row track-list">
+    <div class="row track-line tracklist-header">
+        <span></span>
+        <span>Starts</span>
+        <span>Artist</span>
+        <span>Song</span>
+        <span>Search</span>
     </div>
+    ${scope.each_track((track) =>`
+    <div class="row track-line">
+        <span class="preview-wrapper" data-index="${track.index}"></span>
+        <span>${scope.format_position(track.start_time)}</span>
+        <span>${track.artist}</span>
+        <span>${track.title}</span>
+        <span>
+            <a class="search-link vk-link" target="_blank" href="https://vk.com/audio?q=${track.artist} - ${track.title}">
+                <i class="mg-icon icon-vk"></i>
+            </a>
+        </span>
+        <span>
+            <a class="search-link sk-link" target="_blank" href="https://soundcloud.com/search/sounds?q=${track.artist} - ${track.title}">
+                <i class="mg-icon icon-soundcloud"></i>
+            </a>
+        </span>
+        <!--<span>-->
+            <!--<a class="search-link mk-link" target="_blank" href="https://www.mixcloud.com${track.track_url}">-->
+                <!--<i class="mg-icon icon-mixcloud"></i>-->
+            <!--</a>-->
+        <!--</span>-->
+    </div>
+    `, (track) =>`
+    <div class="row track-line">
+        <span>${scope.format_position(track.start_time)}</span>
+        <span>${track.chapter}</span>
+    </div>
+    `)}
 </div>

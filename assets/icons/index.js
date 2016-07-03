@@ -13,6 +13,8 @@ const icons_map = {
   play: require('./svg/play.svg'),
   pause: require('./svg/pause.svg'),
   discogs_logo: require('./svg/discogs_logo.svg'),
+  mixcloud: require('./svg/mixcloud.svg'),
+  soundcloud: require('./svg/soundcloud.svg'),
 }
 
 style_inject(icon_font.css);
