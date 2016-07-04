@@ -1,6 +1,6 @@
 const BaseController = require('ascesis').BaseController;
 const Delegate = require('dom-delegate');
-const template = require('ejs!./random_post.html');
+const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./random_post.html');
 const styles = require('./random_post.styl');
 
 
@@ -80,7 +80,7 @@ class RandomPostController extends BaseController {
       (keyCode === 39) && this.next();
     });
 
-    this.html(template());
+    this.html(template({}));
   }
   attach(){
     var post_id = this.getAttribute('post_id');

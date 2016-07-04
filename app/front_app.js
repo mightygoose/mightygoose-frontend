@@ -4,6 +4,7 @@ const serve = require('koa-serve');
 const route = require('koa-route');
 const log = require('log-colors');
 const aws = require('aws-sdk');
+const _ = require('lodash');
 const pry = require('pryjs');
 
 const GA_TRACKING_CODE = process.env['GA_TRACKING_CODE'] || '';
@@ -60,7 +61,7 @@ front_app.use(route.get('/post/random', function *(post_id){
   });
 }));
 
-front_app.use(route.get('/post/:post_id', function *(post_id){
+front_app.use(route.get('/post/:post_id/:slug?', function *(post_id, slug){
   log.info('render item');
   var response = yield store.get_by_id(post_id);
   var item_data = response[0];
@@ -74,12 +75,32 @@ front_app.use(route.get('/post/:post_id', function *(post_id){
     artist: title_parts[0],
     album: title_parts[1]
   });
+  var post_content = render('../public/post.html', _.assign({}, {
+    main_image: item_data.images[0],
+    each(list, tpl){
+      return _.reduce(list, (accum, item) => accum.concat(tpl(item)), "");
+    },
+    post_share_link: `${this.request.href}/post/${item_data.id}`
+  }, item_data));
+  var content = render('../public/random_post.html', {
+    content: `
+      <post-item>
+        ${post_content}
+      </post-item>
+    `
+  });
+
   this.body = render('../public/index.html', {
     og_tags,
     jsonld,
     GA_TRACKING_CODE,
     request_href: this.request.href,
-    title: item_data.title
+    title: item_data.title,
+    content: `
+      <random-post-controller post_id="${item_data.id}" style="display: none;">
+        ${content}
+      </random-post-controller>
+    `
   });
 }));
 

@@ -27,7 +27,7 @@ class MainController extends BaseController {
         },
         '/random': function () {
         },
-        '/:post_id': function (post_id) {
+        '/:post_id/?((\w|.)*)': function (post_id) {
           let $random_post_controller = self.childComponents.querySelector('random-post-controller');
           if($random_post_controller){
             $random_post_controller.setAttribute('post_id', post_id);

@@ -2,6 +2,8 @@
 require('file?name=../../index.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!application.html');
 require('file?name=../../item_og_tags.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/og_tags/item.html');
 require('file?name=../../item_jsonld.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/jsonld/jsonld.html');
+require('file?name=../../random_post.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/random_post/random_post.html');
+require('file?name=../../post.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/post/post.html');
 
 /* fonts */
 require("icons");

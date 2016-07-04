@@ -3,6 +3,7 @@ const aws = require('aws-sdk');
 const spawn = require('lib/spawn');
 const log = require('log-colors');
 const sm = require('sitemap');
+const get_slug = require('speakingurl');
 
 const AWS_ACCESS_KEY_ID = process.env['AWS_ACCESS_KEY_ID'];
 const AWS_SECRET_ACCESS_KEY = process.env['AWS_SECRET_ACCESS_KEY'];
@@ -31,7 +32,7 @@ spawn(function*(){
   });
 
   var items = yield new Promise((resolve) => {
-    db.run('select id from items', (err, items) => {
+    db.run('select id, title from items', (err, items) => {
       if(err){ log.error(err); }
       resolve(items);
     });
@@ -52,7 +53,7 @@ spawn(function*(){
     var items_portion = items.splice(0, 50000);
 
     items_portion.forEach((item) => {
-      sitemap.add({url: `/post/${item.id}`, changefreq: 'monthly'});
+      sitemap.add({url: `/post/${item.id}/${get_slug(item.title)}`, changefreq: 'monthly'});
     });
 
     log.info(`generating xml content`);
