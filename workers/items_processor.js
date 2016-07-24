@@ -11,8 +11,9 @@ const _ = require('lodash');
 const massive = require("massive");
 
 const discogs_restorer = require('lib/restorers/discogs');
-const itunes_restorer = require('lib/restorers/itunes');
-const deezer_restorer = require('lib/restorers/deezer');
+
+const itunes_album_restorer = new (require('lib/restorers/itunes')).AlbumRestorer();
+const deezer_album_restorer = new (require('lib/restorers/deezer')).AlbumRestorer();
 
 
 const DB_HOST = process.env['DB_HOST'];
@@ -83,8 +84,8 @@ function process_item(item) {
     }
 
     var additional_data = yield [
-      yield itunes_restorer(item),
-      yield deezer_restorer(item)
+      yield itunes_album_restorer.restore(item),
+      yield deezer_album_restorer.restore(item)
     ];
     var itunes_data = additional_data[0];
     var deezer_data = additional_data[1];
