@@ -12,8 +12,9 @@ const massive = require("massive");
 
 const discogs_restorer = require('lib/restorers/discogs');
 
-const itunes_album_restorer = new (require('lib/restorers/itunes')).AlbumRestorer();
-const deezer_album_restorer = new (require('lib/restorers/deezer')).AlbumRestorer();
+const discogs_album_restorer = new (require('lib/restorers/discogs')).AlbumRestorer();
+const itunes_album_restorer  = new (require('lib/restorers/itunes')).AlbumRestorer();
+const deezer_album_restorer  = new (require('lib/restorers/deezer')).AlbumRestorer();
 
 
 const DB_HOST = process.env['DB_HOST'];
@@ -24,8 +25,6 @@ const DB_NAME = process.env['DB_NAME'];
 
 const RABBITMQ_URL = process.env['RABBITMQ_URL'];
 const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
-
-const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
 
 var db;
 
@@ -73,7 +72,7 @@ function process_item(item) {
   spawn(function*(){
 
     console.log(`got item #${item.sh_key}`);
-    var discogs_data = yield discogs_restorer(item);
+    var discogs_data = yield discogs_album_restorer.restore(item);
     var prepared_data = decorate_with_discogs_data(item, discogs_data);
 
     var status = prepared_data[0];
@@ -131,19 +130,18 @@ function process_item(item) {
 }
 
 
-function decorate_with_discogs_data(item, results){
+function decorate_with_discogs_data(item, discogs_data){
   var status = "good";
   item['badges'] = JSON.parse(item['badges']);
 
-  var discogs_data = results[0];
-  if(results.length == 0 || !discogs_data){
+  if(!discogs_data){
     item['badges'].push('discogs-no-results');
     item['discogs'] = [];
     return ["bad", item];
   }
 
   item['discogs'] = discogs_data;
-  if(item['title'] === discogs_data['title']){
+  if(item['title'] === discogs_data['title'] || discogs_data.similarity === 1){
     item['badges'].push('discogs-title-exact-match')
   }
   else {
