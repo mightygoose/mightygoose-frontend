@@ -1,10 +1,13 @@
+const pry = require('pryjs');
+
 const massive = require("massive");
 const log = require('log-colors');
 const spawn = require('lib/spawn');
 
 const itunes_restorer = require('lib/restorers/itunes');
 const s_digital_restorer = require('lib/restorers/7digital');
-const deezer_restorer = require('lib/restorers/deezer');
+const DeezerRestorer = new require('lib/restorers/deezer');
+const deezer_album_restorer = new DeezerRestorer.AlbumRestorer();
 
 const DB_HOST = process.env['DB_HOST'];
 const DB_PORT = process.env['DB_PORT'];
@@ -52,7 +55,7 @@ spawn(function*(){
       var item_data = yield query(`select * from ${TABLE} where id = ${item.id}`);
       var restored_data = yield [
         //yield itunes_restorer(item_data[0]),
-        yield deezer_restorer(item_data[0])
+        yield deezer_album_restorer.restore(item_data[0])
         //yield s_digital_restorer(item_data[0])
       ];
 
