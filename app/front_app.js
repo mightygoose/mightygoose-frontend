@@ -20,9 +20,8 @@ var front_app = koa();
 var assets_dir = path.join(__dirname, '..', 'public');
 
 var __render = function(template, data){
-  !data && (data = {});
   var template = require(template);
-  return template(data);
+  return template(data || {});
 }
 
 var render;

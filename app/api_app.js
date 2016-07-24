@@ -9,7 +9,7 @@ const pry = require('pryjs');
 var app = koa();
 global.store = new Store(); // bad!
 
-app.use(body_parser());
+app.use(body_parser({limit: '10mb'}));
 
 app.use(route.get('/crawler/get_urls', function *(){
   var response = yield store.get_random_blogspot_urls(this.query.limit);

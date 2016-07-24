@@ -33,7 +33,9 @@ values = {
     "sh_key": item['scrapinghub_id'],
     "crawler_name": item['crawler_name'],
     "embed": json.dumps(item['embed']),
-    "images": json.dumps(item['images'])
+    "images": json.dumps(item['images']),
+    "content": json.dumps(item['content']),
+    "comments": json.dumps(item['comments'])
 }
 headers = {}
 

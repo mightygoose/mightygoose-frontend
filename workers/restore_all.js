@@ -2,10 +2,17 @@ const pry = require('pryjs');
 
 const massive = require("massive");
 const log = require('log-colors');
-const spawn = require('lib/spawn');
+const spawn = require('co');
+
+const discogs_client = require('lib/discogs_client');
 
 const itunes_album_restorer = new (require('lib/restorers/itunes')).AlbumRestorer();
 const deezer_album_restorer = new (require('lib/restorers/deezer')).AlbumRestorer();
+
+const track_restorers = {
+  itunes: new (require('lib/restorers/itunes')).TrackRestorer(),
+  deezer: new (require('lib/restorers/deezer')).TrackRestorer()
+}
 
 const s_digital_restorer = require('lib/restorers/7digital');
 
@@ -16,7 +23,7 @@ const DB_PASSWD = process.env['DB_PASSWD'];
 const DB_NAME = process.env['DB_NAME'];
 
 const TABLE = 'items';
-const LIMIT = 40000;
+const LIMIT = 20000;
 
 
 var connect = () => {
@@ -46,30 +53,39 @@ spawn(function*(){
     })
   }
 
-  //var result = yield query(`select id from ${TABLE} where s_digital is null and itunes is null limit ${LIMIT}`);
-  //var result = yield query(`select id from ${TABLE} where deezer is null limit ${LIMIT}`);
-  var result = yield query(`select id from ${TABLE} where deezer is null and itunes is null limit ${LIMIT}`);
+  var result = yield query(`
+    select id from ${TABLE}
+    where
+      deezer = 'null'
+      and itunes = 'null'
+      and tracklist is null
+      and discogs->>'type' != 'artist'
+      and discogs->>'type' != 'label'
+    limit ${LIMIT}
+  `);
   log.info(`processing ${result.length} items`);
 
   for(var item of result){
     try {
       var item_data = yield query(`select * from ${TABLE} where id = ${item.id}`);
-      var restored_data = yield [
-        yield itunes_album_restorer.restore(item_data[0]),
-        yield deezer_album_restorer.restore(item_data[0])
-        //yield s_digital_restorer(item_data[0])
-      ];
 
-      var itunes_data = restored_data[0];
-      var deezer_data = restored_data[1];
-      //console.log(deezer_data);
-      //var s_digital_data = restored_data[1];
-      var values = [
-        `itunes = '${JSON.stringify(itunes_data).replace(/'/ig, "''")}'`,
-        `deezer = '${JSON.stringify(deezer_data).replace(/'/ig, "''")}'`,
-        //`s_digital = '${JSON.stringify(s_digital_data).replace(/'/ig, "''")}'`
-      ].join(', ');
-      var query_text = `UPDATE ${TABLE} set ${values} WHERE id = ${item.id}`;
+      var discogs_data = yield discogs_client.get_info(item_data[0].discogs);
+
+      var data = yield Object.keys(track_restorers).reduce((acc, provider) => {
+        acc[provider] = discogs_data.tracklist.map(track => {
+          return track_restorers[provider].restore(track);
+        });
+        return acc;
+      }, {});
+      var tracks = Object.keys(data).reduce((acc, provider) => {
+        var list = data[provider].filter(item => !!item);
+        if(list.length){
+          (acc = acc || {})[provider] = list;
+        }
+        return acc;
+      }, null);
+
+      var query_text = `UPDATE ${TABLE} set tracklist = '${JSON.stringify(tracks).replace(/'/ig, "''")}' WHERE id = ${item.id}`;
       var query_result = yield query(query_text);
       query_result && log.info(`item #${item.id} updated`);
     } catch(e) {
