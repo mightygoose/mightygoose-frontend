@@ -4,8 +4,8 @@ const log = require('log-colors');
 const spawn = require('co');
 const cheerio = require('cheerio');
 const _ = require('lodash');
-const massive = require("massive");
 
+const db_client = require('lib/clients/db');
 const discogs_client = require('lib/discogs_client');
 
 const track_restorers = {
@@ -13,22 +13,9 @@ const track_restorers = {
   deezer: new (require('lib/restorers/deezer')).TrackRestorer()
 }
 
-const DB_HOST = process.env['DB_HOST'];
-const DB_PORT = process.env['DB_PORT'];
-const DB_USER = process.env['DB_USER'];
-const DB_PASSWD = process.env['DB_PASSWD'];
-const DB_NAME = process.env['DB_NAME'];
-
 
 var db;
-log.info('connecting to db');
-massive.connect({
-  connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}/${DB_NAME}`
-}, (err, _db) => {
-  log.info('connected to db');
-  db = _db;
-});
-
+db_client.then(_db => db = _db);
 
 function postprocess(item){
   var discogs_data = item.discogs_data;

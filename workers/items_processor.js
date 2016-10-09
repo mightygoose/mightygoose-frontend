@@ -2,29 +2,21 @@
 
 const pry = require('pryjs');
 
-const jackrabbit = require('jackrabbit');
 const log = require('log-colors');
 const spawn = require('co');
-const qs = require('qs');
 const _ = require('lodash');
-const massive = require("massive");
 
 const discogs_client = require('lib/discogs_client');
 const postprocess = require('workers/items_postprocessor');
+
+const db_client = require('lib/clients/db');
+const queue_client = require('lib/clients/queue');
 
 const discogs_album_restorer = new (require('lib/restorers/discogs')).AlbumRestorer();
 const itunes_album_restorer  = new (require('lib/restorers/itunes')).AlbumRestorer();
 const deezer_album_restorer  = new (require('lib/restorers/deezer')).AlbumRestorer();
 
-const DB_HOST = process.env['DB_HOST'];
-const DB_PORT = process.env['DB_PORT'];
-const DB_USER = process.env['DB_USER'];
-const DB_PASSWD = process.env['DB_PASSWD'];
-const DB_NAME = process.env['DB_NAME'];
-
-const RABBITMQ_URL = process.env['RABBITMQ_URL'];
 const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
-
 
 class ItemsProcessor {
 
@@ -36,50 +28,26 @@ class ItemsProcessor {
     spawn(function*(){
 
       var connections = yield [
-        ItemsProcessor.connect_to_db(),
-        ItemsProcessor.connect_to_queue()
+        db_client,
+        queue_client
       ];
 
       self.db = connections[0];
       self.queue = connections[1];
 
+
+      self.queue.on('disconnected', () => {
+        log.info('disconnected from queue. exiting.');
+        process.exit(0);
+      });
+
       self.queue
       .default()
       .queue({ name: RABBITMQ_CHANNEL })
       .consume(self.process_item.bind(self), { noAck: true });
-    });
+    }).catch(e => log.error(`erroron initialisation. ${e}`));
 
     return this;
-  }
-
-  static connect_to_db(){
-    return new Promise((resolve) => {
-      log.info('connecting to db');
-      massive.connect({
-        connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}/${DB_NAME}`
-      }, (err, _db) => {
-        log.info('connected to db');
-        resolve(_db);
-      });
-    });
-  }
-
-  static connect_to_queue(){
-    return new Promise((resolve) => {
-      log.info('connecting to queue');
-      var queue = jackrabbit(RABBITMQ_URL)
-      .on('connected', function() {
-        log.info('connected to queue');
-        resolve(queue);
-      })
-      .on('error', function(err) {
-        log.info('queue error: ', err);
-      })
-      .on('disconnected', function() {
-        log.info('disconnected from queue. exiting.');
-        process.exit(0);
-      });
-    })
   }
 
   static generate_query_string(item){
