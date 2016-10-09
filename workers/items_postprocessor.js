@@ -17,6 +17,8 @@ const track_restorers = {
 var db;
 db_client.then(_db => db = _db);
 
+process.on('postprocess', postprocess);
+
 function postprocess(item){
   var discogs_data = item.discogs_data;
   var itunes_data = item.restorers_data.itunes;

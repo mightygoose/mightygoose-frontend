@@ -23,8 +23,6 @@ class ItemsProcessor {
   constructor(){
     var self = this;
 
-    self.postprocess = postprocess;
-
     spawn(function*(){
 
       var connections = yield [
@@ -199,8 +197,7 @@ class ItemsProcessor {
         });
       }
 
-      //should be event here
-      this.postprocess(Object.assign({}, processed_item));
+      process.emit('postprocess', Object.assign({}, processed_item));
     }).catch(e => log.error(e))
   }
 }
