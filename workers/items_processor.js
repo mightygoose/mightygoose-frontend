@@ -7,10 +7,6 @@ const spawn = require('co');
 const _ = require('lodash');
 
 const discogs_client = require('lib/discogs_client');
-const postprocess = require('workers/items_postprocessor');
-
-const db_client = require('lib/clients/db');
-const queue_client = require('lib/clients/queue');
 
 const discogs_album_restorer = new (require('lib/restorers/discogs')).AlbumRestorer();
 const itunes_album_restorer  = new (require('lib/restorers/itunes')).AlbumRestorer();
@@ -25,9 +21,11 @@ class ItemsProcessor {
 
     spawn(function*(){
 
+      require('workers/items_postprocessor');
+
       var connections = yield [
-        db_client,
-        queue_client
+        require('lib/clients/db'),
+        require('lib/clients/queue')
       ];
 
       self.db = connections[0];
@@ -56,9 +54,9 @@ class ItemsProcessor {
       ]),
       sh_type: item.crawler_name,
       tags: item.merged_tags
-    }, !item.restorers_data.itunes ? {} : {
+    }, _.isUndefined(item.restorers_data.itunes) ? {} : {
       itunes: item.restorers_data.itunes,
-    }, !item.restorers_data.deezer ? {} : {
+    }, _.isUndefined(item.restorers_data.deezer) ? {} : {
       deezer: item.restorers_data.deezer,
     }), [
       "sh_key", "sh_type", "embed", "images", "title", "url",
@@ -115,17 +113,19 @@ class ItemsProcessor {
   }
 
   static generate_status(item){
-    if(~item.badges.indexOf('discogs-no-results') || item.discogs_data.similarity <= 0.5){
-      return "bad";
+    switch(true){
+      case !~item.badges.indexOf('discogs-no-results') && item.discogs_data.similarity > 0.5:
+      case item.restorers_data.itunes && item.restorers_data.itunes.similarity === 1:
+      case item.restorers_data.deezer && item.restorers_data.deezer.similarity === 1:
+        return 'good';
+      default:
+        return 'bad';
     }
-    return "good";
   }
 
   static generate_table_name(item){
     switch(true){
       case item.status === 'good':
-      case item.restorers_data.itunes && item.restorers_data.itunes.similarity === 1:
-      case item.restorers_data.deezer && item.restorers_data.deezer.similarity === 1:
         return 'items';
       default:
         return 'bad_items';
@@ -137,6 +137,11 @@ class ItemsProcessor {
 
       log.info(`got item #${item.sh_key}`);
       var processed_item = Object.assign({}, item);
+
+      //should be filtered on spider side
+      Object.assign(processed_item, {
+        title: _.trim(processed_item.title)
+      });
 
       Object.assign(processed_item, {
         discogs_data: yield discogs_album_restorer.restore(processed_item)
