@@ -52,6 +52,11 @@ front_app.use(route.get('/sitemaps/:sitemap_file', function *(sitemap_file){
   this.body = sitemap_content.Body.toString();
 }));
 
+front_app.use(route.get('/metrics/:metric', function *(metric){
+  this.set('Content-Type', 'image/png');
+  this.body = '';
+}));
+
 front_app.use(route.get('/post/random', function *(post_id){
   log.info('render random post page');
   this.body = render('../public/index.html', {

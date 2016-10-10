@@ -3,6 +3,7 @@ require('file?name=../../assets/main.css!stylus!./main.styl');
 
 const BaseController = require('ascesis').BaseController;
 const Router = require('director').Router;
+const Delegate = require('dom-delegate');
 
 
 class MainController extends BaseController {
@@ -56,9 +57,31 @@ class MainController extends BaseController {
     this.addEventListener('post-rendered', ({target: controller}) => {
       router.setRoute(`/post/${controller.current_post_id}`);
     });
+
+
+    let delegate = new Delegate(this);
+    delegate.on('click', '.next-button', () => {
+      this.send_metric('next_button');
+    });
+    delegate.on('click', '.prev-button', () => {
+      this.send_metric('prev_button');
+    });
+    delegate.on('click', '.original-post-link', () => {
+      this.send_metric('original_post_link');
+    });
+    delegate.on('click', 'itunes-widget .track-list-track', () => {
+      this.send_metric('itunes_widget');
+    });
+    delegate.on('click', '.icon-discogs_logo', () => {
+      this.send_metric('discogs_link');
+    });
+
   }
   attach(){}
   detach(){}
+  send_metric(metric_name){
+    document.createElement('img').setAttribute('src', `/metrics/${metric_name}`)
+  }
   attributeChange(name, previousValue, value){}
 }
 MainController.extends = 'body';
