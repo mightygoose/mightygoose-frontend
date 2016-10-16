@@ -100,6 +100,16 @@ post-item {
     background: $color-yellow-primary;
     color: $color-black;
     text-decoration: underline;
+    display: inline-block;
+    min-width: 20%;
+  }
+  .original-post-notification {
+    color: $color-gray-dark;
+    font-size: 0.45em;
+    line-height: 1.4;
+    display: inline-block;
+    vertical-align: top;
+    width: 60%;
   }
   .item-tracklist {
     mighty-preloader {
@@ -129,6 +139,12 @@ post-item {
     }
     .item-content-wrapper {
       padding: 0;
+    }
+  }
+  @media (max-width: $breakpoints.$tablet) {
+    .original-post-notification {
+      margin-top: 1em;
+      width: 100%;
     }
   }
 }
