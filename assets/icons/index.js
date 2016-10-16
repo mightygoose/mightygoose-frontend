@@ -15,6 +15,7 @@ const icons_map = {
   discogs_logo: require('./svg/discogs_logo.svg'),
   mixcloud: require('./svg/mixcloud.svg'),
   soundcloud: require('./svg/soundcloud.svg'),
+  itunes: require('./svg/itunes.svg'),
 }
 
 style_inject(icon_font.css);

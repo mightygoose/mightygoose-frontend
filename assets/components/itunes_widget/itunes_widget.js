@@ -9,6 +9,7 @@ const Delegate = require('dom-delegate');
 class ItunesWidget extends BaseComponent {
   render(data){
     this.html(template({
+      collection: _.filter(data.results, {wrapperType: "collection"})[0],
       each_track(tpl){
         return _.reduce(
           _.filter(data.results, {wrapperType: "track"}),

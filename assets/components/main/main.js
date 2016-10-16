@@ -75,6 +75,9 @@ class MainController extends BaseController {
     delegate.on('click', '.icon-discogs_logo', () => {
       this.send_metric('discogs_link');
     });
+    delegate.on('click', '.itunes-link', () => {
+      this.send_metric('itunes_link');
+    });
 
   }
   attach(){}
