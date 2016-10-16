@@ -1,6 +1,9 @@
 "use strict"
 const pry = require('pryjs');
 
+//this module becomes a monster.
+//split into db connector, items store and user store
+
 const request = require('koa-request');
 const _ = require('lodash');
 const log = require('log-colors');
@@ -19,6 +22,8 @@ const RABBITMQ_URL = process.env['RABBITMQ_URL'];
 const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
 
 const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
+
+const USERS_TABLE = process.env['USERS_TABLE'];
 
 const CONNECT_TIMEOUT = 200;
 const REQUEST_TIMEOUT = 200;
@@ -183,6 +188,36 @@ class Store {
       })((error, response) => resolve(response, error));
     }).then((response, error) => {
       return response.body;
+    });
+  }
+
+  //user
+  get_user_by_email(email){
+    return new Promise((resolve) => {
+      var query = `
+        SELECT * FROM ${USERS_TABLE} WHERE email = '${email}' LIMIT 1
+      `;
+      this.db.run(query, (err,items) => {
+        resolve(items, err);
+      });
+    }).then((response, error) => {
+      return (response || [null])[0];
+    });
+  }
+
+  create_user(user){
+    return new Promise((resolve) => {
+      var query = `
+        INSERT INTO ${USERS_TABLE}
+          (email, first_name, last_name)
+        VALUES
+          ('${user.email}', '${user.first_name}', '${user.last_name}')
+      `;
+      this.db.run(query, (err,items) => {
+        resolve(items, err);
+      });
+    }).then((response, error) => {
+      return user;
     });
   }
 

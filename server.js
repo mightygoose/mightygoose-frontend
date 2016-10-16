@@ -7,11 +7,13 @@ const pry = require('pryjs');
 //requirements
 const koa = require('koa');
 const route = require('koa-route');
+const session = require('koa-session');
 const compress = require('koa-compress');
 const mount = require('koa-mount');
 
 const front_app = require('./app/front_app');
 const api_app = require('./app/api_app');
+const user_app = require('./app/user_app');
 const log = require('log-colors');
 
 //code
@@ -43,8 +45,12 @@ app.use(compress({
 //api endpoints
 app.use(mount('/api', api_app));
 
+//user app
+app.keys = ['grant', 'user'];
+app.use(session(app));
+app.use(mount('/user', user_app));
+
 //static
 app.use(mount('/', front_app));
-
 
 app.listen(process.env['PORT'] || 3000);
