@@ -10,11 +10,15 @@ const string_parser = require('lib/string_parser');
 
 const discogs_client = require('lib/discogs_client');
 
-const discogs_album_restorer = new (require('lib/restorers/discogs')).AlbumRestorer();
-const itunes_album_restorer  = new (require('lib/restorers/itunes')).AlbumRestorer();
-const deezer_album_restorer  = new (require('lib/restorers/deezer')).AlbumRestorer();
+const restorers = {
+  discogs: new (require('lib/restorers/discogs')).AlbumRestorer(),
+  itunes: new (require('lib/restorers/itunes')).AlbumRestorer(),
+  deezer: new (require('lib/restorers/deezer')).AlbumRestorer()
+}
 
 const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
+
+const MAX_RESTORING_ATTEMPTS = 2;
 
 class ItemsProcessor {
 
@@ -156,8 +160,7 @@ class ItemsProcessor {
   }
 
   static process_data(item, masks){
-    //1) passing masks as an argument is probably not a good idea
-    //2) use all restorers in parallel
+    // passing masks as an argument is probably not a good idea
     return spawn(function*(){
 
       log.info(`got item #${item.sh_key}`);
@@ -168,24 +171,34 @@ class ItemsProcessor {
         title: _.trim(processed_item.title)
       });
 
+      var title_variants = string_parser.parse_massive(processed_item.title, masks).slice(0, MAX_RESTORING_ATTEMPTS);
+      var restorers_data = yield Object.keys(restorers).reduce((acc, restorer_name) => {
+        acc[restorer_name] = spawn(function*(){
+          var data = null;
+          if(!title_variants.length){
+            data = yield restorers[restorer_name].restore(processed_item);
+            return data;
+          }
+          for(var variant of title_variants){
+            data = yield restorers[restorer_name].restore(Object.assign({}, processed_item, {
+              title: `${variant.artist} - ${variant.album}`
+            }));
+            if(data !== null){
+              return data;
+            }
+          }
+          return data;
+        });
+        return acc;
+      }, {});
+
+
+      //bad!
       Object.assign(processed_item, {
-        discogs_data: yield discogs_album_restorer.restore(processed_item)
+        discogs_data: restorers_data.discogs,
+        restorers_data: restorers_data
       });
 
-      if(processed_item.discogs_data === null){
-        var title_variants = string_parser.parse_massive(processed_item.title, masks).slice(0, 2);
-        for(var variant of title_variants.slice(0, 1)){
-          var discogs_data = yield discogs_album_restorer.restore(Object.assign({}, processed_item, {
-            title: `${variant.artist} - ${variant.album}`
-          }));
-          if(discogs_data !== null){
-            Object.assign(processed_item, {
-              discogs_data: discogs_data
-            });
-            break;
-          }
-        }
-      }
 
       /* think of something better here */
       Object.assign(processed_item, {
@@ -194,13 +207,6 @@ class ItemsProcessor {
         title: processed_item.discogs_data.title
       });
       /* / */
-
-      Object.assign(processed_item, {
-        restorers_data: yield {
-          itunes: itunes_album_restorer.restore(processed_item),
-          deezer: deezer_album_restorer.restore(processed_item)
-        }
-      });
 
       Object.assign(processed_item, {
         badges: ItemsProcessor.generate_badges(processed_item)
