@@ -13,7 +13,8 @@ const discogs_client = require('lib/discogs_client');
 const restorers = {
   discogs: new (require('lib/restorers/discogs')).AlbumRestorer(),
   itunes: new (require('lib/restorers/itunes')).AlbumRestorer(),
-  deezer: new (require('lib/restorers/deezer')).AlbumRestorer()
+  deezer: new (require('lib/restorers/deezer')).AlbumRestorer(),
+  spotify: new (require('lib/restorers/spotify')).AlbumRestorer(),
 }
 
 const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
@@ -75,6 +76,8 @@ class ItemsProcessor {
 
   static generate_query_string(item){
 
+
+    //should be common logic for all restorers
     var prepared = _.pick(Object.assign({}, item, {
       discogs: _.pick(item.discogs_data, [
         "id", "type", "resource_url", "similarity", "thumb", "country", "year"
@@ -83,11 +86,13 @@ class ItemsProcessor {
       tags: item.merged_tags
     }, _.isUndefined(item.restorers_data.itunes) ? {} : {
       itunes: item.restorers_data.itunes,
+    }, _.isUndefined(item.restorers_data.spotify) ? {} : {
+      spotify: item.restorers_data.spotify,
     }, _.isUndefined(item.restorers_data.deezer) ? {} : {
       deezer: item.restorers_data.deezer,
     }), [
       "sh_key", "sh_type", "embed", "images", "title", "url",
-      "badges", "discogs", "itunes", "deezer", "tags"
+      "badges", "discogs", "itunes", "deezer", "spotify", "tags"
     ]);
 
 
@@ -99,7 +104,7 @@ class ItemsProcessor {
         : JSON.stringify(value)
       ).replace(/'/ig, "''")}'`);
       return acc;
-    }, { fields: [], values: [] })
+    }, { fields: [], values: [] });
 
 
     return `
