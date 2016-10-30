@@ -6,6 +6,8 @@ const log = require('log-colors');
 const spawn = require('co');
 const _ = require('lodash');
 
+const string_parser = require('lib/string_parser');
+
 const discogs_client = require('lib/discogs_client');
 
 const discogs_album_restorer = new (require('lib/restorers/discogs')).AlbumRestorer();
@@ -31,6 +33,27 @@ class ItemsProcessor {
       self.db = connections[0];
       self.queue = connections[1];
 
+      log.info('pulling masks');
+      var masks_query = `
+        SELECT mask, occurencies, (occurencies::FLOAT / total::float) * 100 AS weight FROM (
+              SELECT
+                  recognition_result->'title'->>'mask'::text AS mask,
+                  count(*) AS occurencies
+              FROM recognition_masks
+              GROUP BY mask
+              ORDER BY occurencies DESC
+          ) a, (
+              SELECT count(*) AS total FROM recognition_masks
+          ) b
+        WHERE occurencies > 1
+        ORDER BY occurencies desc, char_length(mask) desc
+      `;
+
+      self.masks = yield new Promise((resolve) => self.db.run(masks_query, (err, items) => {
+        if(err){ reject(err); }
+        resolve(items);
+      }));
+      log.info('masks pulled');
 
       self.queue.on('disconnected', () => {
         log.info('disconnected from queue. exiting.');
@@ -132,7 +155,9 @@ class ItemsProcessor {
     }
   }
 
-  static process_data(item){
+  static process_data(item, masks){
+    //1) passing masks as an argument is probably not a good idea
+    //2) use all restorers in parallel
     return spawn(function*(){
 
       log.info(`got item #${item.sh_key}`);
@@ -146,6 +171,21 @@ class ItemsProcessor {
       Object.assign(processed_item, {
         discogs_data: yield discogs_album_restorer.restore(processed_item)
       });
+
+      if(processed_item.discogs_data === null){
+        var title_variants = string_parser.parse_massive(processed_item.title, masks).slice(0, 2);
+        for(var variant of title_variants.slice(0, 1)){
+          var discogs_data = yield discogs_album_restorer.restore(Object.assign({}, processed_item, {
+            title: `${variant.artist} - ${variant.album}`
+          }));
+          if(discogs_data !== null){
+            Object.assign(processed_item, {
+              discogs_data: discogs_data
+            });
+            break;
+          }
+        }
+      }
 
       /* think of something better here */
       Object.assign(processed_item, {
@@ -187,7 +227,7 @@ class ItemsProcessor {
   }
 
   process_item(item) {
-    return ItemsProcessor.process_data(item).then((processed_item) => {
+    return ItemsProcessor.process_data(item, this.masks).then((processed_item) => {
       var query_string = ItemsProcessor.generate_query_string(processed_item);
 
       if(process.env['NODE_ENV'] !== 'production'){
