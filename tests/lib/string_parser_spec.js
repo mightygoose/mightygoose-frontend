@@ -7,6 +7,23 @@ const cases = [
     structure: [
       {
         "type": "pattern",
+        "value": "album",
+      }
+    ],
+    mask: '{album}',
+    strings: {
+      'Album': {
+        positions: [],
+        chunks: {
+          album: ['Album']
+        }
+      },
+    }
+  },
+  {
+    structure: [
+      {
+        "type": "pattern",
         "value": "artist",
       },
       {
