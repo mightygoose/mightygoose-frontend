@@ -1,3 +1,7 @@
+//1) rewrite everything in es6
+//2) add event delegation functionality
+
+
 (function (root, factory) {
   if (typeof exports === 'object') {
     module.exports = factory();

@@ -79,6 +79,11 @@ class MainController extends BaseController {
       this.send_metric('itunes_link');
     });
 
+
+    delegate.on('user-authorised', 'login-bar', () => {
+      console.log('authorised');
+    });
+
   }
   attach(){}
   detach(){}

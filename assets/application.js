@@ -38,5 +38,6 @@ require.ensure([], () => {
   require('components/autocomplete/autocomplete');
   require('components/deezer-widget/deezer-widget');
   require('components/itunes_widget/itunes_widget');
+  require('components/login_bar/login_bar');
 })
 
