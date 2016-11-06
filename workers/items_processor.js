@@ -7,6 +7,7 @@ const spawn = require('co');
 const _ = require('lodash');
 
 const string_parser = require('lib/string_parser');
+const StringAnalyser = require('lib/string_analyser');
 
 const discogs_client = require('lib/discogs_client');
 
@@ -17,7 +18,11 @@ const restorers = {
   spotify: new (require('lib/restorers/spotify')).AlbumRestorer(),
 }
 
+const analyser = new StringAnalyser();
+
+
 const RABBITMQ_CHANNEL = process.env['RABBITMQ_CHANNEL'];
+const RESTORING_DELAY = process.env['RESTORING_DELAY'];
 
 const MAX_RESTORING_ATTEMPTS = 2;
 
@@ -40,25 +45,28 @@ class ItemsProcessor {
 
       log.info('pulling masks');
       var masks_query = `
-        SELECT mask, occurencies, (occurencies::FLOAT / total::float) * 100 AS weight FROM (
-              SELECT
-                  recognition_result->'title'->>'mask'::text AS mask,
-                  count(*) AS occurencies
-              FROM recognition_masks
-              GROUP BY mask
-              ORDER BY occurencies DESC
-          ) a, (
-              SELECT count(*) AS total FROM recognition_masks
-          ) b
-        WHERE occurencies > 1
-        ORDER BY occurencies desc, char_length(mask) desc
+        SELECT
+            recognition_result->'title'->>'original_title'::text AS string,
+            json_build_object(
+                'year', recognition_result->'title'->>'year',
+                'album', recognition_result->'title'->'album',
+                'artist', recognition_result->'title'->'artist'
+            ) AS data,
+            recognition_result->'title'->>'mask'::text AS mask
+        FROM recognition_masks
+        ORDER BY id DESC
       `;
 
-      self.masks = yield new Promise((resolve) => self.db.run(masks_query, (err, items) => {
+      var masks = yield new Promise((resolve) => self.db.run(masks_query, (err, items) => {
         if(err){ reject(err); }
         resolve(items);
       }));
       log.info('masks pulled');
+
+      log.info('training title analyser');
+      analyser.train(masks.map(mask => [mask['string'], mask['data'], mask['mask']]));
+
+      analyser.on('weights_updated', () => log.info('title analyser trained'));
 
       self.queue.on('disconnected', () => {
         log.info('disconnected from queue. exiting.');
@@ -68,7 +76,7 @@ class ItemsProcessor {
       self.queue
       .default()
       .queue({ name: RABBITMQ_CHANNEL })
-      .consume(self.process_item.bind(self), { noAck: true });
+      .consume(self.process_item.bind(self));
     }).catch(e => log.error(`erroron initialisation. ${e}`));
 
     return this;
@@ -165,7 +173,6 @@ class ItemsProcessor {
   }
 
   static process_data(item, masks){
-    // passing masks as an argument is probably not a good idea
     return spawn(function*(){
 
       log.info(`got item #${item.sh_key}`);
@@ -176,32 +183,43 @@ class ItemsProcessor {
         title: _.trim(processed_item.title)
       });
 
-      var title_variants = string_parser.parse_massive(processed_item.title, masks).slice(0, MAX_RESTORING_ATTEMPTS);
-      var restorers_data = yield Object.keys(restorers).reduce((acc, restorer_name) => {
-        acc[restorer_name] = spawn(function*(){
-          var data = null;
-          if(!title_variants.length){
-            data = yield restorers[restorer_name].restore(processed_item);
-            return data;
-          }
-          for(var variant of title_variants){
-            data = yield restorers[restorer_name].restore(Object.assign({}, processed_item, {
-              title: `${variant.artist} - ${variant.album}`
-            }));
-            if(data !== null){
+      var mask = analyser.classify_mask(processed_item.title)[0];
+      var title_variants = string_parser.parse_string(processed_item.title, mask.mask).slice(0, MAX_RESTORING_ATTEMPTS);
+
+      Object.assign(processed_item, {
+        restorers_data: yield Object.keys(restorers).reduce((acc, restorer_name) => {
+          acc[restorer_name] = spawn(function*(){
+            var data = null;
+            if(!title_variants.length){
+              data = yield restorers[restorer_name].restore(processed_item);
               return data;
             }
-          }
-          return data;
-        });
-        return acc;
-      }, {});
+            for(var variant of title_variants){
+              data = yield restorers[restorer_name].restore(Object.assign({}, processed_item, {
+                title: `${variant.artist} - ${variant.album}`
+              }));
+              if(data !== null){
+                return data;
+              }
+            }
+            return data;
+          });
+          return acc;
+        }, {})
+      });
 
 
-      //bad!
+      //bad! discogs data should be on the same level
       Object.assign(processed_item, {
-        discogs_data: restorers_data.discogs,
-        restorers_data: restorers_data
+        discogs_data: processed_item.restorers_data.discogs
+      });
+
+      //create method get_merged_tags()
+      Object.assign(processed_item, {
+        merged_tags: _.uniq(
+          JSON.parse(processed_item.tags).concat((processed_item.discogs_data || {genre: []}).genre)
+                                         .concat((processed_item.discogs_data || {style: []}).style)
+        )
       });
 
 
@@ -212,6 +230,7 @@ class ItemsProcessor {
         title: processed_item.discogs_data.title
       });
       /* / */
+
 
       Object.assign(processed_item, {
         badges: ItemsProcessor.generate_badges(processed_item)
@@ -225,20 +244,14 @@ class ItemsProcessor {
         item_table: ItemsProcessor.generate_table_name(processed_item)
       });
 
-      Object.assign(processed_item, {
-        merged_tags: _.uniq(
-          JSON.parse(processed_item.tags).concat((processed_item.discogs_data || {genre: []}).genre)
-                                         .concat((processed_item.discogs_data || {style: []}).style)
-        )
-      });
 
       return processed_item;
 
     }).catch(e => log.error(`error while processing item. ${e}`));
   }
 
-  process_item(item) {
-    return ItemsProcessor.process_data(item, this.masks).then((processed_item) => {
+  process_item(item, ack) {
+    return ItemsProcessor.process_data(item).then((processed_item) => {
       var query_string = ItemsProcessor.generate_query_string(processed_item);
 
       if(process.env['NODE_ENV'] !== 'production'){
@@ -254,6 +267,10 @@ class ItemsProcessor {
       }
 
       process.emit('postprocess', Object.assign({}, processed_item));
+
+      //sleep before next restoring session
+      setTimeout(ack || () => {}, RESTORING_DELAY);
+
     }).catch(e => log.error(e))
   }
 }
