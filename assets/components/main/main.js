@@ -14,6 +14,9 @@ class MainController extends BaseController {
     var $content_section = document.querySelector("#content_section");
 
     var routes = {
+      '/user/profile': function () {
+        $content_section.innerHTML = '<user-profile-controller></user-profile-controller>';
+      },
       '/search': function () {
         document.querySelector("#search-link").classList.add("active-menu-item");
         document.querySelector("#random-post-link").classList.remove("active-menu-item");
@@ -37,8 +40,6 @@ class MainController extends BaseController {
         }
       },
       '/mixcloud': function () {
-        //document.querySelector("#mixcloud-link").classList.add("active-menu-item");
-        //document.querySelector("#random-post-link").classList.remove("active-menu-item");
         $content_section.innerHTML = '<mixcloud-controller></mixcloud-controller>';
       },
       '/statistic': function () {
