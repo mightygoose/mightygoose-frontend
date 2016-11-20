@@ -40,7 +40,7 @@ module.exports = {
 	resolve: {
           modulesDirectories: ["node_modules", "assets", "lib"],
           alias: {
-            "ascesis": path.join(__dirname, "assets/lib/ascesis")
+            "ascesis": path.join(__dirname, "assets/lib/_ascesis")
           }
 	},
 	plugins: [

@@ -40,5 +40,5 @@ require.ensure([], () => {
   require('components/itunes_widget/itunes_widget');
   require('components/login_bar/login_bar');
   require('components/user_profile_controller/user_profile_controller');
-})
+});
 
