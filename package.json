@@ -24,6 +24,7 @@
   "dependencies": {
     "7digital-api": "^0.35.8",
     "@purest/providers": "^1.0.0",
+    "@risingstack/trace": "^2.33.0",
     "autoprefixer": "^6.3.3",
     "aws-sdk": "^2.4.1",
     "babel-core": "^6.4.5",

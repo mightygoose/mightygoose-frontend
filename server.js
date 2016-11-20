@@ -1,4 +1,5 @@
 if(process.env['NODE_ENV'] === 'production'){
+  require('@risingstack/trace');
   require('newrelic');
 }
 
