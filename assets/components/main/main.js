@@ -7,7 +7,9 @@ const Delegate = require('dom-delegate');
 
 
 class MainController extends BaseController {
-  create() {
+  constructor(){
+    super();
+
     console.log("application ready");
     var self = this;
 
@@ -86,13 +88,13 @@ class MainController extends BaseController {
     });
 
   }
-  attach(){}
-  detach(){}
+  connectedCallback(){
+    super.connectedCallback();
+    console.log('test');
+  }
   send_metric(metric_name){
     document.createElement('img').setAttribute('src', `/metrics/${metric_name}`)
   }
-  attributeChange(name, previousValue, value){}
 }
-MainController.extends = 'body';
 
-module.exports = document.registerElement('main-controller', MainController);
+module.exports = customElements.define('main-controller', MainController, {extends: 'body'});

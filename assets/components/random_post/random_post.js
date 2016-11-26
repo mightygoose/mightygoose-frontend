@@ -52,7 +52,8 @@ class RandomPostController extends BaseController {
     this.load_by_id();
   }
 
-  create() {
+  connectedCallback(){
+    super.connectedCallback();
     console.log('random post ctrl');
     this.state = {
       queue: new Map(),
@@ -95,4 +96,4 @@ class RandomPostController extends BaseController {
   }
 }
 
-module.exports = document.registerElement('random-post-controller', RandomPostController);
+module.exports = customElements.define('random-post-controller', RandomPostController);

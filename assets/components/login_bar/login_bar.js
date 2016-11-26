@@ -6,7 +6,8 @@ const styles = require('./login_bar.styl');
 
 
 class LoginBar extends BaseComponent {
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
     console.log('login bar created');
     this.render({});
     this.check_auth();
@@ -50,4 +51,4 @@ class LoginBar extends BaseComponent {
   }
 }
 
-module.exports = document.registerElement('login-bar', LoginBar);
+module.exports = customElements.define('login-bar', LoginBar);

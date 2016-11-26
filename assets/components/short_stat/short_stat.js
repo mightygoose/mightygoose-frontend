@@ -15,4 +15,4 @@ class ShortStat extends BaseComponent {
   attributeChange(name, previousValue, value){}
 }
 
-module.exports = document.registerElement('short-stat', ShortStat);
+module.exports = customElements.define('short-stat', ShortStat);
