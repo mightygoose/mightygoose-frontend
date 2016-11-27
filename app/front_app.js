@@ -101,7 +101,7 @@ front_app.use(route.get('/post/:post_id/:slug?', function *(post_id, slug){
     request_href: this.request.href,
     title: item_data.title,
     content: `
-      <random-post-controller post_id="${item_data.id}" style="display: none;">
+      <random-post-controller prerendered="true" post_id="${item_data.id}" style="display: none;">
         ${content}
       </random-post-controller>
     `

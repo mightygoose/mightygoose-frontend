@@ -101,7 +101,7 @@ class MainController extends BaseController {
     var router = new Router().configure({ html5history: true,  recurse: 'forward' });
 
     let table = {
-      'comp-a': '/post',
+      'random-post-controller': '/post',
       'comp-b': '/foo',
     };
 
@@ -111,8 +111,10 @@ class MainController extends BaseController {
 
         router.mount(Object.assign({}, component.routes, {
           on: [() => {
-            $content_section.children[0] && buffer.appendChild($content_section.children[0]);
-            $content_section.appendChild(component);
+            if(!($content_section.children[0] === component)){
+              $content_section.children[0] && buffer.appendChild($content_section.children[0]);
+              $content_section.appendChild(component);
+            }
           }].concat(component.routes.on || [])
         }), table[component_name]);
 
@@ -124,7 +126,7 @@ class MainController extends BaseController {
 
 
     if(router.getPath() === '/'){
-      router.init('/post/random');
+      router.init('/post');
     } else {
       router.init();
     }
@@ -146,6 +148,7 @@ class CompA extends BaseController {
     this.trigger('a-created');
   }
   get routes(){
+    let self = this;
     return {
       on(){
         console.log('alright');
@@ -157,6 +160,9 @@ class CompA extends BaseController {
         }
       }
     }
+  }
+  dump(){
+    console.log('dump!');
   }
 }
 customElements.define('comp-a', CompA);

@@ -1,7 +1,8 @@
 const BaseController = require('ascesis').BaseController;
 
 class PostsController extends BaseController {
-  create() {
+  connectedCallback(){
+    super.connectedCallback();
     console.log('posts ctrl');
   }
   render(posts, append){
@@ -14,9 +15,6 @@ class PostsController extends BaseController {
     });
     this.appendChild(fragment);
   }
-  attach(){}
-  detach(){}
-  attributeChange(name, previousValue, value){}
 }
 
-module.exports = document.registerElement('posts-controller', PostsController);
+module.exports = customElements.define('posts-controller', PostsController);

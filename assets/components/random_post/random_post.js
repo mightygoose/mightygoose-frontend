@@ -16,6 +16,12 @@ class RandomPostController extends BaseController {
 
   load_by_id(post_id = "random"){
     return new Promise((resolve, reject) => {
+      if(this.getAttribute('prerendered') === 'true'){
+        this.setAttribute('prerendered', 'false');
+        resolve(false);
+      } else {
+        this.html(template({}));
+      }
       if(post_id === this.current_post_id){
         reject();
         return;
@@ -29,9 +35,13 @@ class RandomPostController extends BaseController {
       .then(response => response.json())
       .then((posts) => resolve(posts))
     }).then((posts) => {
-      var current_post_id = posts[0].id;
-      this.state.queue.set(current_post_id, posts);
-      this.$posts_controller.render(posts);
+      if(posts){
+        var current_post_id = posts[0].id;
+        this.state.queue.set(current_post_id, posts);
+        this.querySelector('posts-controller').render(posts);
+      }
+
+      this.style = '';
       this.classList.add('with-post');
       this.trigger('post-rendered');
       return;
@@ -81,17 +91,29 @@ class RandomPostController extends BaseController {
       //(keyCode === 39) && this.next();
     //});
 
-    this.html(template({}));
   }
-  attach(){
-    var post_id = this.getAttribute('post_id');
-    if(post_id && post_id !== ''){
-      this.load_by_id(+post_id);
+  attributeChangedCallback(name, prev, value){
+    super.attributeChangedCallback();
+
+    switch(name){
+      case 'post_id':
+        this.load_by_id(+value);
+        break;
     }
   }
-  attributeChange(name, previousValue, value){
-    if(name === 'post_id' && previousValue !== '' && value && value !== ''){
-      this.load_by_id(+value).catch(() => {});
+  static get observedAttributes() {
+    return ['post_id'];
+  }
+  get routes(){
+    let self = this;
+    return {
+      '/': {
+        on(){
+        }
+      },
+      '/:post_id/?((\w|.)*)'(post_id){
+        self.setAttribute('post_id', post_id);
+      },
     }
   }
 }
