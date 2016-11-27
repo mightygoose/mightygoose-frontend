@@ -103,18 +103,18 @@ class MainController extends BaseController {
     let table = {
       'comp-a': '/post',
       'comp-b': '/foo',
-      'comp-c': '/'
     };
 
     Object.keys(table).forEach((component_name) => {
       customElements.whenDefined(component_name).then(() => {
         let component = this.querySelector(component_name) || document.createElement(component_name);
-        router.mount(Object.assign({}, {
-          on(){
+
+        router.mount(Object.assign({}, component.routes, {
+          on: [() => {
             $content_section.children[0] && buffer.appendChild($content_section.children[0]);
             $content_section.appendChild(component);
-          }
-        }, component.routes), table[component_name]);
+          }].concat(component.routes.on || [])
+        }), table[component_name]);
 
         if('/'.concat(router.getRoute(0)) === table[component_name]){
           router.dispatch('on', router.getPath());
@@ -147,7 +147,7 @@ class CompA extends BaseController {
   }
   get routes(){
     return {
-      '/'(){
+      on(){
         console.log('alright');
         return true;
       },
