@@ -9,11 +9,12 @@ class Preloader extends BaseComponent {
   hide(){
     this.$content.classList.add('hidden');
   }
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
     console.log('preloader created');
     this.innerHTML = template();
     this.$content = this.querySelector('.preloader-wrapper');
   }
 }
 
-module.exports = document.registerElement('mighty-preloader', Preloader);
+module.exports = customElements.define('mighty-preloader', Preloader);

@@ -57,9 +57,9 @@ class MainController extends BaseController {
       //router.init();
     //}
 
-    this.addEventListener('post-rendered', ({target: controller}) => {
-      router.setRoute(`/post/${controller.current_post_id}`);
-    });
+    //this.addEventListener('post-rendered', ({target: controller}) => {
+      //router.setRoute(`/post/${controller.current_post_id}`);
+    //});
 
 
     let delegate = new Delegate(this);
@@ -98,7 +98,7 @@ class MainController extends BaseController {
     var $content_section = document.querySelector("#content_section");
     var buffer = document.createDocumentFragment();
 
-    var router = new Router().configure({ html5history: true,  recurse: 'forward' });
+    var router = new Router().configure({ html5history: true, recurse: 'forward' });
 
     let table = {
       'random-post-controller': '/post',
@@ -118,6 +118,10 @@ class MainController extends BaseController {
           }].concat(component.routes.on || [])
         }), table[component_name]);
 
+        component.addEventListener('change-url', ({ eventData }) => {
+          router.setRoute(table[component_name] + eventData);
+        })
+
         if('/'.concat(router.getRoute(0)) === table[component_name]){
           router.dispatch('on', router.getPath());
         }
@@ -126,7 +130,7 @@ class MainController extends BaseController {
 
 
     if(router.getPath() === '/'){
-      router.init('/post');
+      router.init('/post/');
     } else {
       router.init();
     }
@@ -141,54 +145,3 @@ class MainController extends BaseController {
 }
 
 module.exports = customElements.define('main-controller', MainController, {extends: 'body'});
-
-class CompA extends BaseController {
-  constructor(){
-    super();
-    this.trigger('a-created');
-  }
-  get routes(){
-    let self = this;
-    return {
-      on(){
-        console.log('alright');
-        return true;
-      },
-      '/random': {
-        on(){
-          console.log('foo!');
-        }
-      }
-    }
-  }
-  dump(){
-    console.log('dump!');
-  }
-}
-customElements.define('comp-a', CompA);
-
-class CompB extends BaseController {
-  get routes(){
-    return {
-      '/bar': {
-        on(){
-          console.log('bar!');
-        }
-      }
-    }
-  }
-}
-customElements.define('comp-b', CompB);
-
-class CompC extends BaseController {
-  get routes(){
-    return {
-      '/post/random': {
-        on(){
-          console.log('comp c post!');
-        }
-      }
-    }
-  }
-}
-customElements.define('comp-c', CompC);

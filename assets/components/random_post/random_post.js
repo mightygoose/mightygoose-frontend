@@ -40,11 +40,11 @@ class RandomPostController extends BaseController {
         var current_post_id = posts[0].id;
         this.state.queue.set(current_post_id, posts);
         this.querySelector('posts-controller').render(posts);
+        this.trigger('change-url', '/' + current_post_id);
       }
 
       this.style = '';
       this.classList.add('with-post');
-      this.trigger('post-rendered');
       return;
     });
   }
@@ -98,7 +98,7 @@ class RandomPostController extends BaseController {
 
     switch(name){
       case 'post_id':
-        this.load_by_id(+value);
+        this.load_by_id(+value).catch((e) => {});
         break;
     }
   }
@@ -108,14 +108,13 @@ class RandomPostController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '/': {
-        on(){
-          if(!(self.getAttribute('prerendered') === 'true')){
-            self.html(template({}));
-            self.classList.remove('with-post');
-          }
+      on(){
+        if(typeof this.getRoute(1) === 'undefined' || this.getRoute(1) === ''){
+          self.html(template({}));
+          self.classList.remove('with-post');
         }
       },
+      '$/'(){},
       '/:post_id/?((\w|.)*)'(post_id){
         self.setAttribute('post_id', post_id);
       },

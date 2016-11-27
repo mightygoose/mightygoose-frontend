@@ -1,7 +1,8 @@
 const BaseComponent = require('ascesis').BaseComponent;
 
 class LazyLoad extends BaseComponent {
-  attach(){
+  connectedCallback(){
+    super.connectedCallback();
     var src = this.getAttribute('src');
     console.log(`lazy loading ${src}`);
     let cb = () => {
@@ -12,6 +13,5 @@ class LazyLoad extends BaseComponent {
     window.addEventListener('load', cb);
   }
 }
-LazyLoad.extends = 'link';
 
-module.exports = document.registerElement('lazy-load', LazyLoad);
+module.exports = customElements.define('lazy-load', LazyLoad, {extends: 'link'});
