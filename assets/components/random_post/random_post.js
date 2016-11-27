@@ -17,10 +17,10 @@ class RandomPostController extends BaseController {
   load_by_id(post_id = "random"){
     return new Promise((resolve, reject) => {
       if(this.getAttribute('prerendered') === 'true'){
-        this.setAttribute('prerendered', 'false');
-        resolve(false);
-      } else {
-        this.html(template({}));
+        setTimeout(() => {
+          resolve(false);
+        }, 0);
+        return;
       }
       if(post_id === this.current_post_id){
         reject();
@@ -35,6 +35,7 @@ class RandomPostController extends BaseController {
       .then(response => response.json())
       .then((posts) => resolve(posts))
     }).then((posts) => {
+      this.setAttribute('prerendered', 'false');
       if(posts){
         var current_post_id = posts[0].id;
         this.state.queue.set(current_post_id, posts);
@@ -109,6 +110,10 @@ class RandomPostController extends BaseController {
     return {
       '/': {
         on(){
+          if(!(self.getAttribute('prerendered') === 'true')){
+            self.html(template({}));
+            self.classList.remove('with-post');
+          }
         }
       },
       '/:post_id/?((\w|.)*)'(post_id){
