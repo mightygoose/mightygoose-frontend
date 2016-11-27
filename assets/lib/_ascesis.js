@@ -44,7 +44,6 @@ export function extend(baseClass){
     constructor(){
       super();
     }
-
     toggleHighlight(){
       this.classList.toggle(this.componentType + '-highlighted');
     }
