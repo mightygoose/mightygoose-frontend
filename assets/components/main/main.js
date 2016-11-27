@@ -96,37 +96,31 @@ class MainController extends BaseController {
     console.log('test');
 
     var $content_section = document.querySelector("#content_section");
-    var fragment = document.createDocumentFragment();
-    var buf = document.createDocumentFragment();
+    var buffer = document.createDocumentFragment();
 
     var router = new Router().configure({ html5history: true,  recurse: 'forward' });
 
     let table = {
       'comp-a': '/post',
-      'comp-b': '/foo'
+      'comp-b': '/foo',
+      'comp-c': '/'
     };
 
     Object.keys(table).forEach((component_name) => {
       customElements.whenDefined(component_name).then(() => {
-        let component = document.createElement(component_name);
+        let component = this.querySelector(component_name) || document.createElement(component_name);
         router.mount(Object.assign({}, {
           on(){
-            $content_section.children[0] && buf.appendChild($content_section.children[0]);
+            $content_section.children[0] && buffer.appendChild($content_section.children[0]);
             $content_section.appendChild(component);
           }
         }, component.routes), table[component_name]);
+
         if('/'.concat(router.getRoute(0)) === table[component_name]){
           router.dispatch('on', router.getPath());
         }
-      })
+      });
     });
-
-    window.fr = fragment;
-    window.buf = buf;
-
-    //this.appendChild(table['/post']);
-
-    this.appendChild(fragment);
 
 
     if(router.getPath() === '/'){
@@ -135,6 +129,7 @@ class MainController extends BaseController {
       router.init();
     }
 
+    window.buf = buffer;
     window.router = router;
 
   }
@@ -178,3 +173,16 @@ class CompB extends BaseController {
   }
 }
 customElements.define('comp-b', CompB);
+
+class CompC extends BaseController {
+  get routes(){
+    return {
+      '/post/random': {
+        on(){
+          console.log('comp c post!');
+        }
+      }
+    }
+  }
+}
+customElements.define('comp-c', CompC);
