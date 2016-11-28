@@ -79,11 +79,24 @@ front_app.use(route.get('/post/:post_id/:slug?', function *(post_id, slug){
     artist: title_parts[0],
     album: title_parts[1]
   });
+
+  var type;
+  if(!(item_data.deezer || item_data.itunes)){
+    type = "discogs";
+  } else if((item_data.deezer || {similarity: 0}).similarity >= (item_data.itunes || {similarity: 0}).similarity){
+    type = "deezer";
+  } else {
+    type = "itunes";
+  }
+
   var post_content = render('../public/post.html', _.assign({}, {
     main_image: item_data.images[0],
     each(list, tpl){
       return _.reduce(list, (accum, item) => accum.concat(tpl(item)), "");
     },
+    type: type,
+    deezer: item_data.deezer,
+    itunes: item_data.itunes,
     post_share_link: `${this.request.href}/post/${item_data.id}`
   }, item_data));
   var content = render('../public/random_post.html', {

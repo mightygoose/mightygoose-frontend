@@ -19,8 +19,11 @@ class ItunesWidget extends BaseComponent {
       }
     }));
   }
-  create(){
-    console.log('itunes widget created');
+  connectedCallback(){
+    super.connectedCallback();
+
+    console.log('itunes widget connected');
+
     let self = this;
     let album_id = this.getAttribute('album-id');
     jsonp({
@@ -48,7 +51,6 @@ class ItunesWidget extends BaseComponent {
       target.classList.toggle('icon-pause');
     }, true);
   }
-  attach(){}
 }
 
-module.exports = document.registerElement('itunes-widget', ItunesWidget);
+module.exports = customElements.define('itunes-widget', ItunesWidget);

@@ -8,8 +8,11 @@ class DeezerWidget extends BaseComponent {
   render(data){
     this.html(template(data));
   }
-  create(){
-    console.log('deezer widget created');
+  connectedCallback(){
+    super.connectedCallback();
+
+    console.log('deezer widget connected');
+
     let self = this;
     let album_id = this.getAttribute('album-id');
     jsonp({
@@ -25,4 +28,4 @@ class DeezerWidget extends BaseComponent {
   }
 }
 
-module.exports = document.registerElement('deezer-widget', DeezerWidget);
+module.exports = customElements.define('deezer-widget', DeezerWidget);
