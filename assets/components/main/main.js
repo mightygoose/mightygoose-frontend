@@ -102,7 +102,7 @@ class MainController extends BaseController {
 
     let table = {
       'random-post-controller': '/post',
-      'comp-b': '/foo',
+      'search-posts-controller': '/search',
     };
 
     Object.keys(table).forEach((component_name) => {

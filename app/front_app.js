@@ -57,7 +57,7 @@ front_app.use(route.get('/metrics/:metric', function *(metric){
   this.body = '';
 }));
 
-front_app.use(route.get('/post/random', function *(post_id){
+front_app.use(route.get('/post/', function *(post_id){
   log.info('render random post page');
   this.body = render('../public/index.html', {
     GA_TRACKING_CODE,
@@ -88,7 +88,7 @@ front_app.use(route.get('/post/:post_id/:slug?', function *(post_id, slug){
   }, item_data));
   var content = render('../public/random_post.html', {
     content: `
-      <post-item>
+      <post-item discogs-link="${item_data.discogs && item_data.discogs.resource_url ? item_data.discogs.resource_url : 'false'}">
         ${post_content}
       </post-item>
     `

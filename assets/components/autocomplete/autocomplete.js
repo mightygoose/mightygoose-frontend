@@ -12,7 +12,9 @@ const styles = require('./autocomplete.styl');
 class Autocomplete extends BaseComponent {
   render(data){
   }
-  attach(){
+  connectedCallback(){
+    super.connectedCallback();
+
     console.log('autocomplete created');
     this.html(template());
     var input = this.querySelector('input');
@@ -56,4 +58,4 @@ class Autocomplete extends BaseComponent {
   }
 }
 
-module.exports = document.registerElement('mg-autocomplete', Autocomplete);
+module.exports = customElements.define('mg-autocomplete', Autocomplete);

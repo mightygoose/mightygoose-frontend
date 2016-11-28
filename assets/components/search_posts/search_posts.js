@@ -21,12 +21,12 @@ class SearchPostsController extends BaseController {
       this.preloader.hide();
     });
   }
-  attach(){
+  connectedCallback(){
+    super.connectedCallback();
     console.log('search posts ctrl');
 
     this.posts = [];
 
-    this.html(template);
     this.addEventListener('mg-autocomplete-item-selected', (event) => {
       var {eventData: data} = event;
       if(data.type !== 'tags_suggestion'){
@@ -49,8 +49,14 @@ class SearchPostsController extends BaseController {
     });
 
   }
-  detach(){}
-  attributeChange(name, previousValue, value){}
+  get routes(){
+    let self = this;
+    return {
+      on(){
+        self.html(template);
+      },
+    }
+  }
 }
 
-module.exports = document.registerElement('search-posts-controller', SearchPostsController);
+module.exports = customElements.define('search-posts-controller', SearchPostsController);
