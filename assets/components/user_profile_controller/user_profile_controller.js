@@ -4,14 +4,22 @@ const styles = require('./user_profile_controller.styl');
 
 
 class UserProfileController extends BaseController {
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
+
     console.log('user profile ctrl');
     this.html(template());
   }
-  attach(){
+  get routes(){
+    let self = this;
+    return {
+      on(){
+      },
+      '$/'(){},
+      '/profile'(){
+      },
+    }
   }
-  detach(){}
-  attributeChange(name, previousValue, value){}
 }
 
-module.exports = document.registerElement('user-profile-controller', UserProfileController);
+module.exports = customElements.define('user-profile-controller', UserProfileController);

@@ -14,4 +14,4 @@ class QueryFilter extends BaseComponent {
 }
 QueryFilter.extends = 'style';
 
-module.exports = document.registerElement('query-filter', QueryFilter);
+module.exports = customElements.define('query-filter', QueryFilter);

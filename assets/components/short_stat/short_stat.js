@@ -1,7 +1,15 @@
 const BaseComponent = require('ascesis').BaseComponent;
 
 class ShortStat extends BaseComponent {
-  create() {
+  constructor(){
+    super();
+    console.log('short stat constructor');
+  }
+  connectedCallback(){
+    super.connectedCallback();
+
+    console.log('short stat connected');
+
     var $total_posts_count = this.querySelector("#total_posts_count");
     fetch("/api/stat")
     .then(function(response){

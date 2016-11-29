@@ -2,10 +2,10 @@ const BaseComponent = require('ascesis').BaseComponent;
 const videoEmbed = require('video-embed');
 
 class EmbedContainer extends BaseComponent {
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
+
     console.log('embed container created');
-  }
-  attach(){
     var embed_url = this.getAttribute('src');
     if(embed_url && embed_url !== ''){
       this.innerHTML = `
@@ -18,4 +18,4 @@ class EmbedContainer extends BaseComponent {
   }
 }
 
-module.exports = document.registerElement('embed-container', EmbedContainer);
+module.exports = customElements.define('embed-container', EmbedContainer);

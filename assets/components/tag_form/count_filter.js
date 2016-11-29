@@ -45,7 +45,9 @@ class CountFilter extends BaseComponent {
     this.innerHTML = ``;
   }
 
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
+
     this.tags_to_show = this.tags_to_show_generator(+this.getAttribute('interval'));
 
     this.innerHTML = `#taglist li:nth-child(n+${this.tags_to_show()}){
@@ -55,4 +57,4 @@ class CountFilter extends BaseComponent {
 }
 CountFilter.extends = 'style';
 
-module.exports = document.registerElement('count-filter', CountFilter);
+module.exports = customElements.define('count-filter', CountFilter);

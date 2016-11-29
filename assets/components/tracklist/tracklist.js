@@ -13,9 +13,11 @@ class TrackList extends BaseComponent {
       additional
     }));
   }
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
+
     console.log('tracklist created');
   }
 }
 
-module.exports = document.registerElement('track-list', TrackList);
+module.exports = customElements.define('track-list', TrackList);

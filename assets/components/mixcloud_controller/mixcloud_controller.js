@@ -38,7 +38,9 @@ class MixcloudController extends BaseController {
     });
   }
 
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
+
     var delegate = new Delegate(this);
 
     console.log('mixcloud ctrl');
@@ -57,10 +59,16 @@ class MixcloudController extends BaseController {
     //delegate.on('paste', '#mixcloud_url_input', _.debounce(_.bind(this.changeInputHandler, this), 500));
     delegate.on('keyup', '#mixcloud_url_input', _.debounce(_.bind(this.changeInputHandler, this), 300));
   }
-  attach(){
+
+  get routes(){
+    let self = this;
+    return {
+      on(){
+        console.log('mixcloud ctrl');
+      },
+      '$/'(){},
+    }
   }
-  detach(){}
-  attributeChange(name, previousValue, value){}
 }
 
-module.exports = document.registerElement('mixcloud-controller', MixcloudController);
+module.exports = customElements.define('mixcloud-controller', MixcloudController);

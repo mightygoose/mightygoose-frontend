@@ -15,7 +15,9 @@ class ShareButton extends BaseComponent {
         `text=${encode(title)}&url=${encode(url)}`].join('?')
     }
   }
-  create(){
+  connectedCallback(){
+    super.connectedCallback();
+
     console.log('share button created');
     this.addEventListener('click', _ => this.share());
   }
@@ -39,4 +41,4 @@ class ShareButton extends BaseComponent {
 }
 
 
-module.exports = document.registerElement('share-button', ShareButton);
+module.exports = customElements.define('share-button', ShareButton);

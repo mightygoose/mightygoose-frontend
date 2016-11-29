@@ -71,8 +71,8 @@ class MixcloudTracklist extends BaseComponent {
       }
     }));
   }
-  create(){
-    console.log('mixcloud tracklist created');
+  connectedCallback(){
+    super.connectedCallback();
 
     let delegate = new Delegate(this);
     delegate.on('click', '.play-pause-button', (event, target) => {
@@ -88,9 +88,6 @@ class MixcloudTracklist extends BaseComponent {
       target.classList.toggle('icon-pause');
     }, true);
   }
-  attach(){}
-  detach(){}
-  attributeChange(name, previousValue, value){}
 }
 
-module.exports = document.registerElement('mixcloud-tracklist', MixcloudTracklist);
+module.exports = customElements.define('mixcloud-tracklist', MixcloudTracklist);

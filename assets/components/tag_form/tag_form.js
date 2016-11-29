@@ -8,7 +8,8 @@ const Delegate = require('dom-delegate');
 
 class TagForm extends BaseComponent {
 
-  create() {
+  connectedCallback(){
+    super.connectedCallback();
 
     var letters = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
@@ -102,4 +103,4 @@ class TagForm extends BaseComponent {
   attributeChange(name, previousValue, value){}
 }
 
-module.exports = document.registerElement('tag-form', TagForm);
+module.exports = customElements.define('tag-form', TagForm);

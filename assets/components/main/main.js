@@ -103,6 +103,8 @@ class MainController extends BaseController {
     let table = {
       'random-post-controller': '/post',
       'search-posts-controller': '/search',
+      'user-profile-controller': '/user',
+      'mixcloud-controller': '/mixcloud',
     };
 
     Object.keys(table).forEach((component_name) => {
