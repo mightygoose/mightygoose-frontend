@@ -1,4 +1,4 @@
-function fireEvent(eventName, target, eventData){
+export function fireEvent(eventName, target, eventData){
   target = target || document.body;
   var event;
   if(window.Event){

@@ -1,3 +1,5 @@
+import { fireEvent } from 'ascesis';
+
 const default_options = {
   root: ''
 }
@@ -32,8 +34,8 @@ export default class Router {
   constructor(options = {}){
 
     this.options = Object.assign({}, default_options, options);
-
     this.listeners = [];
+    this.subrouters = [];
 
     console.log('router init', this.options);
 
@@ -49,7 +51,6 @@ export default class Router {
   notify_listeners(){
     this.listeners.forEach(({ route, callback }) => {
       let match = this.path.match(route);
-      //console.log(this.root, match);
       if(match){
         callback.apply(this, match);
       }
@@ -57,8 +58,7 @@ export default class Router {
   }
 
   trigger(){
-    let e = new Event('url-changed');
-    window.dispatchEvent(e);
+    fireEvent('url-changed', window);
   }
 
   resolve(){
@@ -81,8 +81,12 @@ export default class Router {
     this.listeners = [];
     window.removeEventListener('popstate', () => this.resolve());
     window.removeEventListener('load', () => this.resolve());
-    window.removeEventListener('url-changed', () => this.resolve());
+    window.removeEventListener('url-changed', (e) => this.resolve());
   }
 
-  mount(path, router){}
+  mount(path, router){
+    router.root = path;
+    this.subrouters.push(router);
+  }
+
 }
