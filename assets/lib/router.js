@@ -31,17 +31,18 @@ export default class Router {
     return this.global_path.indexOf(this.root) === 0;
   }
 
-  constructor(options = {}){
+  constructor(options = {}, container = document){
 
     this.options = Object.assign({}, default_options, options);
     this.listeners = [];
     this.subrouters = [];
+    this.container = container;
 
     console.log('router init', this.options);
 
     window.addEventListener('popstate', () => this.resolve());
-    window.addEventListener('load', () => this.resolve());
-    window.addEventListener('url-changed', () => this.resolve());
+    this.container.addEventListener('url-changed', () => this.resolve());
+
   }
 
   add(route = /(.*)/, callback = () => {}){
@@ -58,7 +59,7 @@ export default class Router {
   }
 
   trigger(){
-    fireEvent('url-changed', window);
+    fireEvent('url-changed', this.container);
   }
 
   resolve(){
@@ -89,11 +90,10 @@ export default class Router {
   destroy(){
     this.listeners = [];
     window.removeEventListener('popstate', () => this.resolve());
-    window.removeEventListener('load', () => this.resolve());
-    window.removeEventListener('url-changed', (e) => this.resolve());
+    this.container.removeEventListener('url-changed', (e) => this.resolve());
   }
 
-  mount(path, router, prevent = true){
+  mount(path, router, prevent = false){
     router.root = this.root + path;
     router.prevent = prevent;
     this.subrouters.push(router);
