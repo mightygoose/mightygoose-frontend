@@ -65,6 +65,15 @@ export default class Router {
     if(!this.root_matches || this.prev_path === this.path){
       return false;
     }
+    //do not notify own listeners if subrouter matches root
+    //should be checker here
+    if(this.subrouters.length){
+      for(let subrouter of this.subrouters){
+        if(subrouter.root_matches && subrouter.prevent){
+          return false;
+        }
+      }
+    }
     this.prev_path = this.path;
     this.notify_listeners();
   }
@@ -84,8 +93,9 @@ export default class Router {
     window.removeEventListener('url-changed', (e) => this.resolve());
   }
 
-  mount(path, router){
-    router.root = path;
+  mount(path, router, prevent = true){
+    router.root = this.root + path;
+    router.prevent = prevent;
     this.subrouters.push(router);
   }
 
