@@ -1,4 +1,5 @@
 const BaseController = require('ascesis').BaseController;
+const Router = require('router').default;
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
 const styles = require('./mixcloud_controller.styl');
 
@@ -60,13 +61,16 @@ class MixcloudController extends BaseController {
     delegate.on('keyup', '#mixcloud_url_input', _.debounce(_.bind(this.changeInputHandler, this), 300));
   }
 
+  get router(){
+    this._router || (this._router = new Router({ routes: this.routes }));
+    return this._router;
+  }
   get routes(){
     let self = this;
     return {
-      on(){
+      '.*'(){
         console.log('mixcloud ctrl');
       },
-      '$/'(){},
     }
   }
 }

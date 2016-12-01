@@ -61,7 +61,6 @@
     "lodash": "^4.0.1",
     "log-colors": "^1.0.0",
     "massive": "^2.1.0",
-    "navigo": "^3.5.0",
     "newrelic": "^1.25.3",
     "postcss-loader": "^0.8.1",
     "pryjs": "^0.1.3",

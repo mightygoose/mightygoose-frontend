@@ -58,7 +58,6 @@ class SearchPostsController extends BaseController {
     let self = this;
     return {
       '.*'(){
-        console.log(123);
         self.html(template);
       },
     }

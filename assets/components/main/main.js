@@ -2,133 +2,27 @@
 require('file?name=../../assets/main.css!stylus!./main.styl');
 
 const BaseController = require('ascesis').BaseController;
-//const Router = require('director').Router;
-const Delegate = require('dom-delegate');
-
-const Navigo = require('babel-loader?presets[]=es2015!navigo/src/index').default;
-
 const Router = require('router').default;
+const Delegate = require('dom-delegate');
 
 
 class MainController extends BaseController {
-  constructor(){
-    super();
-
-    console.log("application ready");
-    var self = this;
-
-    var $content_section = document.querySelector("#content_section");
-
-    //var routes = {
-      //'/user/profile': function () {
-        //$content_section.innerHTML = '<user-profile-controller></user-profile-controller>';
-      //},
-      //'/search': function () {
-        //document.querySelector("#search-link").classList.add("active-menu-item");
-        //document.querySelector("#random-post-link").classList.remove("active-menu-item");
-        //$content_section.innerHTML = '<search-posts-controller></search-posts-controller>';
-      //},
-      //'/post': {
-        ////think of something better here!
-        //on(post_id = ''){
-          //document.querySelector("#random-post-link").classList.add("active-menu-item");
-          //document.querySelector("#search-link").classList.remove("active-menu-item");
-          //$content_section.innerHTML = `<random-post-controller post_id="${post_id}"/>`;
-        //},
-        //'/random': function () {
-        //},
-        //'/:post_id/?((\w|.)*)': function (post_id) {
-          //let $random_post_controller = self.childComponents.querySelector('random-post-controller');
-          //if($random_post_controller){
-            //$random_post_controller.setAttribute('post_id', post_id);
-            //return false;
-          //}
-        //}
-      //},
-      //'/mixcloud': function () {
-        //$content_section.innerHTML = '<mixcloud-controller></mixcloud-controller>';
-      //},
-      //'/statistic': function () {
-        //console.log("statistic");
-      //}
-    //};
-
-
-    //var router = Router(routes).configure({ recurse: 'backward', html5history: true });
-    //if(router.getPath() === '/'){
-      //router.init('/post/random');
-    //} else {
-      //router.init();
-    //}
-
-    //this.addEventListener('post-rendered', ({target: controller}) => {
-      //router.setRoute(`/post/${controller.current_post_id}`);
-    //});
-
-
-    let delegate = new Delegate(this);
-    delegate.on('click', '.next-button', () => {
-      this.send_metric('next_button');
-    });
-    delegate.on('click', '.prev-button', () => {
-      this.send_metric('prev_button');
-    });
-    delegate.on('click', '.original-post-link', () => {
-      this.send_metric('original_post_link');
-    });
-    delegate.on('click', 'itunes-widget .track-list-track', () => {
-      this.send_metric('itunes_widget');
-    });
-    delegate.on('click', '.icon-discogs_logo', () => {
-      this.send_metric('discogs_link');
-    });
-    delegate.on('click', '.itunes-link', () => {
-      this.send_metric('itunes_link');
-    });
-
-
-    //console.log(compa.routes);
-
-
-    delegate.on('user-authorised', 'login-bar', () => {
-      console.log('authorised');
-    });
-
-  }
   connectedCallback(){
     super.connectedCallback();
-    console.log('test');
+
+    console.log("application ready");
 
     let router = new Router();
-    //router.add(/^\/post/, () => {
-      //console.log('woohoo', arguments);
-    //});
-    //router.resolve();
     window.router = router;
-
-    //let subrouter = new Router({ root: '/post' });
-    //subrouter.add(/^\/(\d+)/, (route, post_id) => {
-      //console.log('subr', post_id);
-    //});
-    //subrouter.resolve();
-
-    //router.mount('/post', subrouter);
-
-    //window.subrouter = subrouter;
-
-
-
 
     var $content_section = document.querySelector("#content_section");
     var buffer = document.createDocumentFragment();
 
-    //var router = new Router().configure({ html5history: true, recurse: 'forward' });
-
     let table = {
       'random-post-controller': '/post',
       'search-posts-controller': '/search',
-      //'user-profile-controller': '/user',
-      //'mixcloud-controller': '/mixcloud'
+      'user-profile-controller': '/user',
+      'mixcloud-controller': '/mixcloud'
     };
 
     Object.keys(table).forEach((component_name) => {
@@ -152,44 +46,40 @@ class MainController extends BaseController {
         component.router.resolve();
       });
 
-      //customElements.whenDefined(component_name).then(() => {
-        //let component = this.querySelector(component_name) || document.createElement(component_name);
-
-
-        //router.add(table[component_name], (route) => {
-          //debugger;
-        //});
-        //router.mount(Object.assign({}, component.routes, {
-          //on: [() => {
-            //if(!($content_section.children[0] === component)){
-              //$content_section.children[0] && buffer.appendChild($content_section.children[0]);
-              //$content_section.appendChild(component);
-            //}
-          //}].concat(component.routes.on || [])
-        //}), table[component_name]);
-
-        //component.addEventListener('change-url', ({ eventData }) => {
-          //router.setRoute(table[component_name] + eventData);
-        //})
-
-        //if('/'.concat(router.getRoute(0)) === table[component_name]){
-          //router.dispatch('on', router.getPath());
-        //}
-      //});
     });
+
     router.resolve();
 
+    if(router.path === '/'){
+      router.navigate('/post/');
+    }
 
-    //if(router.getPath() === '/'){
-      //router.init('/post/');
-    //} else {
-      //router.init();
-    //}
 
-    window.buf = buffer;
-    //window.router = router;
+    let delegate = new Delegate(this);
+    delegate.on('click', '.next-button', () => {
+      this.send_metric('next_button');
+    });
+    delegate.on('click', '.prev-button', () => {
+      this.send_metric('prev_button');
+    });
+    delegate.on('click', '.original-post-link', () => {
+      this.send_metric('original_post_link');
+    });
+    delegate.on('click', 'itunes-widget .track-list-track', () => {
+      this.send_metric('itunes_widget');
+    });
+    delegate.on('click', '.icon-discogs_logo', () => {
+      this.send_metric('discogs_link');
+    });
+    delegate.on('click', '.itunes-link', () => {
+      this.send_metric('itunes_link');
+    });
 
+    delegate.on('user-authorised', 'login-bar', () => {
+      console.log('authorised');
+    });
   }
+
   send_metric(metric_name){
     document.createElement('img').setAttribute('src', `/metrics/${metric_name}`)
   }
