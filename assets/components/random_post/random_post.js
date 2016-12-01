@@ -23,10 +23,10 @@ class RandomPostController extends BaseController {
         }, 0);
         return;
       }
-      //if(post_id === this.current_post_id){
-        //reject();
-        //return;
-      //}
+      if(this.state && post_id === this.current_post_id){
+        reject();
+        return;
+      }
       if(this.state && this.state.queue.has(post_id)){
         console.log('item from cache');
         resolve(this.state.queue.get(post_id));
@@ -42,8 +42,7 @@ class RandomPostController extends BaseController {
         this.state.queue.set(current_post_id, posts);
         this.querySelector('posts-controller').render(posts);
         //fix here!
-        console.log(123123);
-        this.router.navigate('/' + current_post_id);
+        this.router.navigate('/' + current_post_id, false, false, true);
       }
 
       this.style = '';
@@ -88,15 +87,12 @@ class RandomPostController extends BaseController {
 
     delegate.on("click", ".prev-button", () => this.prev());
 
-    delegate.on("swipeleft", ".post-row", () => this.next());
-    delegate.on("swiperight", ".post-row", () => this.prev());
+    //delegate.on("swipeleft", ".post-row", () => this.next());
+    //delegate.on("swiperight", ".post-row", () => this.prev());
     //document.addEventListener("keydown", ({keyCode}) => {
       //(keyCode === 37) && this.prev();
       //(keyCode === 39) && this.next();
     //});
-
-    //this.html(template({}));
-    //this.classList.remove('with-post');
 
   }
   attributeChangedCallback(name, prev, value){
@@ -104,7 +100,6 @@ class RandomPostController extends BaseController {
 
     switch(name){
       case 'post_id':
-        console.log(8888);
         this.load_by_id(+value).catch((e) => {});
         break;
     }

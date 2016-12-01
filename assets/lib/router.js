@@ -83,18 +83,18 @@ export default class Router {
     this.notify_listeners();
   }
 
-  navigate(url, absolute = false, replace = false){
-    if(!this.root_matches){
+  navigate(url, absolute = false, replace = false, silent = false){
+    if(!this.root_matches || url === this.path){
       return false;
     }
     history[replace ? 'replaceState' : 'pushState'](null, null, this.root + url);
-    this.trigger('url-changed');
+    !silent && this.trigger('url-changed');
   }
 
   destroy(){
     this.listeners = [];
     window.removeEventListener('popstate', () => this.resolve());
-    this.container.removeEventListener('url-changed', (e) => this.resolve());
+    this.container.removeEventListener('url-changed', () => this.resolve());
   }
 
   mount(path, router, prevent = false){
