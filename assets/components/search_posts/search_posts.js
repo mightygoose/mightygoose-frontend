@@ -1,4 +1,5 @@
 const BaseController = require('ascesis').BaseController;
+const Router = require('router').default;
 const template = require('raw!./search_posts.html');
 const styles = require('./search_posts.styl');
 const _ = require('lodash');
@@ -49,10 +50,15 @@ class SearchPostsController extends BaseController {
     });
 
   }
+  get router(){
+    this._router || (this._router = new Router({ routes: this.routes }));
+    return this._router;
+  }
   get routes(){
     let self = this;
     return {
-      on(){
+      '.*'(){
+        console.log(123);
         self.html(template);
       },
     }

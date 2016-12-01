@@ -1,7 +1,8 @@
 import { fireEvent } from 'ascesis';
 
 const default_options = {
-  root: ''
+  root: '',
+  routes: {}
 }
 
 export default class Router {
@@ -38,7 +39,10 @@ export default class Router {
     this.subrouters = [];
     this.container = container;
 
-    console.log('router init', this.options);
+    Object.keys(this.options.routes).forEach((route) => {
+      //add function should handle this
+      this.add(route, this.options.routes[route]);
+    });
 
     window.addEventListener('popstate', () => this.resolve());
     this.container.addEventListener('url-changed', () => this.resolve());
@@ -46,7 +50,7 @@ export default class Router {
   }
 
   add(route = /(.*)/, callback = () => {}){
-    this.listeners.push({ route, callback });
+    this.listeners.push({ route: new RegExp(route), callback });
   }
 
   notify_listeners(){
@@ -79,11 +83,11 @@ export default class Router {
     this.notify_listeners();
   }
 
-  navigate(url){
+  navigate(url, absolute = false, replace = false){
     if(!this.root_matches){
       return false;
     }
-    history.pushState(null, null, this.root + url);
+    history[replace ? 'replaceState' : 'pushState'](null, null, this.root + url);
     this.trigger('url-changed');
   }
 

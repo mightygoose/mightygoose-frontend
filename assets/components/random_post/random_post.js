@@ -1,4 +1,5 @@
 const BaseController = require('ascesis').BaseController;
+const Router = require('router').default;
 const Delegate = require('dom-delegate');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./random_post.html');
 const styles = require('./random_post.styl');
@@ -22,11 +23,11 @@ class RandomPostController extends BaseController {
         }, 0);
         return;
       }
-      if(post_id === this.current_post_id){
-        reject();
-        return;
-      }
-      if(this.state.queue.has(post_id)){
+      //if(post_id === this.current_post_id){
+        //reject();
+        //return;
+      //}
+      if(this.state && this.state.queue.has(post_id)){
         console.log('item from cache');
         resolve(this.state.queue.get(post_id));
         return;
@@ -40,7 +41,8 @@ class RandomPostController extends BaseController {
         var current_post_id = posts[0].id;
         this.state.queue.set(current_post_id, posts);
         this.querySelector('posts-controller').render(posts);
-        this.trigger('change-url', '/' + current_post_id);
+        //fix here!
+        this.router.navigate('/' + current_post_id);
       }
 
       this.style = '';
@@ -92,6 +94,9 @@ class RandomPostController extends BaseController {
       //(keyCode === 39) && this.next();
     //});
 
+    //this.html(template({}));
+    //this.classList.remove('with-post');
+
   }
   attributeChangedCallback(name, prev, value){
     super.attributeChangedCallback();
@@ -105,17 +110,22 @@ class RandomPostController extends BaseController {
   static get observedAttributes() {
     return ['post_id'];
   }
+  get router(){
+    this._router || (this._router = new Router({ routes: this.routes }));
+    return this._router;
+  }
   get routes(){
     let self = this;
     return {
-      on(){
-        if(typeof this.getRoute(1) === 'undefined' || this.getRoute(1) === ''){
-          self.html(template({}));
-          self.classList.remove('with-post');
-        }
+      '^/?$'(path){
+        self.html(template({}));
+        self.classList.remove('with-post');
       },
-      '$/'(){},
-      '/:post_id/?((\w|.)*)'(post_id){
+      '^/(\\d+)'(route, post_id){
+        if(!self.childNodes.length){
+          self.html(template({}));
+          self.setAttribute('prerendered', 'false');
+        }
         self.setAttribute('post_id', post_id);
       },
     }

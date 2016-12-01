@@ -2,8 +2,12 @@
 require('file?name=../../assets/main.css!stylus!./main.styl');
 
 const BaseController = require('ascesis').BaseController;
-const Router = require('director').Router;
+//const Router = require('director').Router;
 const Delegate = require('dom-delegate');
+
+const Navigo = require('babel-loader?presets[]=es2015!navigo/src/index').default;
+
+const Router = require('router').default;
 
 
 class MainController extends BaseController {
@@ -95,50 +99,95 @@ class MainController extends BaseController {
     super.connectedCallback();
     console.log('test');
 
+    let router = new Router();
+    //router.add(/^\/post/, () => {
+      //console.log('woohoo', arguments);
+    //});
+    //router.resolve();
+    window.router = router;
+
+    //let subrouter = new Router({ root: '/post' });
+    //subrouter.add(/^\/(\d+)/, (route, post_id) => {
+      //console.log('subr', post_id);
+    //});
+    //subrouter.resolve();
+
+    //router.mount('/post', subrouter);
+
+    //window.subrouter = subrouter;
+
+
+
+
     var $content_section = document.querySelector("#content_section");
     var buffer = document.createDocumentFragment();
 
-    var router = new Router().configure({ html5history: true, recurse: 'forward' });
+    //var router = new Router().configure({ html5history: true, recurse: 'forward' });
 
     let table = {
       'random-post-controller': '/post',
       'search-posts-controller': '/search',
-      'user-profile-controller': '/user',
-      'mixcloud-controller': '/mixcloud',
+      //'user-profile-controller': '/user',
+      //'mixcloud-controller': '/mixcloud'
     };
 
     Object.keys(table).forEach((component_name) => {
-      customElements.whenDefined(component_name).then(() => {
-        let component = this.querySelector(component_name) || document.createElement(component_name);
 
-        router.mount(Object.assign({}, component.routes, {
-          on: [() => {
-            if(!($content_section.children[0] === component)){
-              $content_section.children[0] && buffer.appendChild($content_section.children[0]);
-              $content_section.appendChild(component);
-            }
-          }].concat(component.routes.on || [])
-        }), table[component_name]);
 
-        component.addEventListener('change-url', ({ eventData }) => {
-          router.setRoute(table[component_name] + eventData);
-        })
+      let promise = customElements.whenDefined(component_name)
+                                  .then(() => this.querySelector(component_name) ||
+                                              document.createElement(component_name))
 
-        if('/'.concat(router.getRoute(0)) === table[component_name]){
-          router.dispatch('on', router.getPath());
-        }
+      router.add(new RegExp('^' + table[component_name]), (route) => {
+        promise.then((component) => {
+          if(!($content_section.children[0] === component)){
+            $content_section.children[0] && buffer.appendChild($content_section.children[0]);
+            $content_section.appendChild(component);
+          }
+        });
       });
+
+      promise.then((component) => {
+        router.mount(table[component_name], component.router);
+        component.router.resolve();
+      });
+
+      //customElements.whenDefined(component_name).then(() => {
+        //let component = this.querySelector(component_name) || document.createElement(component_name);
+
+
+        //router.add(table[component_name], (route) => {
+          //debugger;
+        //});
+        //router.mount(Object.assign({}, component.routes, {
+          //on: [() => {
+            //if(!($content_section.children[0] === component)){
+              //$content_section.children[0] && buffer.appendChild($content_section.children[0]);
+              //$content_section.appendChild(component);
+            //}
+          //}].concat(component.routes.on || [])
+        //}), table[component_name]);
+
+        //component.addEventListener('change-url', ({ eventData }) => {
+          //router.setRoute(table[component_name] + eventData);
+        //})
+
+        //if('/'.concat(router.getRoute(0)) === table[component_name]){
+          //router.dispatch('on', router.getPath());
+        //}
+      //});
     });
+    router.resolve();
 
 
-    if(router.getPath() === '/'){
-      router.init('/post/');
-    } else {
-      router.init();
-    }
+    //if(router.getPath() === '/'){
+      //router.init('/post/');
+    //} else {
+      //router.init();
+    //}
 
     window.buf = buffer;
-    window.router = router;
+    //window.router = router;
 
   }
   send_metric(metric_name){
