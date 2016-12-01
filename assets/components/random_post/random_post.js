@@ -42,6 +42,7 @@ class RandomPostController extends BaseController {
         this.state.queue.set(current_post_id, posts);
         this.querySelector('posts-controller').render(posts);
         //fix here!
+        console.log(123123);
         this.router.navigate('/' + current_post_id);
       }
 
@@ -103,6 +104,7 @@ class RandomPostController extends BaseController {
 
     switch(name){
       case 'post_id':
+        console.log(8888);
         this.load_by_id(+value).catch((e) => {});
         break;
     }
