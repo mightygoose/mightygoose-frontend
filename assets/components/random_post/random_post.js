@@ -114,11 +114,11 @@ class RandomPostController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '^/?$'(path){
+      '/'(path){
         self.html(template({}));
         self.classList.remove('with-post');
       },
-      '^/(\\d+)'(route, post_id){
+      '/(\\d+)/:slug?'(route, post_id){
         if(!self.childNodes.length){
           self.html(template({}));
           self.setAttribute('prerendered', 'false');

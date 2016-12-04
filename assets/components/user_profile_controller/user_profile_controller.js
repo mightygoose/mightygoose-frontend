@@ -18,7 +18,8 @@ class UserProfileController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '^/profile'(){
+      '/profile'(){
+        console.log('profile');
       },
     }
   }

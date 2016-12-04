@@ -68,8 +68,7 @@ class MixcloudController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '.*'(){
-        console.log('mixcloud ctrl');
+      '*'(){
       },
     }
   }

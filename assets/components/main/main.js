@@ -32,7 +32,7 @@ class MainController extends BaseController {
                                   .then(() => this.querySelector(component_name) ||
                                               document.createElement(component_name))
 
-      router.add(new RegExp('^' + table[component_name]), (route) => {
+      router.add(table[component_name] + '*', (route) => {
         promise.then((component) => {
           if(!($content_section.children[0] === component)){
             $content_section.children[0] && buffer.appendChild($content_section.children[0]);

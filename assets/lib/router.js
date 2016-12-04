@@ -1,4 +1,5 @@
 import { fireEvent } from 'ascesis';
+import pathToRegexp from 'path-to-regexp';
 
 const default_options = {
   root: '',
@@ -32,7 +33,7 @@ export default class Router {
     return this.global_path.indexOf(this.root) === 0;
   }
 
-  constructor(options = {}, container = document){
+  constructor(options = {}, container = window){
 
     this.options = Object.assign({}, default_options, options);
     this.listeners = [];
@@ -44,13 +45,13 @@ export default class Router {
       this.add(route, this.options.routes[route]);
     });
 
-    window.addEventListener('popstate', () => this.resolve());
+    this.container.addEventListener('popstate', () => this.resolve());
     this.container.addEventListener('url-changed', () => this.resolve());
 
   }
 
   add(route = /(.*)/, callback = () => {}){
-    this.listeners.push({ route: new RegExp(route), callback });
+    this.listeners.push({ route: pathToRegexp(route, []), callback });
   }
 
   notify_listeners(){
@@ -71,7 +72,6 @@ export default class Router {
       return false;
     }
     //do not notify own listeners if subrouter matches root
-    //should be checker here
     if(this.subrouters.length){
       for(let subrouter of this.subrouters){
         if(subrouter.root_matches && subrouter.prevent){
@@ -93,7 +93,7 @@ export default class Router {
 
   destroy(){
     this.listeners = [];
-    window.removeEventListener('popstate', () => this.resolve());
+    this.container.removeEventListener('popstate', () => this.resolve());
     this.container.removeEventListener('url-changed', () => this.resolve());
   }
 

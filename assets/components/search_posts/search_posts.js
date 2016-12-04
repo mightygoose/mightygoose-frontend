@@ -57,7 +57,7 @@ class SearchPostsController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '.*'(){
+      '*'(){
         self.html(template);
       },
     }
