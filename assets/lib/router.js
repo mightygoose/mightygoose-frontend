@@ -21,8 +21,21 @@ export default class Router {
     this._prev_path = value;
   }
 
+  get prev_qs(){
+    return this._prev_qs;
+  }
+  set prev_qs(value){
+    this._prev_qs = value;
+  }
+
+  get qs(){
+    return this.container.location.search === ''
+           ? false
+           : this.container.location.search.split('?')[1];
+  }
+
   get global_path(){
-    return window.location.pathname;
+    return this.container.location.pathname;
   }
 
   get path(){
@@ -31,6 +44,17 @@ export default class Router {
 
   get root_matches(){
     return this.global_path.indexOf(this.root) === 0;
+  }
+
+  get params(){
+    return this.qs
+           ? this.qs.split('&').reduce((acc, param) => {
+             let [key, value] = param.split('=');
+             return Object.assign(acc, {
+                [key]: value
+             });
+           }, {})
+           : {}
   }
 
   constructor(options = {}, container = window){
@@ -58,7 +82,7 @@ export default class Router {
     this.listeners.forEach(({ route, callback }) => {
       let match = this.path.match(route);
       if(match){
-        callback.apply(this, match);
+        callback.apply(this, match.concat(this.params));
       }
     })
   }
@@ -68,7 +92,7 @@ export default class Router {
   }
 
   resolve(){
-    if(!this.root_matches || this.prev_path === this.path){
+    if(!this.root_matches || (this.prev_path === this.path && this.prev_qs === this.qs)){
       return false;
     }
     //do not notify own listeners if subrouter matches root
@@ -80,6 +104,7 @@ export default class Router {
       }
     }
     this.prev_path = this.path;
+    this.prev_qs = this.qs;
     this.notify_listeners();
   }
 
