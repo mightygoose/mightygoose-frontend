@@ -6,7 +6,6 @@ window.history.replaceState(null, null, '/');
 describe("Base functionality", () => {
   const router = new Router();
 
-
   it('returns root correctly', () => {
     assert.equal(router.root, '');
   });
@@ -34,8 +33,21 @@ describe("Base functionality", () => {
   it('adds handlers correctly', () => {
     let handler = () => {};
     router.add('/', handler);
-    assert.equal(router.listeners.length, 1)
+    assert.equal(router.listeners.length, 1);
+    assert.equal(router.listeners[0].callback, handler);
   });
 
+  it('navigates correctly', () => {
+    router.navigate('/bar');
+    assert.equal(router.path, '/bar');
+  });
+
+  it('handles route correctly', () => {
+    let flag = false;
+    let handler = () => flag = true;
+    router.add('/foo', handler);
+    router.navigate('/foo');
+    assert.equal(flag, true);
+  });
 
 });
