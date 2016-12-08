@@ -18,7 +18,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      //'src/**/*.js',
+      'node_modules/document-register-element/build/document-register-element.js',
+      'src/**/*.js',
       'test/**/*_spec.js'
     ],
 
