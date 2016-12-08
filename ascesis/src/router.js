@@ -1,4 +1,4 @@
-import { fireEvent } from 'ascesis';
+import { fireEvent } from './ascesis';
 import pathToRegexp from 'path-to-regexp';
 
 const default_options = {

@@ -1,4 +1,4 @@
-import Router from 'src/router';
+import Router from '../src/router';
 
 //set initial url to /
 window.history.replaceState(null, null, '/');
@@ -30,5 +30,12 @@ describe("Base functionality", () => {
   it('returns relative path correctly', () => {
     assert.equal(router.path, '/');
   });
+
+  it('adds handlers correctly', () => {
+    let handler = () => {};
+    router.add('/', handler);
+    assert.equal(router.listeners.length, 1)
+  });
+
 
 });
