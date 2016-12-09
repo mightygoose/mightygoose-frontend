@@ -43,7 +43,7 @@ export default class Router {
   }
 
   get root_matches(){
-    return this.global_path.indexOf(this.root) === 0;
+    return (new RegExp(`^${this.root}(/|$)`)).test(this.global_path);
   }
 
   get params(){
@@ -108,11 +108,15 @@ export default class Router {
     this.notify_listeners();
   }
 
-  navigate(url, absolute = false, replace = false, silent = false){
-    if(!this.root_matches || url === this.path){
+  navigate(path, absolute = false, replace = false, silent = false){
+    if(!absolute && (!this.root_matches || path === this.path)){
       return false;
     }
-    history[replace ? 'replaceState' : 'pushState'](null, null, this.root + url);
+    if(absolute && url === this.global_path){
+      return false;
+    }
+    let _path = absolute ? url : this.root + path;
+    history[replace ? 'replaceState' : 'pushState'](null, null, _path);
     !silent && this.trigger('url-changed');
   }
 
