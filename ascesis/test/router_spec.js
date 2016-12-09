@@ -24,10 +24,21 @@ describe('Base functionality', () => {
 
   it('returns query string correctly', () => {
     assert.equal(router.qs, false);
+    window.history.replaceState(null, null, '/?foo=bar');
+    assert.equal(router.qs, 'foo=bar');
+    window.history.replaceState(null, null, '/?foo=bar&bar=baz');
+    assert.equal(router.qs, 'foo=bar&bar=baz');
   });
 
   it('returns query params correctly', () => {
+    window.history.replaceState(null, null, '/');
     assert.deepEqual(router.params, {});
+    window.history.replaceState(null, null, '/?foo');
+    assert.deepEqual(router.params, { foo: undefined });
+    window.history.replaceState(null, null, '/?foo=bar');
+    assert.deepEqual(router.params, { foo: 'bar' });
+    window.history.replaceState(null, null, '/?foo=bar&bar=baz');
+    assert.deepEqual(router.params, { foo: 'bar', bar: 'baz' });
   });
 
   it('returns absolute path correctly', () => {
@@ -127,6 +138,44 @@ describe('Mount on subpath', () => {
 });
 
 describe('Routes handling', () => {
+  beforeEach(() => {
+    //set initial url to /
+    window.history.replaceState(null, null, '/');
+  });
+
+  afterEach(() => {
+    //set initial url to /
+    window.history.replaceState(null, null, '/');
+  });
+
+  const router = new Router();
+
+  it('handles nested routes correctly', () => {
+    let handler1 = chai.spy(() => {});
+    let handler2 = chai.spy(() => {});
+    let handler3 = chai.spy(() => {});
+    router.add('/', handler1);
+    router.add('/foo', handler2);
+    router.add('/*', handler3);
+    router.resolve();
+    expect(handler1).to.have.been.called.once;
+    router.navigate('/foo');
+    expect(handler2).to.have.been.called.once;
+    expect(handler3).to.have.been.called.twice;
+  });
+
+  it('passes correct params to handler', () => {
+    let args;
+    let handler = chai.spy((route, foo, params) => {
+      //route argument should not be here
+      args = [route, foo, params];
+    });
+    router.add('/:foo', handler);
+    router.navigate('/test?foo=bar');
+    expect(handler).to.have.been.called.once;
+    assert.deepEqual(args, ['/test', 'test', { foo: 'bar' }]);
+  });
+
 });
 
 describe('Nested Routers', () => {

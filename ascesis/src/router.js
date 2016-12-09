@@ -82,6 +82,7 @@ export default class Router {
     this.listeners.forEach(({ route, callback }) => {
       let match = this.path.match(route);
       if(match){
+        //first argument should not be here
         callback.apply(this, match.concat(this.params));
       }
     })
