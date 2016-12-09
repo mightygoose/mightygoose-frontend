@@ -1,9 +1,17 @@
 import Router from '../src/router';
 
-//set initial url to /
-window.history.replaceState(null, null, '/');
 
-describe("Base functionality", () => {
+describe('Base functionality', () => {
+  before(() => {
+    //set initial url to /
+    window.history.replaceState(null, null, '/');
+  });
+
+  after(() => {
+    //set initial url to /
+    window.history.replaceState(null, null, '/');
+  });
+
   const router = new Router();
 
   it('returns root correctly', () => {
@@ -49,4 +57,21 @@ describe("Base functionality", () => {
     expect(handler).to.have.been.called.once;
   });
 
+  it('destroys correctly', () => {
+    let handler = chai.spy(() => {});
+    router.add('/bar', handler);
+    router.destroy();
+    router.navigate('/bar');
+    expect(handler).not.to.have.been.called.once;
+    assert.deepEqual(router.listeners, []);
+  });
+});
+
+describe('Mount on subpath', () => {
+});
+
+describe('Routes handling', () => {
+});
+
+describe('Multiple Routers', () => {
 });
