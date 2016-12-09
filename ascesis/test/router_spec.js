@@ -43,11 +43,10 @@ describe("Base functionality", () => {
   });
 
   it('handles route correctly', () => {
-    let flag = false;
-    let handler = () => flag = true;
+    let handler = chai.spy(() => {});
     router.add('/foo', handler);
     router.navigate('/foo');
-    assert.equal(flag, true);
+    expect(handler).to.have.been.called.once;
   });
 
 });
