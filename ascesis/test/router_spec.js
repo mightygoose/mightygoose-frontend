@@ -179,4 +179,26 @@ describe('Routes handling', () => {
 });
 
 describe('Nested Routers', () => {
+  beforeEach(() => {
+    //set initial url to /
+    window.history.replaceState(null, null, '/');
+  });
+
+  afterEach(() => {
+    //set initial url to /
+    window.history.replaceState(null, null, '/');
+  });
+
+  const root_router = new Router();
+  const sub_router_1 = new Router();
+  const sub_router_2 = new Router();
+
+
+  it('mounts correctly', () => {
+
+    //assert.equal(router.global_path, '/');
+    //window.history.replaceState(null, null, '/subpath');
+    //assert.equal(router.global_path, '/subpath');
+  });
+
 });
