@@ -113,10 +113,10 @@ export default class Router {
     if(!absolute && (!this.root_matches || path === this.path)){
       return false;
     }
-    if(absolute && url === this.global_path){
+    if(absolute && path === this.global_path){
       return false;
     }
-    let _path = absolute ? url : this.root + path;
+    let _path = absolute ? path : this.root + path;
     history[replace ? 'replaceState' : 'pushState'](null, null, _path);
     !silent && this.trigger('url-changed');
   }

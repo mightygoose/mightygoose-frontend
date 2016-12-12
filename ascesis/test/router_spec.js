@@ -126,6 +126,8 @@ describe('Mount on subpath', () => {
     router.navigate('/bar');
     assert.equal(router.path, '/bar');
     assert.equal(router.global_path, '/subpath/bar');
+    router.navigate('/subpath/baz', true);
+    assert.equal(router.global_path, '/subpath/baz');
   });
 
   it('handles route correctly', () => {
@@ -164,6 +166,17 @@ describe('Routes handling', () => {
     expect(handler3).to.have.been.called.twice;
   });
 
+  it('doesnt handle silent naviagation', () => {
+    let handler1 = chai.spy(() => {});
+    let handler2 = chai.spy(() => {});
+    router.add('/', handler1);
+    router.add('/foo', handler2);
+    router.resolve();
+    expect(handler1).to.have.been.called.once;
+    router.navigate('/foo', false, false, true);
+    expect(handler2).not.to.have.been.called.once;
+  });
+
   it('passes correct params to handler', () => {
     let args;
     let handler = chai.spy((route, foo, params) => {
@@ -180,12 +193,10 @@ describe('Routes handling', () => {
 
 describe('Nested Routers', () => {
   beforeEach(() => {
-    //set initial url to /
     window.history.replaceState(null, null, '/');
   });
 
   afterEach(() => {
-    //set initial url to /
     window.history.replaceState(null, null, '/');
   });
 
@@ -193,12 +204,31 @@ describe('Nested Routers', () => {
   const sub_router_1 = new Router();
   const sub_router_2 = new Router();
 
+  root_router.mount('/test1', sub_router_1);
+  root_router.mount('/test2', sub_router_2, true);
+
 
   it('mounts correctly', () => {
+    assert.equal(sub_router_1.root, '/test1');
+    assert.equal(sub_router_2.root, '/test2');
+    assert.equal(sub_router_2.prevent, true);
+  });
 
-    //assert.equal(router.global_path, '/');
-    //window.history.replaceState(null, null, '/subpath');
-    //assert.equal(router.global_path, '/subpath');
+  it('handles routes correctly', () => {
+    let handler1 = chai.spy(() => {});
+    let handler2 = chai.spy(() => {});
+    let handler3 = chai.spy(() => {});
+    let handler4 = chai.spy(() => {});
+    root_router.add('/test1', handler1);
+    root_router.add('/test2', handler2);
+    sub_router_1.add('/', handler3);
+    sub_router_2.add('/', handler4);
+    root_router.navigate('/test1');
+    expect(handler1).to.have.been.called.once;
+    expect(handler3).to.have.been.called.once;
+    root_router.navigate('/test2');
+    expect(handler2).not.to.have.been.called.once;
+    expect(handler4).to.have.been.called.once;
   });
 
 });
