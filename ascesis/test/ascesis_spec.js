@@ -1,4 +1,4 @@
-import { BaseComponent } from '../src/ascesis';
+import { BaseComponent, BaseController } from '../src/ascesis';
 
 describe('Single component functionality', (done) => {
 
@@ -48,6 +48,38 @@ describe('Single component functionality', (done) => {
     component.addEventListener('test-event', handler);
     component.trigger('test-event', { foo: 'bar' });
     assert.deepEqual(data, { foo: 'bar' });
+  });
+
+});
+
+
+describe('Complex functionality', (done) => {
+
+  class RootController extends BaseController {}
+  class ChildController extends BaseController {}
+  class ComponentOne extends BaseComponent {}
+  class ComponentTwo extends BaseComponent {}
+  class ComponentThree extends BaseComponent {}
+
+  customElements.define('root-controller', RootController);
+  customElements.define('child-controller', ChildController);
+  customElements.define('component-one', ComponentOne);
+  customElements.define('component-two', ComponentTwo);
+  customElements.define('component-three', ComponentThree);
+
+  let container = document.createElement('div');
+
+  before((done) => {
+    let promises = [
+      'root-controller',
+      'child-controller',
+      'component-one',
+      'component-two',
+      'component-three'
+    ].map((component_name) => {
+      return customElements.whenDefined(component_name);
+    ));
+    Promise.all(promises).then(done);
   });
 
 });
