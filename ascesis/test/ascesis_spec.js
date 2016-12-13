@@ -2,7 +2,6 @@ import { BaseComponent } from '../src/ascesis';
 
 describe('Single component functionality', (done) => {
 
-  const container = document.createElement('div');
   let component;
 
   customElements.define('my-test-component', BaseComponent);
@@ -10,7 +9,6 @@ describe('Single component functionality', (done) => {
   before((done) => {
     customElements.whenDefined('my-test-component').then(() => {
       component = document.createElement('my-test-component');
-      container.appendChild(component);
       done();
     });
   });
@@ -38,11 +36,18 @@ describe('Single component functionality', (done) => {
   });
 
   it('triggers events correctly', () => {
-    let handler = chai.spy(() => { console.log(234234); });
-    container.addEventListener('test-event', handler);
-    //component.trigger('test-event');
-    //console.log(container.innerHTML);
-    //expect(handler).to.have.been.called.once;
+    let handler = chai.spy(() => {});
+    component.addEventListener('test-event', handler);
+    component.trigger('test-event');
+    expect(handler).to.have.been.called.once;
+  });
+
+  it('passes event data correctly', () => {
+    let data;
+    let handler = chai.spy(({eventData}) => { data = eventData });
+    component.addEventListener('test-event', handler);
+    component.trigger('test-event', { foo: 'bar' });
+    assert.deepEqual(data, { foo: 'bar' });
   });
 
 });
