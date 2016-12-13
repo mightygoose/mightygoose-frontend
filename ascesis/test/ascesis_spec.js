@@ -61,25 +61,66 @@ describe('Complex functionality', (done) => {
   class ComponentTwo extends BaseComponent {}
   class ComponentThree extends BaseComponent {}
 
-  customElements.define('root-controller', RootController);
-  customElements.define('child-controller', ChildController);
-  customElements.define('component-one', ComponentOne);
-  customElements.define('component-two', ComponentTwo);
-  customElements.define('component-three', ComponentThree);
+
+  let components_map = {
+    'root-controller': RootController,
+    'child-controller': ChildController,
+    'component-one': ComponentOne,
+    'component-two': ComponentTwo,
+    'component-three': ComponentThree,
+  };
+
+  Object.keys(components_map).forEach((component_name) => {
+    customElements.define(component_name, components_map[component_name]);
+  });
 
   let container = document.createElement('div');
 
+  document.body.appendChild(container);
+
+  container.innerHTML = `
+    <root-controller>
+      <component-one>
+      </component-one>
+      <component-one>
+      </component-one>
+      <child-controller>
+        <component-two>
+        </component-two>
+        <component-three>
+        </component-three>
+      </child-controller>
+    </root-controller>
+  `;
+
+  let components_elements = Object.keys(components_map)
+                                  .reduce((acc, component_name) => {
+    return Object.assign(acc, {
+      [component_name]: container.querySelectorAll(component_name)
+    });
+  }, {});
+
   before((done) => {
-    let promises = [
-      'root-controller',
-      'child-controller',
-      'component-one',
-      'component-two',
-      'component-three'
-    ].map((component_name) => {
+    let promises = Object.keys(components_map).map((component_name) => {
       return customElements.whenDefined(component_name);
-    ));
-    Promise.all(promises).then(done);
+    });
+    Promise.all(promises).then(() => {
+      done();
+    });
   });
+
+
+  it('creates child components correctly', () => {
+    let root_child_components = components_elements['root-controller'][0].childComponents;
+    assert.equal(root_child_components.length, 3);
+    assert.equal(root_child_components[0], components_elements['component-one'][0]);
+    assert.equal(root_child_components[1], components_elements['component-one'][1]);
+    assert.equal(root_child_components[2], components_elements['child-controller'][0]);
+    let child_controller_child_components = components_elements['child-controller'][0].childComponents;
+    assert.equal(child_controller_child_components.length, 2);
+    assert.equal(child_controller_child_components[0], components_elements['component-two'][0]);
+    assert.equal(child_controller_child_components[1], components_elements['component-three'][0]);
+  });
+
 
 });
