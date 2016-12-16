@@ -137,6 +137,13 @@ describe('Complex functionality', (done) => {
     assert.equal(components_elements['component-three'][0].classList.contains('component-highlighted'), false);
   });
 
+  it('child components selectors work correctly', () => {
+    let child_controller = components_elements['root-controller'][0].querySelector('child-controller');
+    assert.equal(child_controller, components_elements['child-controller'][0]);
+    let component_one = components_elements['root-controller'][0].querySelectorAll('component-one');
+    assert.deepEqual(component_one, components_elements['component-one']);
+  });
+
   it('deletes child components correctly', () => {
     let root_child_components = components_elements['root-controller'][0].childComponents;
     components_elements['component-one'][0].remove();
