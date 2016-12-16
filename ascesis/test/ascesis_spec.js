@@ -122,5 +122,31 @@ describe('Complex functionality', (done) => {
     assert.equal(child_controller_child_components[1], components_elements['component-three'][0]);
   });
 
+  it('highlights components correctly', () => {
+    components_elements['root-controller'][0].toggleHighlightAll();
+    assert.equal(components_elements['component-one'][0].classList.contains('component-highlighted'), true);
+    assert.equal(components_elements['component-one'][1].classList.contains('component-highlighted'), true);
+    assert.equal(components_elements['child-controller'][0].classList.contains('controller-highlighted'), true);
+    assert.equal(components_elements['component-two'][0].classList.contains('component-highlighted'), true);
+    assert.equal(components_elements['component-three'][0].classList.contains('component-highlighted'), true);
+    components_elements['child-controller'][0].toggleHighlightAll();
+    assert.equal(components_elements['component-one'][0].classList.contains('component-highlighted'), true);
+    assert.equal(components_elements['component-one'][1].classList.contains('component-highlighted'), true);
+    assert.equal(components_elements['child-controller'][0].classList.contains('controller-highlighted'), false);
+    assert.equal(components_elements['component-two'][0].classList.contains('component-highlighted'), false);
+    assert.equal(components_elements['component-three'][0].classList.contains('component-highlighted'), false);
+  });
+
+  it('deletes child components correctly', () => {
+    let root_child_components = components_elements['root-controller'][0].childComponents;
+    components_elements['component-one'][0].remove();
+    assert.equal(root_child_components.length, 2);
+    assert.equal(root_child_components[0], components_elements['component-one'][1]);
+    assert.equal(root_child_components[1], components_elements['child-controller'][0]);
+    let child_controller_child_components = components_elements['child-controller'][0].childComponents;
+    components_elements['component-two'][0].remove();
+    assert.equal(child_controller_child_components.length, 1);
+    assert.equal(child_controller_child_components[0], components_elements['component-three'][0]);
+  });
 
 });

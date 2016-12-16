@@ -44,22 +44,27 @@ export function extend(baseClass){
     constructor(){
       super();
     }
+
     toggleHighlight(){
       this.classList.toggle(this.componentType + '-highlighted');
     }
+
     toggleHighlightAll(){
       this.toggleHighlight();
       this.childComponents.forEach(function(child){
         child.toggleHighlightAll();
       });
     }
+
     removeChildComponent(childComponent){
       var index = this.childComponents.indexOf(childComponent);
       this.childComponents.splice(index, 1);
     }
+
     trigger(eventName, eventData){
       fireEvent(eventName, this, eventData);
     }
+
     html(html_string){
       var fragment = document.createDocumentFragment();
       var temp_container = document.createElement('div');
@@ -71,24 +76,30 @@ export function extend(baseClass){
       this.appendChild(fragment);
     }
 
+    addDisconnectListener(callback){
+      this.disconnectListeners.push(callback);
+    }
+
     connectedCallback(){
+      this.disconnectListeners = [];
       this.childComponents = createChildComponents();
       this.trigger('component-attached');
       this.addEventListener('component-attached', (event) => {
         event.stopPropagation();
         event.target.parentComponent = this;
         this.childComponents.push(event.target);
+        event.target.addDisconnectListener((target) => {
+          this.removeChildComponent(target);
+        });
       });
       super.connectedCallback && super.connectedCallback();
     }
-    disconnectedCallback(){
-      //remove event listener here
-      this.parentComponent.removeChildComponent(this); //element shouldn't remove itself from parent
-      super.disconnectedCallback && super.disconnectedCallback();
-    }
 
-    attributeChangedCallback(name, previousValue, value){
-      this.attributeChange && this.attributeChange(name, previousValue, value);
+    disconnectedCallback(){
+      this.disconnectListeners.forEach((listener) => {
+        listener(this);
+      });
+      super.disconnectedCallback && super.disconnectedCallback();
     }
   }
 }
