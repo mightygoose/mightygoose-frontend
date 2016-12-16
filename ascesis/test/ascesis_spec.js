@@ -138,10 +138,12 @@ describe('Complex functionality', (done) => {
   });
 
   it('child components selectors work correctly', () => {
-    let child_controller = components_elements['root-controller'][0].querySelector('child-controller');
+    let child_controller = components_elements['root-controller'][0].childComponents.querySelector('child-controller');
     assert.equal(child_controller, components_elements['child-controller'][0]);
-    let component_one = components_elements['root-controller'][0].querySelectorAll('component-one');
-    assert.deepEqual(component_one, components_elements['component-one']);
+    let component_one = components_elements['root-controller'][0].childComponents.querySelectorAll('component-one');
+    assert.equal(component_one.length, 2);
+    assert.deepEqual(component_one[0], components_elements['component-one'][0]);
+    assert.deepEqual(component_one[1], components_elements['component-one'][1]);
   });
 
   it('deletes child components correctly', () => {

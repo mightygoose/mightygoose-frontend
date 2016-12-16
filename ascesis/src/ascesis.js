@@ -11,24 +11,25 @@ export function fireEvent(eventName, target, eventData){
   target.dispatchEvent(event);
 }
 
-function createChildComponents(){
-  return Object.create(Array.prototype, {
-    querySelector: {value: function(selector){
+class ChildComponents extends Array {
+   constructor(){
+    super();
+    this.querySelector = (selector) => {
       for(var index = 0; index < this.length; index++){
         if(this[index].matches(selector)){
           return this[index];
         }
       }
       return null;
-    }},
-    querySelectorAll: {value: function(selector){
+    }
+    this.querySelectorAll = (selector) => {
       var output = [];
       for(var index = 0; index < this.length; index++){
         this[index].matches(selector) && output.push(this[index]);
       }
       return output;
-    }}
-  });
+    }
+  }
 }
 
 export class BaseController extends extend(HTMLElement) {
@@ -82,7 +83,7 @@ export function extend(baseClass){
 
     connectedCallback(){
       this.disconnectListeners = [];
-      this.childComponents = createChildComponents();
+      this.childComponents = new ChildComponents();
       this.trigger('component-attached');
       this.addEventListener('component-attached', (event) => {
         event.stopPropagation();
