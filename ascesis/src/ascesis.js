@@ -102,5 +102,7 @@ export function extend(baseClass){
       });
       super.disconnectedCallback && super.disconnectedCallback();
     }
+
+    attributeChangedCallback(){}
   }
 }
