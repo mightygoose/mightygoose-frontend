@@ -31,25 +31,50 @@ class SearchPostsController extends BaseController {
     this.addEventListener('mg-autocomplete-item-selected', (event) => {
       var {eventData: data} = event;
       if(data.type !== 'tags_suggestion'){
-        this.posts = [data.id];
-        this.render_first()
+        this.router.navigate(`/post/${data.id}`, true);
       } else {
-        fetch(`/api/search/tag?q=${data.title}`)
-        .then((response) => response.json())
-        .then((ids) => {
-          this.posts = ids;
-          this.render_first();
-        });
+        this.router.navigate(`?tag=${data.title}`)
       }
     });
 
-    window.addEventListener('scroll', (event) => {
-      if((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
-        this.render_first(true);
-      }
-    });
 
+    let handler = () => this.handle_infinite_scroll();
+    window.addEventListener('scroll', handler);
+    this.addDisconnectListener(() => {
+      window.removeEventListener('scroll', handler);
+    })
   }
+
+  handle_infinite_scroll(event){
+    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
+      this.render_first(true);
+    }
+  }
+
+  search_by_tag(tag){
+    return fetch(`/api/search/tag?q=${tag}`)
+    .then((response) => response.json())
+    .then((ids) => {
+      this.posts = ids;
+      this.render_first();
+    });
+  }
+
+  attributeChangedCallback(name, prev, value){
+    super.attributeChangedCallback();
+
+    switch(name){
+      case 'tag':
+        this.search_by_tag(value).catch((e) => {
+          console.log(`error searching by tag: ${e}`)
+        });
+        break;
+    }
+  }
+  static get observedAttributes() {
+    return ['tag'];
+  }
+
   get router(){
     this._router || (this._router = new Router({ routes: this.routes }));
     return this._router;
@@ -57,9 +82,12 @@ class SearchPostsController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '*'(route, m, params){
+      '/'(route, q){
         if(!self.childNodes.length){
           self.html(template);
+        }
+        if(q.tag){
+          self.setAttribute('tag', q.tag);
         }
       },
     }

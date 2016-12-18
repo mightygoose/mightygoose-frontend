@@ -31,7 +31,7 @@ class MixcloudController extends BaseController {
       this.$mixcloud_url_form.classList.add('valid');
     }
     this.$loader && this.$loader.parentElement && this.$loader.classList.remove('hidden');
-    fetch('/api/mixcloud/get_tracks', {
+    return fetch('/api/mixcloud/get_tracks', {
       method: 'post',
       body: JSON.stringify({
         "url": parser.href
@@ -67,7 +67,9 @@ class MixcloudController extends BaseController {
       case 'url':
         let input = this.querySelector('#mixcloud_url_input');
         (input.value !== value) && (input.value = value);
-        this.load_by_url(value);
+        this.load_by_url(value).catch((e) => {
+          console.log(`error processing data: ${e}`)
+        });
         break;
     }
   }
