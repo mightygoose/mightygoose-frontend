@@ -110,12 +110,17 @@ export default class Router {
   }
 
   navigate(path, absolute = false, replace = false, silent = false){
-    if(!absolute && (!this.root_matches || path === this.path)){
+
+    let full_prev_path = [this.path].concat(this.qs || []).join('?');
+    if(!absolute && (!this.root_matches || (path === full_prev_path))){
       return false;
     }
-    if(absolute && path === this.global_path){
+
+    let full_prev_global_path = [this.global_path].concat(this.qs || []).join('?');
+    if(absolute && path === full_prev_global_path){
       return false;
     }
+
     let _path = absolute ? path : this.root + path;
     history[replace ? 'replaceState' : 'pushState'](null, null, _path);
     !silent && this.trigger('url-changed');

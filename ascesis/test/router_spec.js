@@ -189,6 +189,14 @@ describe('Routes handling', () => {
     assert.deepEqual(args, ['/test', 'test', { foo: 'bar' }]);
   });
 
+  it('doesnt handle same url twice', () => {
+    router.navigate('/foobar?foo=bar');
+    let result = router.navigate('/foobar?foo=bar');
+    assert.equal(result, false);
+    let result2 = router.navigate('/foobar?foo=bar', true);
+    assert.equal(result2, false);
+  });
+
 });
 
 describe('Nested Routers', () => {
