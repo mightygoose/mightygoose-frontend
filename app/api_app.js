@@ -52,6 +52,13 @@ app.use(route.post('/search/tags', function *(){
   this.body = response;
 }));
 
+app.use(route.get('/search/best_posts', function *(){
+  var response = yield store.search({
+    limit: this.query.limit
+  });
+  this.body = response;
+}));
+
 app.use(route.get('/search/tag', function *(){
   var query = this.query.q;
   var response = yield store.get_by_tag(query);

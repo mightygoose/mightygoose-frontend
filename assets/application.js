@@ -5,7 +5,7 @@ require('file?name=../../item_jsonld.html.js!babel?presets[]=es2015&plugins[]=tr
 require('file?name=../../random_post.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/random_post/random_post.html');
 require('file?name=../../post.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/post/post.html');
 
-/* fonts */
+/* icon fonts */
 require("icons");
 
 /* polyfills */
@@ -40,5 +40,7 @@ require.ensure([], () => {
   require('components/itunes_widget/itunes_widget');
   require('components/login_bar/login_bar');
   require('components/user_profile_controller/user_profile_controller');
+  require('components/welcome_page_controller/welcome_page_controller');
+  require('components/posts_gallery_controller/posts_gallery_controller');
 });
 

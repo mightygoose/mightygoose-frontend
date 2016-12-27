@@ -192,6 +192,25 @@ class Store {
     });
   }
 
+  search(params){
+    let limit = params.limit || 6;
+    return new Promise((resolve) => {
+      this.db.run(`
+        SELECT *
+        FROM items
+        WHERE
+            (discogs->'thumb') IS NOT NULL AND
+            (spotify->'similarity' = '1' OR deezer->'similarity' = '1' OR itunes->'similarity' = '1')
+        ORDER BY id DESC
+        LIMIT ${limit}
+      `, (err,stat) => {
+        resolve(stat, err);
+      });
+    }).then((response, error) => {
+      return response;
+    });
+  }
+
   //user
   get_user_by_email(email){
     return new Promise((resolve) => {

@@ -22,7 +22,8 @@ class MainController extends BaseController {
       'random-post-controller': '/post',
       'search-posts-controller': '/search',
       'user-profile-controller': '/user',
-      'mixcloud-controller': '/mixcloud'
+      'mixcloud-controller': '/mixcloud',
+      'welcome-page-controller': '/welcome'
     };
 
     Object.keys(table).forEach((component_name) => {
