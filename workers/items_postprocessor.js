@@ -23,8 +23,9 @@ function postprocess(item){
   var discogs_data = item.discogs_data;
   var itunes_data = item.restorers_data.itunes;
   var deezer_data = item.restorers_data.deezer;
+  var spotify_data = item.restorers_data.spotify;
   spawn(function*(){
-    if(_.isNull(itunes_data) && _.isNull(deezer_data) && !_.isNull(discogs_data)){
+    if(_.isNull(spotify_data) && _.isNull(deezer_data) && !_.isNull(discogs_data)){
       log.info(`restoring tracklist of item #${item.sh_key}`);
       var discogs_additional_data = yield discogs_client.get_info(discogs_data);
       var data = yield Object.keys(track_restorers).reduce((acc, provider) => {
