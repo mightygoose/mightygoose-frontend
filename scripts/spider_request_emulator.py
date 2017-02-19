@@ -26,7 +26,7 @@ print "preparing mg request"
 item = json.loads(storage_response_body)[0]
 
 values = {
-    "title": item['title'],
+    "title": item['title'].encode("utf-8"),
     "badges": item['badges'],
     "url": item['url'],
     "tags": json.dumps(item['tags']),
