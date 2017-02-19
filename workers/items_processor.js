@@ -157,6 +157,7 @@ class ItemsProcessor {
       case !~item.badges.indexOf('discogs-no-results') && item.discogs_data.similarity > 0.5:
       case item.restorers_data.itunes && item.restorers_data.itunes.similarity === 1:
       case item.restorers_data.deezer && item.restorers_data.deezer.similarity === 1:
+      case item.restorers_data.spotify && item.restorers_data.spotify.similarity === 1:
         return 'good';
       default:
         return 'bad';
@@ -271,7 +272,7 @@ class ItemsProcessor {
       //sleep before next restoring session
       setTimeout(ack || () => {}, RESTORING_DELAY);
 
-    }).catch(e => log.error(e))
+    }).catch(ack || () => {});
   }
 }
 
