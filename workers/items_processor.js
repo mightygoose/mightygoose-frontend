@@ -270,9 +270,9 @@ class ItemsProcessor {
       process.emit('postprocess', Object.assign({}, processed_item));
 
       //sleep before next restoring session
-      setTimeout(ack || () => {}, RESTORING_DELAY);
+      setTimeout(ack || function(){}, RESTORING_DELAY);
 
-    }).catch(ack || () => {});
+    }).catch(ack || function(){});
   }
 }
 
