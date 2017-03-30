@@ -45,23 +45,34 @@ class ItemsProcessor {
 
       log.info('pulling masks');
       var masks_query = `
-        SELECT
-            recognition_result->'title'->>'original_title'::text AS string,
-            json_build_object(
-                'year', recognition_result->'title'->>'year',
-                'album', recognition_result->'title'->'album',
-                'artist', recognition_result->'title'->'artist'
-            ) AS data,
-            recognition_result->'title'->>'mask'::text AS mask
-        FROM recognition_masks
-        ORDER BY id DESC
+        SELECT y.string AS string, y.data AS data, y.mask AS mask, z.occurencies AS occurencies
+          FROM (
+              SELECT
+              recognition_result->'title'->>'original_title'::text AS string,
+              json_build_object(
+                  'year', recognition_result->'title'->>'year',
+                  'album', recognition_result->'title'->'album',
+                  'artist', recognition_result->'title'->'artist'
+              ) AS data,
+              recognition_result->'title'->>'mask'::text AS mask
+              FROM recognition_masks
+          ) y, (
+            SELECT
+                recognition_result->'title'->>'mask'::text AS mask,
+                count(*) AS occurencies
+            FROM recognition_masks
+            GROUP BY mask
+            ORDER BY occurencies DESC
+          ) z
+        WHERE y.mask = z.mask AND occurencies > 1
+        ORDER BY occurencies desc
       `;
 
       var masks = yield new Promise((resolve) => self.db.run(masks_query, (err, items) => {
         if(err){ reject(err); }
         resolve(items);
       }));
-      log.info('masks pulled');
+      log.info('masks pulled', masks.length);
 
       log.info('training title analyser');
       analyser.train(masks.map(mask => [mask['string'], mask['data'], mask['mask']]));
