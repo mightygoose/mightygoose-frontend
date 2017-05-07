@@ -12,6 +12,7 @@ const massive = require("massive");
 const url = require('url');
 
 
+//FIXME: use lib/clients/db.js for db connection
 const DB_HOST = process.env['DB_HOST'];
 const DB_PORT = process.env['DB_PORT'];
 const DB_USER = process.env['DB_USER'];
