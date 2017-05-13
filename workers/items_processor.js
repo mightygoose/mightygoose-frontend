@@ -64,7 +64,7 @@ class ItemsProcessor {
             GROUP BY mask
             ORDER BY occurencies DESC
           ) z
-        WHERE y.mask = z.mask AND occurencies > 1
+        WHERE y.mask = z.mask AND occurencies > 10
         ORDER BY occurencies desc
       `;
 
