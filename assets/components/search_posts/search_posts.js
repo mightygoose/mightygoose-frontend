@@ -1,5 +1,5 @@
 const BaseController = require('ascesis').BaseController;
-const Router = require('router').default;
+const Router = require('router').Router;
 const template = require('raw!./search_posts.html');
 const styles = require('./search_posts.styl');
 const _ = require('lodash');
@@ -40,9 +40,9 @@ class SearchPostsController extends BaseController {
 
     let handler = () => this.handle_infinite_scroll();
     window.addEventListener('scroll', handler);
-    this.addDisconnectListener(() => {
-      window.removeEventListener('scroll', handler);
-    })
+    //this.addDisconnectListener(() => {
+      //window.removeEventListener('scroll', handler);
+    //})
   }
 
   handle_infinite_scroll(event){
@@ -82,7 +82,7 @@ class SearchPostsController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '/'(route, q){
+      '/'(q){
         if(!self.childNodes.length){
           self.html(template);
         }

@@ -1,5 +1,5 @@
 const BaseController = require('ascesis').BaseController;
-const Router = require('router').default;
+const Router = require('router').Router;
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
 const styles = require('./mixcloud_controller.styl');
 
@@ -81,7 +81,7 @@ class MixcloudController extends BaseController {
   get routes(){
     let self = this;
     return {
-      '/'(route, q){
+      '/'(q){
         if(!self.childNodes.length){
           self.html(template({}));
         }

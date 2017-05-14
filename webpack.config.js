@@ -38,10 +38,9 @@ module.exports = {
           return [autoprefixer];
         },
 	resolve: {
-          modulesDirectories: ["node_modules", "assets", "lib"],
+          modulesDirectories: ["node_modules", "assets"],
           alias: {
-            "ascesis": path.join(__dirname, "ascesis/src/ascesis"),
-            "router": path.join(__dirname, "ascesis/src/router")
+            "router": "ascesis/router"
           }
 	},
 	plugins: [

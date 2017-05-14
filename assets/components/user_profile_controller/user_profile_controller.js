@@ -1,5 +1,5 @@
 const BaseController = require('ascesis').BaseController;
-const Router = require('router').default;
+const Router = require('router').Router;
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./user_profile_controller.html');
 const styles = require('./user_profile_controller.styl');
 

@@ -2,7 +2,7 @@
 require('file?name=../../assets/main.css!stylus!./main.styl');
 
 const BaseController = require('ascesis').BaseController;
-const Router = require('router').default;
+const Router = require('router').Router;
 const Delegate = require('dom-delegate');
 
 
@@ -44,7 +44,7 @@ class MainController extends BaseController {
 
       promise.then((component) => {
         router.mount(table[component_name], component.router);
-        component.router.resolve();
+        router.resolve();
       });
 
     });
