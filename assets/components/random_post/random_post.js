@@ -1,6 +1,5 @@
 const BaseController = require('ascesis').BaseController;
 const Router = require('router').Router;
-const Delegate = require('dom-delegate');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./random_post.html');
 const styles = require('./random_post.styl');
 
@@ -62,23 +61,22 @@ class RandomPostController extends BaseController {
     this.state = {
       queue: new Map(),
     };
-    var delegate = new Delegate(this);
 
     this.router = new Router({ container: this, routes: this.routes });
 
-    delegate.on(
+    this.on(
       "component-attached", "posts-controller", ({target}) => this.$posts_controller = target
     );
-    delegate.on(
+    this.on(
       "component-attached", "mighty-preloader", ({target}) => this.$preloader = target
     );
-    delegate.on("click", ".random_post_button", (event) => {
+    this.on("click", ".random_post_button", (event) => {
       event.preventDefault();
       this.$preloader.show();
       this.next();
     });
 
-    delegate.on("click", ".prev-button", () => this.prev());
+    this.on("click", ".prev-button", () => this.prev());
 
     this.trigger('subrouter-connected', {
       router: this.router,
@@ -86,8 +84,8 @@ class RandomPostController extends BaseController {
     });
 
 
-    //delegate.on("swipeleft", ".post-row", () => this.next());
-    //delegate.on("swiperight", ".post-row", () => this.prev());
+    //this.on("swipeleft", ".post-row", () => this.next());
+    //this.on("swiperight", ".post-row", () => this.prev());
     //document.addEventListener("keydown", ({keyCode}) => {
       //(keyCode === 37) && this.prev();
       //(keyCode === 39) && this.next();

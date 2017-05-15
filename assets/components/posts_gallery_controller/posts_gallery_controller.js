@@ -1,6 +1,5 @@
 const BaseController = require('ascesis').BaseController;
 const Router = require('router').Router;
-//const Delegate = require('dom-delegate');
 
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./posts_gallery_controller.html');
 //const styles = require('./posts_gallery_controller.styl');

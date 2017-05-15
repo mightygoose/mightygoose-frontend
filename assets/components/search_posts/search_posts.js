@@ -30,7 +30,7 @@ class SearchPostsController extends BaseController {
 
     this.router = new Router({ container: this, routes: this.routes })
 
-    this.addEventListener('mg-autocomplete-item-selected', (event) => {
+    this.on('mg-autocomplete-item-selected', (event) => {
       var {eventData: data} = event;
       if(data.type !== 'tags_suggestion'){
         this.router.navigate(`/post/${data.id}`, true);

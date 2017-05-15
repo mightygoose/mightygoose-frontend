@@ -3,7 +3,6 @@ const Router = require('router').Router;
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
 const styles = require('./mixcloud_controller.styl');
 
-const Delegate = require('dom-delegate');
 const _ = require('lodash');
 
 class MixcloudController extends BaseController {
@@ -48,8 +47,6 @@ class MixcloudController extends BaseController {
 
     console.log('mixcloud ctrl');
 
-    var delegate = new Delegate(this);
-
     this.router = new Router({ container: this, routes: this.routes });
 
     this.trigger('subrouter-connected', {
@@ -57,7 +54,7 @@ class MixcloudController extends BaseController {
       base: this.attr('router-base')
     });
 
-    delegate.on(
+    this.on(
       'keyup',
       '#mixcloud_url_input',
       _.debounce((e) => this.router.navigate(`?url=${e.target.value}`), 300)
