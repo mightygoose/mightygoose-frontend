@@ -28,6 +28,8 @@ class SearchPostsController extends BaseController {
 
     this.posts = [];
 
+    this.router = new Router({ container: this, routes: this.routes })
+
     this.addEventListener('mg-autocomplete-item-selected', (event) => {
       var {eventData: data} = event;
       if(data.type !== 'tags_suggestion'){
@@ -37,12 +39,20 @@ class SearchPostsController extends BaseController {
       }
     });
 
+    this.trigger('subrouter-connected', {
+      router: this.router,
+      base: this.attr('router-base')
+    });
+
 
     let handler = () => this.handle_infinite_scroll();
     window.addEventListener('scroll', handler);
-    //this.addDisconnectListener(() => {
-      //window.removeEventListener('scroll', handler);
-    //})
+  }
+
+  disconnectedCallback(){
+    super.disconnectedCallback();
+    this.router.destroy();
+    //window.removeEventListener('scroll', handler);
   }
 
   handle_infinite_scroll(event){
@@ -75,14 +85,15 @@ class SearchPostsController extends BaseController {
     return ['tag'];
   }
 
-  get router(){
-    this._router || (this._router = new Router({ routes: this.routes }));
-    return this._router;
-  }
+  //get router(){
+    //this._router || (this._router = new Router({ routes: this.routes }));
+    //return this._router;
+  //}
   get routes(){
     let self = this;
     return {
       '/'(q){
+        console.log(666666);
         if(!self.childNodes.length){
           self.html(template);
         }

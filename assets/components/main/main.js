@@ -1,7 +1,7 @@
 //critical css
 require('file?name=../../assets/main.css!stylus!./main.styl');
 
-const BaseController = require('ascesis').BaseController;
+const { BaseController, html, attr } = require('ascesis');
 const Router = require('router').Router;
 const Delegate = require('dom-delegate');
 
@@ -12,42 +12,43 @@ class MainController extends BaseController {
 
     console.log("application ready");
 
-    let router = new Router();
-    window.router = router;
-
     var $content_section = document.querySelector("#content_section");
     var buffer = document.createDocumentFragment();
 
+    let router = new Router({ container: this });
+    window.router = router;
+
+    //let table = {
+      //'random-post-controller': '/post',
+      //'search-posts-controller': '/search',
+      //'user-profile-controller': '/user',
+      //'mixcloud-controller': '/mixcloud',
+      //'welcome-page-controller': '/welcome'
+    //};
+
     let table = {
-      'random-post-controller': '/post',
-      'search-posts-controller': '/search',
-      'user-profile-controller': '/user',
-      'mixcloud-controller': '/mixcloud',
-      'welcome-page-controller': '/welcome'
+      'post':     this.querySelector('random-post-controller') || document.createElement('random-post-controller' ),
+      'search':   this.querySelector('search-posts-controller') || document.createElement('search-posts-controller'),
+      'user':     this.querySelector('user-profile-controller') || document.createElement('user-profile-controller'),
+      'mixcloud': this.querySelector('mixcloud-controller') || document.createElement('mixcloud-controller'),
+      'welcome':  this.querySelector('welcome-page-controller') || document.createElement('welcome-page-controller')
     };
 
-    Object.keys(table).forEach((component_name) => {
-
-
-      let promise = customElements.whenDefined(component_name)
-                                  .then(() => this.querySelector(component_name) ||
-                                              document.createElement(component_name))
-
-      router.add(table[component_name] + '*', (route) => {
-        promise.then((component) => {
-          if(!($content_section.children[0] === component)){
-            $content_section.children[0] && buffer.appendChild($content_section.children[0]);
-            $content_section.appendChild(component);
-          }
-        });
-      });
-
-      promise.then((component) => {
-        router.mount(table[component_name], component.router);
-        router.resolve();
-      });
-
+    router.add('/*', (path) => {
+      let controller_name = path.split('/')[0];
+      let $controller = table[controller_name];
+      attr($controller, 'router-base', controller_name);
+      if(!($content_section.children[0] === $controller)){
+        $content_section.children[0] && buffer.appendChild($content_section.children[0]);
+        $content_section.appendChild($controller);
+      }
     });
+
+
+    this.on('subrouter-connected', ({ eventData: { router: subrouter } }) => {
+      subrouter.resolve();
+    });
+
 
     router.resolve();
 

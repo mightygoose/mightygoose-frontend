@@ -50,6 +50,13 @@ class MixcloudController extends BaseController {
 
     var delegate = new Delegate(this);
 
+    this.router = new Router({ container: this, routes: this.routes });
+
+    this.trigger('subrouter-connected', {
+      router: this.router,
+      base: this.attr('router-base')
+    });
+
     delegate.on(
       'keyup',
       '#mixcloud_url_input',
@@ -57,9 +64,15 @@ class MixcloudController extends BaseController {
     );
   }
 
+  disconnectedCallback(){
+    super.disconnectedCallback();
+    this.router.destroy();
+  }
+
   static get observedAttributes() {
     return ['url'];
   }
+
   attributeChangedCallback(name, prev, value){
     super.attributeChangedCallback();
 
@@ -74,10 +87,6 @@ class MixcloudController extends BaseController {
     }
   }
 
-  get router(){
-    this._router || (this._router = new Router({ routes: this.routes }));
-    return this._router;
-  }
   get routes(){
     let self = this;
     return {

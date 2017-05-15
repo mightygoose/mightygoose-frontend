@@ -8,12 +8,15 @@ class UserProfileController extends BaseController {
   connectedCallback(){
     super.connectedCallback();
 
+    this.router = new Router({ container: this, routes: this.routes });
+
+    this.trigger('subrouter-connected', {
+      router: this.router,
+      base: this.attr('router-base')
+    });
+
     console.log('user profile ctrl');
     this.html(template());
-  }
-  get router(){
-    this._router || (this._router = new Router({ routes: this.routes }));
-    return this._router;
   }
   get routes(){
     let self = this;
