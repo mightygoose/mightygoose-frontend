@@ -1,14 +1,14 @@
-const BaseController = require('ascesis').BaseController;
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./welcome_page_controller.html');
 //const styles = require('./welcome_page_controller.styl');
 
 
-class WelcomePageController extends BaseController {
+class WelcomePageController extends RouterController {
 
   connectedCallback(){
     super.connectedCallback();
+
   }
 
   attributeChangedCallback(name, prev, value){
@@ -22,14 +22,10 @@ class WelcomePageController extends BaseController {
   static get observedAttributes() {
     return ['tag'];
   }
-  get router(){
-    this._router || (this._router = new Router({ routes: this.routes }));
-    return this._router;
-  }
   get routes(){
     let self = this;
     return {
-      '/'(path){
+      '*'(){
         if(!self.childNodes.length){
           self.html(template({}));
         }

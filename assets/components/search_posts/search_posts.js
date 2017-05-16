@@ -1,11 +1,10 @@
-const BaseController = require('ascesis').BaseController;
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 const template = require('raw!./search_posts.html');
 const styles = require('./search_posts.styl');
 const _ = require('lodash');
 
 
-class SearchPostsController extends BaseController {
+class SearchPostsController extends RouterController {
   render_first(append){
     var [first, ...others] = this.posts;
     if(!first){
@@ -28,8 +27,6 @@ class SearchPostsController extends BaseController {
 
     this.posts = [];
 
-    this.router = new Router({ container: this, routes: this.routes })
-
     this.on('mg-autocomplete-item-selected', (event) => {
       var {eventData: data} = event;
       if(data.type !== 'tags_suggestion'){
@@ -39,19 +36,12 @@ class SearchPostsController extends BaseController {
       }
     });
 
-    this.trigger('subrouter-connected', {
-      router: this.router,
-      base: this.attr('router-base')
-    });
-
-
     let handler = () => this.handle_infinite_scroll();
     window.addEventListener('scroll', handler);
   }
 
   disconnectedCallback(){
     super.disconnectedCallback();
-    this.router.destroy();
     //window.removeEventListener('scroll', handler);
   }
 
@@ -85,15 +75,10 @@ class SearchPostsController extends BaseController {
     return ['tag'];
   }
 
-  //get router(){
-    //this._router || (this._router = new Router({ routes: this.routes }));
-    //return this._router;
-  //}
   get routes(){
     let self = this;
     return {
       '/'(q){
-        console.log(666666);
         if(!self.childNodes.length){
           self.html(template);
         }

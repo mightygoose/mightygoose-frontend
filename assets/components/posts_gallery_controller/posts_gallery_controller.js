@@ -1,21 +1,17 @@
-const BaseController = require('ascesis').BaseController;
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./posts_gallery_controller.html');
 //const styles = require('./posts_gallery_controller.styl');
 
 
-class PostsGalleryController extends BaseController {
+class PostsGalleryController extends RouterController {
 
   connectedCallback(){
     super.connectedCallback();
-    console.log(23123);
+
     this.load_posts().then((results) => {
       this.html(template({
         posts: results,
-        each(list, tpl){
-          return list.reduce((accum, item) => accum.concat(tpl(item)), "");
-        },
       }))
     });
   }
@@ -27,31 +23,29 @@ class PostsGalleryController extends BaseController {
     //});
   }
 
-  //attributeChangedCallback(name, prev, value){
-    //super.attributeChangedCallback();
+  attributeChangedCallback(name, prev, value){
+    super.attributeChangedCallback();
 
-    //switch(name){
-      //case 'tag':
-        //break;
-    //}
-  //}
-  //static get observedAttributes() {
-    //return ['tag'];
-  //}
-  //get router(){
-    //this._router || (this._router = new Router({ routes: this.routes }));
-    //return this._router;
-  //}
-  //get routes(){
-    //let self = this;
-    //return {
-      //'/'(path){
-        //console.log(12312312312312);
-        ////self.html(template({}));
-        ////self.classList.remove('with-post');
-      //},
-    //}
-  //}
+    switch(name){
+      case 'tag':
+        debugger;
+        break;
+    }
+  }
+  static get observedAttributes() {
+    return ['tag'];
+  }
+
+  get routes(){
+    let self = this;
+    return {
+      '/:type/:value'(type, value){
+        let $gallery = self.querySelector('posts-gallery-controller');
+        //self.html(template({ type, value }));
+        //debugger
+      }
+    }
+  }
 }
 
 module.exports = customElements.define('posts-gallery-controller', PostsGalleryController);

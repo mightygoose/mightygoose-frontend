@@ -2,10 +2,10 @@
 require('file?name=../../assets/main.css!stylus!./main.styl');
 
 const { BaseController, html, attr } = require('ascesis');
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 
 
-class MainController extends BaseController {
+class MainController extends RouterController {
   connectedCallback(){
     super.connectedCallback();
 
@@ -14,16 +14,7 @@ class MainController extends BaseController {
     var $content_section = document.querySelector("#content_section");
     var buffer = document.createDocumentFragment();
 
-    let router = new Router({ container: this });
-    window.router = router;
-
-    //let table = {
-      //'random-post-controller': '/post',
-      //'search-posts-controller': '/search',
-      //'user-profile-controller': '/user',
-      //'mixcloud-controller': '/mixcloud',
-      //'welcome-page-controller': '/welcome'
-    //};
+    window.router = this.router;
 
     let table = {
       'post':     this.querySelector('random-post-controller') || document.createElement('random-post-controller' ),
@@ -33,7 +24,7 @@ class MainController extends BaseController {
       'welcome':  this.querySelector('welcome-page-controller') || document.createElement('welcome-page-controller')
     };
 
-    router.add('/*', (path) => {
+    this.router.add('/*', (path) => {
       let controller_name = path.split('/')[0];
       let $controller = table[controller_name];
       attr($controller, 'router-base', controller_name);
@@ -43,18 +34,11 @@ class MainController extends BaseController {
       }
     });
 
-
-    this.on('subrouter-connected', ({ eventData: { router: subrouter } }) => {
-      subrouter.resolve();
-    });
-
-
-    router.resolve();
-
-    if(router.path === '/'){
-      router.navigate('/post/');
+    if(this.router.getPath() === '/'){
+      this.router.navigate('/post/');
+    } else {
+      this.router.resolve();
     }
-
 
     this.on('click', '.next-button', () => {
       this.send_metric('next_button');

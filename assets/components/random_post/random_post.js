@@ -1,10 +1,9 @@
-const BaseController = require('ascesis').BaseController;
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./random_post.html');
 const styles = require('./random_post.styl');
 
 
-class RandomPostController extends BaseController {
+class RandomPostController extends RouterController {
   get current_post_id(){
     var [...keys] = this.state.queue.keys();
     return keys[this.state.queue.size - 1];
@@ -62,8 +61,6 @@ class RandomPostController extends BaseController {
       queue: new Map(),
     };
 
-    this.router = new Router({ container: this, routes: this.routes });
-
     this.on(
       "component-attached", "posts-controller", ({target}) => this.$posts_controller = target
     );
@@ -78,11 +75,6 @@ class RandomPostController extends BaseController {
 
     this.on("click", ".prev-button", () => this.prev());
 
-    this.trigger('subrouter-connected', {
-      router: this.router,
-      base: this.attr('router-base')
-    });
-
 
     //this.on("swipeleft", ".post-row", () => this.next());
     //this.on("swiperight", ".post-row", () => this.prev());
@@ -91,11 +83,6 @@ class RandomPostController extends BaseController {
       //(keyCode === 39) && this.next();
     //});
 
-  }
-
-  disconnectedCallback(){
-    super.disconnectedCallback();
-    this.router.destroy();
   }
 
   attributeChangedCallback(name, prev, value){

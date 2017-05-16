@@ -1,11 +1,10 @@
-const BaseController = require('ascesis').BaseController;
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
 const styles = require('./mixcloud_controller.styl');
 
 const _ = require('lodash');
 
-class MixcloudController extends BaseController {
+class MixcloudController extends RouterController {
   load_by_url(value){
 
     this.$mixcloud_url_form = this.querySelector('#mixcloud_url_form');
@@ -47,13 +46,6 @@ class MixcloudController extends BaseController {
 
     console.log('mixcloud ctrl');
 
-    this.router = new Router({ container: this, routes: this.routes });
-
-    this.trigger('subrouter-connected', {
-      router: this.router,
-      base: this.attr('router-base')
-    });
-
     this.on(
       'keyup',
       '#mixcloud_url_input',
@@ -63,7 +55,6 @@ class MixcloudController extends BaseController {
 
   disconnectedCallback(){
     super.disconnectedCallback();
-    this.router.destroy();
   }
 
   static get observedAttributes() {

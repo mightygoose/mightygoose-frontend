@@ -1,19 +1,11 @@
-const BaseController = require('ascesis').BaseController;
-const Router = require('router').Router;
+const RouterController = require('lib/router_controller');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./user_profile_controller.html');
 const styles = require('./user_profile_controller.styl');
 
 
-class UserProfileController extends BaseController {
+class UserProfileController extends RouterController {
   connectedCallback(){
     super.connectedCallback();
-
-    this.router = new Router({ container: this, routes: this.routes });
-
-    this.trigger('subrouter-connected', {
-      router: this.router,
-      base: this.attr('router-base')
-    });
 
     console.log('user profile ctrl');
     this.html(template());
