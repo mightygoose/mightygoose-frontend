@@ -52,10 +52,9 @@ app.use(route.post('/search/tags', function *(){
   this.body = response;
 }));
 
-app.use(route.get('/search/best_posts', function *(){
-  var response = yield store.search({
-    limit: this.query.limit
-  });
+app.use(route.post('/search/posts', function *(){
+  let params = JSON.parse(this.request.body);
+  var response = yield store.search(params);
   this.body = response;
 }));
 

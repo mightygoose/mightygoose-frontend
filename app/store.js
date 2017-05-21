@@ -193,14 +193,18 @@ class Store {
   }
 
   search(params){
+    let tags_str = _.map([].concat(params.tags || []), tag => `"${tag}"`).join(', ')
     let limit = params.limit || 6;
+    let criteria = params.tags ? `tags @> '[${tags_str}]'::jsonb` : `
+      (discogs->'thumb') IS NOT NULL AND
+      (spotify->'similarity' = '1' OR deezer->'similarity' = '1' OR itunes->'similarity' = '1')
+    `;
     return new Promise((resolve) => {
       this.db.run(`
         SELECT *
         FROM items
         WHERE
-            (discogs->'thumb') IS NOT NULL AND
-            (spotify->'similarity' = '1' OR deezer->'similarity' = '1' OR itunes->'similarity' = '1')
+          ${criteria}
         ORDER BY id DESC
         LIMIT ${limit}
       `, (err,stat) => {
