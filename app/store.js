@@ -196,7 +196,7 @@ class Store {
     let tags_str = _.map([].concat(params.tags || []), tag => `"${tag}"`).join(', ')
     let limit = params.limit || 6;
     let offset = params.offset || 0;
-    let criteria = params.tags ? `tags @> '[${tags_str}]'::jsonb` : `
+    let criteria = (params.tags && params.tags.length) ? `tags @> '[${tags_str}]'::jsonb` : `
       (discogs->'thumb') IS NOT NULL AND
       (spotify->'similarity' = '1' OR deezer->'similarity' = '1' OR itunes->'similarity' = '1')
     `;

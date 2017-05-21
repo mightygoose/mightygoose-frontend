@@ -12,12 +12,12 @@ class SearchPostsController extends RouterController {
     }
     this.posts = others;
     (this.preloader || (
-      this.preloader = this.childComponents.querySelector('mighty-preloader')
+      this.preloader = this.querySelector('.search-preloader')
     )).show();
     fetch(`/api/post/${first}`)
     .then((response) => response.json())
     .then((posts) => {
-      this.childComponents.querySelector('posts-controller').render(posts, append);
+      this.querySelector('posts-controller').render(posts, append);
       this.preloader.hide();
     });
   }
@@ -30,7 +30,7 @@ class SearchPostsController extends RouterController {
     this.on('mg-autocomplete-item-selected', (event) => {
       var {eventData: data} = event;
       if(data.type !== 'tags_suggestion'){
-        this.router.navigate(`/post/${data.id}`, true);
+        this.router.navigate(`/post/${data.id}`, { absolute: true });
       } else {
         this.router.navigate(`?tag=${data.title}`)
       }

@@ -1,17 +1,24 @@
 const { BaseController, html } = require('ascesis');
+const { map_to_fragment } = require('lib/helpers');
 
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./posts_gallery_controller.html');
 const styles = require('./posts_gallery_controller.styl');
 
 
-/*
- * TODO: extract images block template
- * */
-
 class PostsGalleryController extends BaseController {
 
   connectedCallback(){
     super.connectedCallback();
+
+    this.html(template(this.params));
+
+    this.$posts_table = this.querySelector('[role="gallery-table"]');
+
+    this.generate_posts_fragment = map_to_fragment((post) => {
+      const $post = document.createElement('img');
+      $post.src = post.discogs.thumb || post.images[0];
+      return $post;
+    });
   }
 
   load_posts(params = this.params){
@@ -21,14 +28,8 @@ class PostsGalleryController extends BaseController {
     })
     .then(response => response.json())
     .then((result) => {
-      const posts_html = template({
-        posts: result,
-      });
-      if(!params.offset){
-        this.html(posts_html);
-      } else {
-        this.appendChild(html(posts_html))
-      }
+      const $fragment = this.generate_posts_fragment(result);
+      this.$posts_table.appendChild($fragment);
     });
   }
 

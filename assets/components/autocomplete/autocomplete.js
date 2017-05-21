@@ -25,7 +25,7 @@ class Autocomplete extends BaseComponent {
           return;
         }
         (this.preloader || (
-          this.preloader = this.childComponents.querySelector('mighty-preloader')
+          this.preloader = this.querySelector('.autocomplete-preloader')
         )).show();
         fetch(`/api/search/autocomplete?q=${value}`)
         .then((response) => response.json())
