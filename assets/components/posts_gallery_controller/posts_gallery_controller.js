@@ -1,9 +1,12 @@
-const RouterController = require('lib/router_controller');
-const { BaseController } = require('ascesis');
+const { BaseController, html } = require('ascesis');
 
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./posts_gallery_controller.html');
 const styles = require('./posts_gallery_controller.styl');
 
+
+/*
+ * TODO: extract images block template
+ * */
 
 class PostsGalleryController extends BaseController {
 
@@ -18,9 +21,14 @@ class PostsGalleryController extends BaseController {
     })
     .then(response => response.json())
     .then((result) => {
-      this.html(template({
+      const posts_html = template({
         posts: result,
-      }))
+      });
+      if(!params.offset){
+        this.html(posts_html);
+      } else {
+        this.appendChild(html(posts_html))
+      }
     });
   }
 
@@ -35,13 +43,14 @@ class PostsGalleryController extends BaseController {
   }
 
   static get observedAttributes() {
-    return ['tags'];
+    return ['tags', 'offset'];
   }
 
   get params(){
     return {
       tags: JSON.parse(this.attr('tags')),
-      limit: this.attr('limit') || 9
+      limit: +(this.attr('limit') || 9),
+      offset: +(this.attr('offset') || 0)
     }
   }
 }

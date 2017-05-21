@@ -195,6 +195,7 @@ class Store {
   search(params){
     let tags_str = _.map([].concat(params.tags || []), tag => `"${tag}"`).join(', ')
     let limit = params.limit || 6;
+    let offset = params.offset || 0;
     let criteria = params.tags ? `tags @> '[${tags_str}]'::jsonb` : `
       (discogs->'thumb') IS NOT NULL AND
       (spotify->'similarity' = '1' OR deezer->'similarity' = '1' OR itunes->'similarity' = '1')
@@ -207,6 +208,7 @@ class Store {
           ${criteria}
         ORDER BY id DESC
         LIMIT ${limit}
+        OFFSET ${offset}
       `, (err,stat) => {
         resolve(stat, err);
       });
