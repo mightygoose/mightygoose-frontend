@@ -33,6 +33,7 @@ class PostsGalleryController extends BaseController {
 
     this.load_posts();
   }
+
   static get observedAttributes() {
     return ['tags'];
   }
@@ -40,7 +41,7 @@ class PostsGalleryController extends BaseController {
   get params(){
     return {
       tags: JSON.parse(this.attr('tags')),
-      limit: 20
+      limit: this.attr('limit') || 9
     }
   }
 }

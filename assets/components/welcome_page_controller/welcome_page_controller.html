@@ -4,7 +4,7 @@
     </infobox-controller>
 </div>
 <div class="row">
-    <posts-gallery-controller>
+    <posts-gallery-controller tags="${JSON.stringify(scope.tags)}" limit="${scope.limit}">
         posts gallery
     </posts-gallery-controller>
 </div>

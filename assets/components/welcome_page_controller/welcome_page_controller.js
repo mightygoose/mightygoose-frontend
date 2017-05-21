@@ -28,7 +28,10 @@ class WelcomePageController extends RouterController {
     return {
       '*'(){
         if(!self.childNodes.length){
-          self.html(template({}));
+          self.html(template({
+            tags: [],
+            limit: this.getParams().limit || 9
+          }));
         }
       },
       '/:type/:value'(type, value){
@@ -36,6 +39,11 @@ class WelcomePageController extends RouterController {
           self.querySelector('posts-gallery-controller'),
           type,
           JSON.stringify(decodeURIComponent(value).split(','))
+        );
+        attr(
+          self.querySelector('posts-gallery-controller'),
+          'limit',
+          this.getParams().limit || 9
         );
       }
     }
