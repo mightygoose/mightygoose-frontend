@@ -10,18 +10,28 @@ class PostsGalleryController extends BaseController {
   connectedCallback(){
     super.connectedCallback();
 
-    this.html(template(this.params));
+    this.render();
 
     this.$posts_table = this.querySelector('[role="gallery-table"]');
+    this.$preloader = this.querySelector('[role="preloader"]');
+
+    this.on('click', '[role="load-more-posts-button"]', () => {
+      this.attr('offset', this.params.offset + this.params.limit);
+    });
 
     this.generate_posts_fragment = map_to_fragment((post) => {
       const $post = document.createElement('img');
       $post.src = post.discogs.thumb || post.images[0];
       return $post;
     });
+
   }
 
-  load_posts(params = this.params){
+  load_posts(params = this.params, append){
+    if(!append){
+      html('', this.$posts_table);
+    }
+    this.$preloader && this.$preloader.show();
     return fetch('/api/search/posts', {
       method: 'POST',
       body: JSON.stringify(params)
@@ -30,17 +40,32 @@ class PostsGalleryController extends BaseController {
     .then((result) => {
       const $fragment = this.generate_posts_fragment(result);
       this.$posts_table.appendChild($fragment);
+      this.$preloader.hide();
     });
+  }
+
+  render(){
+    this.html(template(this.params));
   }
 
   attributeChangedCallback(name, prev, value){
     super.attributeChangedCallback();
 
-    if(prev === value){
+    if(value === null || prev === value){
+      return;
+    }
+
+    if(name === 'offset'){
+      this.load_posts(this.params, true);
       return;
     }
 
     this.load_posts();
+  }
+
+  disconnectedCallback(){
+    super.disconnectedCallback();
+    this.removeAttribute('tags');
   }
 
   static get observedAttributes() {

@@ -40,7 +40,7 @@ require.ensure([], () => {
   require('components/itunes_widget/itunes_widget');
   require('components/login_bar/login_bar');
   require('components/user_profile_controller/user_profile_controller');
+
   require('components/welcome_page_controller/welcome_page_controller');
-  require('components/posts_gallery_controller/posts_gallery_controller');
 });
 
