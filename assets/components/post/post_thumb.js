@@ -2,6 +2,8 @@ const { BaseComponent } = require('ascesis');
 const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./post_thumb.html');
 const styles = require('./post_thumb.styl');
 
+const POSTS_PATH = '/post';
+
 class PostThumb extends BaseComponent {
 
   connectedCallback(){
@@ -13,16 +15,10 @@ class PostThumb extends BaseComponent {
 
     console.log('post thumb created');
 
-    this.html(template(this.data));
+    this.html(template(Object.assign({}, this.data, {
+      link: `${POSTS_PATH}/${this.data.id}`
+    })));
   }
-
-  //attributeChangedCallback(name, prev, value){
-    //super.attributeChangedCallback();
-  //}
-
-  //static get observedAttributes() {
-    //return [];
-  //}
 
   set data(value){
     this._data = value;

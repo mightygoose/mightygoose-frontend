@@ -9,10 +9,20 @@ post-thumb {
     background: $color-gray-light;
     position: relative;
     overflow: hidden;
+    display: block;
+    cursor: pointer;
     &:after {
       content: '';
       display: block;
       padding-top: 100%;
+    }
+    &:hover {
+      .post-thumb-info-wrapper {
+        opacity: 0;
+      }
+      lazy-image span {
+        opacity: 1;
+      }
     }
   }
 
@@ -27,13 +37,47 @@ post-thumb {
     }
     span {
       {bold-text}
-      text-transform: uppercase;
+      opacity: 0;
       position: absolute;
       width: 100%;
+      text-transform: uppercase;
       left: 0;
-      text-align: center;
       top: 50%;
       transform: translateY(-50%);
+      color: $color-gray-dark;
     }
+  }
+
+  .post-thumb-info-wrapper {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: rgba(51, 51, 51, 0.5);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  .post-thumb-info-inner {
+    margin-top: 50%;
+    transform: translateY(-50%);
+    padding: 0.5em;
+  }
+
+  .post-thumb-title {
+    {bold-text}
+    text-transform: uppercase;
+    font-size: 0.8em;
+    color: $color-gray-light;
+    margin-bottom: 1em;
+  }
+
+  .post-thumb-tag {
+    display: inline-block;
+    padding: 0.4em 0.8em;
+    font-size: 0.5em;
+    background: $color-gray-light;
+    color: $color-gray-dark;
+    border-radius: 2px;
+    margin-bottom: 0.5em;
   }
 }

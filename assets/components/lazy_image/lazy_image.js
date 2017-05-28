@@ -1,5 +1,4 @@
 const { BaseComponent } = require('ascesis');
-//const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./lazy_image.html');
 
 class LazyImage extends BaseComponent {
   connectedCallback(){
@@ -42,7 +41,7 @@ class LazyImage extends BaseComponent {
   }
 
   get src(){
-    return this.attr('src').split(',');
+    return this.attr('src').split(',').reduce((acc, item) => acc.concat(item || []), []);
   }
 
   set src(value){

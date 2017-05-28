@@ -1,3 +1,11 @@
-<div class="post-thumb-inner">
+<a class="post-thumb-inner" href="${scope.link}">
     <lazy-image src="${[scope.images[0], scope.discogs.thumb].join(',')}"></lazy-image>
-</div>
+    <div class="post-thumb-info-wrapper">
+        <div class="post-thumb-info-inner">
+            <div class="post-thumb-title">${scope.title}</div>
+            <div class="post-thumb-tags">${scope.tags.map((tag) => `
+                <span class="post-thumb-tag">${tag}</span>
+            `).join('')}</div>
+        </div>
+    </div>
+</a>
