@@ -10,6 +10,10 @@ class PostsGalleryController extends BaseController {
   connectedCallback(){
     super.connectedCallback();
 
+    require.ensure(['components/post/post_thumb'], () => {
+      require('components/post/post_thumb');
+    });
+
     this.render();
 
     this.$posts_table = this.querySelector('[role="gallery-table"]');
@@ -20,8 +24,8 @@ class PostsGalleryController extends BaseController {
     });
 
     this.generate_posts_fragment = map_to_fragment((post) => {
-      const $post = document.createElement('img');
-      $post.src = post.discogs.thumb || post.images[0];
+      const $post = document.createElement('post-thumb');
+      $post.data = post;
       return $post;
     });
 

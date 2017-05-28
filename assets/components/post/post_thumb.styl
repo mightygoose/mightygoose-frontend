@@ -1,0 +1,39 @@
+@import '~application.styl';
+
+post-thumb {
+  box-sizing: border-box;
+  text-align: center;
+
+  .post-thumb-inner {
+    width: 100%;
+    background: $color-gray-light;
+    position: relative;
+    overflow: hidden;
+    &:after {
+      content: '';
+      display: block;
+      padding-top: 100%;
+    }
+  }
+
+  lazy-image {
+    img {
+      position: absolute;
+      height: 100%;
+      width: auto;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    span {
+      {bold-text}
+      text-transform: uppercase;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}

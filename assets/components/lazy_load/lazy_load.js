@@ -3,11 +3,9 @@ const BaseComponent = require('ascesis').BaseComponent;
 class LazyLoad extends BaseComponent {
   connectedCallback(){
     super.connectedCallback();
-    var src = this.getAttribute('src');
+    var src = this.attr('src');
     console.log(`lazy loading ${src}`);
-    let cb = () => {
-      this.setAttribute('href', src);
-    };
+    let cb = () => this.attr('href', src);
     let raf = requestAnimationFrame || mozRequestAnimationFrame ||
         webkitRequestAnimationFrame || msRequestAnimationFrame;
     window.addEventListener('load', cb);
