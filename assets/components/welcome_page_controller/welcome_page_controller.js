@@ -28,6 +28,7 @@ class WelcomePageController extends RouterController {
         );
       },
       '/'(){
+        self.querySelector('[role="posts-infobox-label"]').innerHTML = 'random posts';
         attr(
           self.querySelector('posts-gallery-controller'),
           'tags',
@@ -35,6 +36,7 @@ class WelcomePageController extends RouterController {
         );
       },
       '/:type/:value'(type, value){
+        self.querySelector('[role="posts-infobox-label"]').innerHTML = `posts tagged "${value}"`;
         attr(
           self.querySelector('posts-gallery-controller'),
           type,

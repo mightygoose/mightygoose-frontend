@@ -1,2 +1,33 @@
+@import '~application.styl';
+
 welcome-page-controller {
+  .posts-infobox {
+    width: 100%;
+    display: block;
+    height: 3em;
+    background: $color-gray-infobox-bg;
+    text-align: center;
+  }
+
+  .posts-infobox-inner {
+    display: inline-block;
+    height: 100%;
+    line-height: 3em;
+    width: 100%;
+    max-width: 860px;
+    text-align: left;
+    padding: 0 1em;
+    box-sizing: border-box;
+  }
+
+  .posts-infobox-left-column {
+    float: left;
+  }
+
+  .posts-infobox-label {
+    {bold-text}
+    text-transform: uppercase;
+    font-size: 0.8em;
+    color: $color-gray-infobox-label;
+  }
 }
