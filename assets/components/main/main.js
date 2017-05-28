@@ -40,6 +40,14 @@ class MainController extends RouterController {
       this.router.resolve();
     }
 
+    this.on('click', 'a', (event, target) => {
+      const { host, pathname, search } = target;
+      if(host === window.location.host){
+        event.preventDefault();
+        this.router.navigate(`${pathname}${search}`);
+      }
+    });
+
     this.on('click', '.next-button', () => {
       this.send_metric('next_button');
     });

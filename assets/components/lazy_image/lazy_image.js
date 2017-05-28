@@ -3,19 +3,6 @@ const { BaseComponent } = require('ascesis');
 class LazyImage extends BaseComponent {
   connectedCallback(){
     super.connectedCallback();
-
-    this
-      .load_list(this.src)
-      .then(($img) => {
-        this.html('');
-        this.appendChild($img);
-      })
-      .catch(() => {
-        this.html(`
-          <span>no image</span>
-        `);
-      });
-
   }
 
   load_list(list){
@@ -38,6 +25,24 @@ class LazyImage extends BaseComponent {
         reject(false);
       });
     });
+  }
+
+  attributeChangedCallback(name, prev, value){
+    this
+      .load_list(this.src)
+      .then(($img) => {
+        this.html('');
+        this.appendChild($img);
+      })
+      .catch(() => {
+        this.html(`
+          <span>no image</span>
+        `);
+      });
+  }
+
+  static get observedAttributes() {
+    return ['src'];
   }
 
   get src(){
