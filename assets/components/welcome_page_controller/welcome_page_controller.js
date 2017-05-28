@@ -36,7 +36,7 @@ class WelcomePageController extends RouterController {
         );
       },
       '/:type/:value'(type, value){
-        self.querySelector('[role="posts-infobox-label"]').innerHTML = `posts tagged "${value}"`;
+        self.querySelector('[role="posts-infobox-label"]').innerHTML = `posts tagged "${decodeURIComponent(value)}"`;
         attr(
           self.querySelector('posts-gallery-controller'),
           type,

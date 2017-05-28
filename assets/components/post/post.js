@@ -3,6 +3,8 @@ const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!tem
 const styles = require('./post.styl');
 const _ = require('lodash');
 
+const TAGS_PATH = '/welcome';
+
 class PostItem extends BaseComponent {
   render(data){
     let {
@@ -24,6 +26,7 @@ class PostItem extends BaseComponent {
 
     this.html(template({
       title, url, main_image, images, tags, embed, type, deezer, itunes,
+      tags_path: TAGS_PATH,
       each(list, tpl){
         return _.reduce(list, (accum, item) => accum.concat(tpl(item)), "");
       },

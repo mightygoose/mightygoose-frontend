@@ -27,6 +27,7 @@ class PostThumb extends BaseComponent {
   get data(){
     return this._data;
   }
+
 }
 
 module.exports = customElements.define('post-thumb', PostThumb);

@@ -20,7 +20,9 @@
                 <div class="row item-tags">
                     <ul class="tags-list">
                         ${scope.each(scope.tags, tag => `
-                        <li class="tag-label">${tag}</li>
+                        <li class="tag-label">
+                            <a href="${scope.tags_path}/tags/${encodeURIComponent(tag)}">${tag}</a>
+                        </li>
                         `)}
                     </ul>
                 </div>

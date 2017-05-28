@@ -91,6 +91,7 @@ front_app.use(route.get('/post/:post_id/:slug?', function *(post_id, slug){
 
   var post_content = render('../public/post.html', _.assign({}, {
     main_image: item_data.images[0],
+    tags_path: '/welcome',
     each(list, tpl){
       return _.reduce(list, (accum, item) => accum.concat(tpl(item)), "");
     },
