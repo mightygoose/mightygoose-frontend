@@ -1,5 +1,5 @@
 const BaseComponent = require('ascesis').BaseComponent;
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./preloader.html');
+const template = require('./preloader.html');
 const styles = require('./preloader.styl');
 
 class Preloader extends BaseComponent {

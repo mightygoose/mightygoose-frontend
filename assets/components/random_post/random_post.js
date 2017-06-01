@@ -1,5 +1,5 @@
 const RouterController = require('lib/router_controller');
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./random_post.html');
+const template = require('./random_post.html');
 const styles = require('./random_post.styl');
 
 

@@ -1,7 +1,7 @@
 const RouterController = require('lib/router_controller');
 const { attr } = require('ascesis');
 
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./welcome_page_controller.html');
+const template = require('./welcome_page_controller.html');
 const styles = require('./welcome_page_controller.styl');
 
 

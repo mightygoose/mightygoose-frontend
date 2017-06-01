@@ -1,5 +1,5 @@
 const RouterController = require('lib/router_controller');
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./user_profile_controller.html');
+const template = require('./user_profile_controller.html');
 const styles = require('./user_profile_controller.styl');
 
 

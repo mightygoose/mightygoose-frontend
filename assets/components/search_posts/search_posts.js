@@ -1,5 +1,5 @@
 const RouterController = require('lib/router_controller');
-const template = require('raw!./search_posts.html');
+const template = require('./search_posts.html');
 const styles = require('./search_posts.styl');
 const _ = require('lodash');
 
@@ -80,7 +80,7 @@ class SearchPostsController extends RouterController {
     return {
       '/'(q){
         if(!self.childNodes.length){
-          self.html(template);
+          self.html(template());
         }
         if(q.tag){
           self.setAttribute('tag', q.tag);

@@ -1,5 +1,5 @@
 const BaseComponent = require('ascesis').BaseComponent;
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./post.html');
+const template = require('./post.html');
 const styles = require('./post.styl');
 const _ = require('lodash');
 

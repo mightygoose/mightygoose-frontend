@@ -1,5 +1,5 @@
 const BaseComponent = require('ascesis').BaseComponent;
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./itunes_widget.html');
+const template = require('./itunes_widget.html');
 const styles = require('./itunes_widget.styl');
 
 const jsonp = require('browser-jsonp');

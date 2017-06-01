@@ -2,10 +2,10 @@ const BaseComponent = require('ascesis').BaseComponent;
 const _ = require('lodash');
 const horsey = require('horsey');
 
-const horsey_styles = require('style!css!horsey/dist/horsey.css');
+const horsey_styles = require('style-loader!css-loader!horsey/dist/horsey.css');
 
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./autocomplete.html');
-const item_template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./autocomplete_item.html');
+const template = require('./autocomplete.html');
+const item_template = require('./autocomplete_item.html');
 const styles = require('./autocomplete.styl');
 
 

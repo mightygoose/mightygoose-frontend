@@ -1,5 +1,5 @@
 const RouterController = require('lib/router_controller');
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./mixcloud_controller.html');
+const template = require('./mixcloud_controller.html');
 const styles = require('./mixcloud_controller.styl');
 
 const _ = require('lodash');

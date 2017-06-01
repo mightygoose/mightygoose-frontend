@@ -1,7 +1,7 @@
 const Delegate = require('dom-delegate');
 
 const BaseComponent = require('ascesis').BaseComponent;
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./login_bar.html');
+const template = require('./login_bar.html');
 const styles = require('./login_bar.styl');
 
 

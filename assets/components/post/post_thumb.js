@@ -1,5 +1,5 @@
 const { BaseComponent } = require('ascesis');
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./post_thumb.html');
+const template = require('./post_thumb.html');
 const styles = require('./post_thumb.styl');
 
 const POSTS_PATH = '/post';

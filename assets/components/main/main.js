@@ -1,5 +1,5 @@
 //critical css
-require('file?name=../../assets/main.css!stylus!./main.styl');
+require('file-loader?name=../../assets/main.css!stylus-loader!./main.styl');
 
 const { BaseController, html, attr } = require('ascesis');
 const RouterController = require('lib/router_controller');

@@ -1,7 +1,7 @@
 const { BaseController, html } = require('ascesis');
 const { map_to_fragment } = require('lib/helpers');
 
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./posts_gallery_controller.html');
+const template = require('./posts_gallery_controller.html');
 const styles = require('./posts_gallery_controller.styl');
 
 

@@ -1,12 +1,12 @@
 /* copy files */
-require('file?name=../../index.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!application.html');
-require('file?name=../../item_og_tags.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/og_tags/item.html');
-require('file?name=../../item_jsonld.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/jsonld/jsonld.html');
-require('file?name=../../random_post.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/random_post/random_post.html');
-require('file?name=../../post.html.js!babel?presets[]=es2015&plugins[]=transform-runtime!template-string!components/post/post.html');
+require('file-loader?name=../../index.html.js!application.html');
+require('file-loader?name=../../item_og_tags.html.js!components/og_tags/item.html');
+require('file-loader?name=../../item_jsonld.html.js!components/jsonld/jsonld.html');
+require('file-loader?name=../../random_post.html.js!components/random_post/random_post.html');
+require('file-loader?name=../../post.html.js!components/post/post.html');
 
 /* icon fonts */
-require("icons");
+require("icons/icons.font");
 
 /* polyfills */
 require('document-register-element');

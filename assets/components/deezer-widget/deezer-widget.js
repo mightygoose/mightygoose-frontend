@@ -1,5 +1,5 @@
 const BaseComponent = require('ascesis').BaseComponent;
-const template = require('babel?presets[]=es2015&plugins[]=transform-runtime!template-string!./deezer-widget.html');
+const template = require('./deezer-widget.html');
 const styles = require('./deezer-widget.styl');
 
 const jsonp = require('browser-jsonp');
