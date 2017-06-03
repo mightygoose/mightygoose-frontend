@@ -14,14 +14,17 @@ class PostThumb extends BaseComponent {
     });
 
     console.log('post thumb created');
+  }
 
-    this.html(template(Object.assign({}, this.data, {
-      link: `${POSTS_PATH}/${this.data.id}`
+  render(data = this.data){
+    this.html(template(Object.assign({}, data, {
+      link: `${POSTS_PATH}/${data.id}`
     })));
   }
 
   set data(value){
     this._data = value;
+    this.render();
   }
 
   get data(){

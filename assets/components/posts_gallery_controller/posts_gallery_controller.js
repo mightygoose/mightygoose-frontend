@@ -4,31 +4,24 @@ const { map_to_fragment } = require('lib/helpers');
 const template = require('./posts_gallery_controller.html');
 const styles = require('./posts_gallery_controller.styl');
 
+const generate_posts_fragment = map_to_fragment((post) => {
+  const $post = document.createElement('post-thumb');
+  $post.data = post;
+  return $post;
+});
 
 class PostsGalleryController extends BaseController {
 
   connectedCallback(){
-    super.connectedCallback();
-
-    require.ensure(['components/post/post_thumb'/*, 'preloader'*/], () => {
+    require.ensure(['components/post/post_thumb', 'components/preloader/preloader'], () => {
       require('components/post/post_thumb');
+      require('components/preloader/preloader');
     });
-
-    //this.render();
-
-    //this.$posts_table = this.querySelector('[role="gallery-table"]');
-    //this.$preloader = this.querySelector('[role="preloader"]');
+    super.connectedCallback();
 
     this.on('click', '[role="load-more-posts-button"]', () => {
       this.attr('offset', this.params.offset + this.params.limit);
     });
-
-    this.generate_posts_fragment = map_to_fragment((post) => {
-      const $post = document.createElement('post-thumb');
-      $post.data = post;
-      return $post;
-    });
-
   }
 
   load_posts(params = this.params){
@@ -41,14 +34,17 @@ class PostsGalleryController extends BaseController {
   render(data, append){
     !this.childElementCount && this.html(template(this.params));
 
+    if(!append){
+      html('', this.$posts_table);
+    }
+
     if(data){
       this.show_preloader();
-      if(!append){
-        html('', this.$posts_table);
-      }
-      Promise.resolve(data).then(this.generate_posts_fragment).then(($fragment) => {
+      Promise.resolve(data).then(generate_posts_fragment).then(($fragment) => {
         this.$posts_table.appendChild($fragment);
         this.hide_preloader();
+
+        this.trigger('posts-gallery-rendered');
       });
     }
   }
@@ -77,12 +73,13 @@ class PostsGalleryController extends BaseController {
       return;
     }
 
-    this.render(this.load_posts(), name === 'offset');
-  }
+    const offset_changed = (name === 'offset');
 
-  disconnectedCallback(){
-    super.disconnectedCallback();
-    this.removeAttribute('tags');
+    if(!offset_changed){
+      this.removeAttribute('offset');
+    }
+
+    this.render(this.load_posts(), offset_changed);
   }
 
   static get observedAttributes() {

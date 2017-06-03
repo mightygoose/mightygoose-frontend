@@ -5,12 +5,13 @@ var autoprefixer = require("autoprefixer");
 module.exports = {
   context: __dirname,
   entry: {
-    "application": "./assets/application.js"
+    "application": "./assets/application.js",
+    "application_server": "./assets/application_server.js"
   },
   output: {
     path: path.join(__dirname, "public/assets/js"),
     publicPath: "/assets/js/",
-    filename: "application.js",
+    filename: "[name].js",
     chunkFilename: "[hash]/js/[id].js",
   },
   module: {
