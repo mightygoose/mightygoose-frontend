@@ -10,14 +10,14 @@ class PostsGalleryController extends BaseController {
   connectedCallback(){
     super.connectedCallback();
 
-    require.ensure(['components/post/post_thumb'], () => {
+    require.ensure(['components/post/post_thumb'/*, 'preloader'*/], () => {
       require('components/post/post_thumb');
     });
 
-    this.render();
+    //this.render();
 
-    this.$posts_table = this.querySelector('[role="gallery-table"]');
-    this.$preloader = this.querySelector('[role="preloader"]');
+    //this.$posts_table = this.querySelector('[role="gallery-table"]');
+    //this.$preloader = this.querySelector('[role="preloader"]');
 
     this.on('click', '[role="load-more-posts-button"]', () => {
       this.attr('offset', this.params.offset + this.params.limit);
@@ -31,25 +31,43 @@ class PostsGalleryController extends BaseController {
 
   }
 
-  load_posts(params = this.params, append){
-    if(!append){
-      html('', this.$posts_table);
-    }
-    this.$preloader && this.$preloader.show();
+  load_posts(params = this.params){
     return fetch('/api/search/posts', {
       method: 'POST',
       body: JSON.stringify(params)
-    })
-    .then(response => response.json())
-    .then((result) => {
-      const $fragment = this.generate_posts_fragment(result);
-      this.$posts_table.appendChild($fragment);
-      this.$preloader.hide();
-    });
+    }).then(response => response.json());
   }
 
-  render(){
-    this.html(template(this.params));
+  render(data, append){
+    !this.childElementCount && this.html(template(this.params));
+
+    if(data){
+      this.show_preloader();
+      if(!append){
+        html('', this.$posts_table);
+      }
+      Promise.resolve(data).then(this.generate_posts_fragment).then(($fragment) => {
+        this.$posts_table.appendChild($fragment);
+        this.hide_preloader();
+      });
+    }
+  }
+
+  show_preloader(){
+    //should be attribute or property
+    this.$preloader.show && this.$preloader.show();
+  }
+
+  hide_preloader(){
+    this.$preloader.hide && this.$preloader.hide();
+  }
+
+  get $posts_table(){
+    return this.querySelector('[role="gallery-table"]');
+  }
+
+  get $preloader(){
+    return this.querySelector('[role="preloader"]');
   }
 
   attributeChangedCallback(name, prev, value){
@@ -59,12 +77,7 @@ class PostsGalleryController extends BaseController {
       return;
     }
 
-    if(name === 'offset'){
-      this.load_posts(this.params, true);
-      return;
-    }
-
-    this.load_posts();
+    this.render(this.load_posts(), name === 'offset');
   }
 
   disconnectedCallback(){

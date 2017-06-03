@@ -10,10 +10,21 @@ class WelcomePageController extends RouterController {
   connectedCallback(){
     require.ensure(['components/posts_gallery_controller/posts_gallery_controller'], () => {
       require('components/posts_gallery_controller/posts_gallery_controller');
-      this.html(template({}));
       super.connectedCallback();
     });
+  }
 
+  render(params){
+    !this.childElementCount && this.html(template());
+    params.infobox_label_text && (
+      this.querySelector('[role="posts-infobox-label"]').innerHTML = params.infobox_label_text
+    );
+    params.limit && attr(
+      this.querySelector('posts-gallery-controller'), 'limit', params.limit
+    );
+    params.type && attr(
+      this.querySelector('posts-gallery-controller'), params.type, params.value
+    );
 
   }
 
@@ -21,27 +32,40 @@ class WelcomePageController extends RouterController {
     let self = this;
     return {
       '*'(){
-        attr(
-          self.querySelector('posts-gallery-controller'),
-          'limit',
-          this.getParams().limit || attr(self.querySelector('posts-gallery-controller'), 'limit') || 9
-        );
+        self.render({
+          limit: this.getParams().limit
+        });
+        //attr(
+          //self.querySelector('posts-gallery-controller'),
+          //'limit',
+          //this.getParams().limit || attr(self.querySelector('posts-gallery-controller'), 'limit') || 9
+        //);
       },
       '/'(){
-        self.querySelector('[role="posts-infobox-label"]').innerHTML = 'random posts';
-        attr(
-          self.querySelector('posts-gallery-controller'),
-          'tags',
-          '[]'
-        );
+        self.render({
+          infobox_label_text: 'random posts',
+          type: 'tags',
+          value: '[]',
+        });
+        //self.querySelector('[role="posts-infobox-label"]').innerHTML = 'random posts';
+        //attr(
+          //self.querySelector('posts-gallery-controller'),
+          //'tags',
+          //'[]'
+        //);
       },
       '/:type/:value'(type, value){
-        self.querySelector('[role="posts-infobox-label"]').innerHTML = `posts tagged "${decodeURIComponent(value)}"`;
-        attr(
-          self.querySelector('posts-gallery-controller'),
-          type,
-          JSON.stringify(decodeURIComponent(value).split(','))
-        );
+        self.render({
+          infobox_label_text: `${type} tagged "${decodeURIComponent(value)}"`,
+          type: type,
+          value: JSON.stringify(decodeURIComponent(value).split(',')),
+        });
+        //self.querySelector('[role="posts-infobox-label"]').innerHTML = `posts tagged "${decodeURIComponent(value)}"`;
+        //attr(
+          //self.querySelector('posts-gallery-controller'),
+          //type,
+          //JSON.stringify(decodeURIComponent(value).split(','))
+        //);
       }
     }
   }
