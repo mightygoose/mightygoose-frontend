@@ -12,8 +12,6 @@ class PostThumb extends BaseComponent {
     require.ensure(['components/lazy_image/lazy_image'], () => {
       require('components/lazy_image/lazy_image');
     });
-
-    console.log('post thumb created');
   }
 
   render(data = this.data){

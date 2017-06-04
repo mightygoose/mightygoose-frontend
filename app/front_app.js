@@ -5,6 +5,13 @@ const route = require('koa-route');
 const log = require('log-colors');
 const aws = require('aws-sdk');
 const _ = require('lodash');
+const fs = require('fs');
+
+const jsdom = require("jsdom");
+const { Response } = require('node-fetch');
+const { JSDOM } = jsdom;
+const { Script } = require("vm");
+
 const pry = require('pryjs');
 
 const GA_TRACKING_CODE = process.env['GA_TRACKING_CODE'] || '';
@@ -13,11 +20,28 @@ const AWS_ACCESS_KEY_ID = process.env['AWS_ACCESS_KEY_ID'];
 const AWS_SECRET_ACCESS_KEY = process.env['AWS_SECRET_ACCESS_KEY'];
 const S3_BUCKET = process.env['S3_BUCKET'];
 
+const is_production = process.env['NODE_ENV'] === 'production';
+
 const s3 = new aws.S3();
 
 
-var front_app = koa();
-var assets_dir = path.join(__dirname, '..', 'public');
+const front_app = koa();
+const assets_dir = path.join(__dirname, '..', 'public');
+
+const frontend_app = get_frontend_app();
+
+function get_frontend_app(){
+  return new Promise((resolve, reject) => {
+    fs.readFile('./public/assets/js/application_server.js', (err, content) => {
+      if(err){
+        reject(err);
+        return;
+      }
+      resolve(new Script(content.toString()));
+    });
+  });
+}
+
 
 var __render = function(template, data){
   var template = require(template);
@@ -62,6 +86,58 @@ front_app.use(route.get('/post/', function *(post_id){
   this.body = render('../public/index.html', {
     GA_TRACKING_CODE,
     request_href: this.request.href
+  });
+}));
+
+front_app.use(route.get('/welcome/:rest(.*)?', function *(post_id){
+  log.info('render welcome page');
+
+  const dom = new JSDOM(``, {
+    runScripts: "dangerously",
+    resources: "usable",
+    url: this.request.href
+  });
+
+  const { window } = dom;
+  const { document } = window;
+
+  const $controller = document.createElement('welcome-page-controller');
+  $controller.setAttribute('router-root', 'true');
+  $controller.setAttribute('router-base', '/welcome');
+
+  window.fetch = (url, request) => {
+    return store.search(JSON.parse(request.body)).then((data) => {
+      return new Response(JSON.stringify(data));
+    });
+  }
+
+  document.addEventListener('subrouter-connected', (event) => {
+    event.target.router.resolve();
+  });
+
+  const when_gallery_rendered = new Promise((resolve) => {
+    document.addEventListener('posts-gallery-rendered', resolve);
+  });
+
+  document.body.appendChild($controller);
+
+  dom.runVMScript(yield is_production ? frontend_app : get_frontend_app());
+
+  const { target } = yield when_gallery_rendered;
+  target.setAttribute('tags-prerendered', 'true');
+
+  const critical_styles = [].slice.apply(document.querySelectorAll('head style')).reduce((acc, $el) => {
+    acc.appendChild($el);
+    return acc;
+  }, document.createElement('div')).innerHTML;
+
+  $controller.removeAttribute('router-root');
+
+  this.body = render('../public/index.html', {
+    GA_TRACKING_CODE,
+    request_href: this.request.href,
+    critical_styles: critical_styles,
+    content: $controller.outerHTML
   });
 }));
 

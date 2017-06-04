@@ -73,6 +73,11 @@ class PostsGalleryController extends BaseController {
       return;
     }
 
+    if(this.hasAttribute(`${name}-prerendered`)){
+      this.removeAttribute(`${name}-prerendered`);
+      return;
+    }
+
     const offset_changed = (name === 'offset');
 
     if(!offset_changed){

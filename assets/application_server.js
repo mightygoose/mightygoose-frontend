@@ -8,7 +8,6 @@ require('file-loader?name=../../post.html.js!components/post/post.html');
 
 require('document-register-element');
 
-
 //require('components/short_stat/short_stat');
 //require('components/random_post/random_post');
 //require('components/search_posts/search_posts');

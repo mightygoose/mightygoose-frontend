@@ -11,7 +11,6 @@ class Preloader extends BaseComponent {
   }
   connectedCallback(){
     super.connectedCallback();
-    console.log('preloader created');
     this.innerHTML = template();
     this.$content = this.querySelector('.preloader-wrapper');
   }
