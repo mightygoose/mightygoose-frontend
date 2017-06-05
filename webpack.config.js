@@ -90,7 +90,7 @@ module.exports = {
     modules: ["node_modules", "assets"],
     alias: {
       "router": "ascesis/router",
-      "config": path.join(__dirname, "config")
+      "config": path.join(__dirname, "config/")
     }
   },
   plugins: [
