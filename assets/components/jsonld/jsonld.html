@@ -1,11 +1,13 @@
 <script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "MusicAlbum",
-  "name": "${scope.album}",
-  "byArtist": {
-    "@type": "MusicGroup",
-    "name": "${scope.artist}"
-  }
-}
+${scope.jsonld ? JSON.stringify(scope.jsonld) : `
+    {
+      "@context": "http://schema.org",
+      "@type": "MusicAlbum",
+      "name": "${scope.album}",
+      "byArtist": {
+        "@type": "MusicGroup",
+        "name": "${scope.artist}"
+      }
+    }
+`}
 </script>

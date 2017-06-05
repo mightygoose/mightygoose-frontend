@@ -125,9 +125,27 @@ front_app.use(route.get(`${app_routes.posts_page.route_base}/:rest(.*)?`, functi
 
   dom.runVMScript(yield is_production ? frontend_app : get_frontend_app());
 
-  const { target } = yield when_gallery_rendered;
+  const { target, eventData: { posts_data } } = yield when_gallery_rendered;
+
   //should be more generic prerendered attrs setter
   target.setAttribute('tags-prerendered', 'true');
+
+  const jsonld_content = render('../public/item_jsonld.html', {
+    jsonld: {
+      "@context": "http://schema.org",
+      "@graph": posts_data.map((item_data) => {
+        var title_parts = item_data.title.split(' - ');
+        return {
+          "@type": "MusicAlbum",
+          "name": title_parts[1],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": title_parts[0]
+          }
+        }
+      })
+    }
+  });
 
   const critical_styles = [].slice.apply(document.querySelectorAll('head style')).reduce((acc, $el) => {
     acc.appendChild($el);
@@ -140,7 +158,8 @@ front_app.use(route.get(`${app_routes.posts_page.route_base}/:rest(.*)?`, functi
     GA_TRACKING_CODE,
     request_href: this.request.href,
     critical_styles: critical_styles,
-    content: $controller.outerHTML
+    content: $controller.outerHTML,
+    jsonld: jsonld_content
   });
 }));
 

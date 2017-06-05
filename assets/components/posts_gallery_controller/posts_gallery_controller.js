@@ -40,11 +40,11 @@ class PostsGalleryController extends BaseController {
 
     if(data){
       this.show_preloader();
-      Promise.resolve(data).then(generate_posts_fragment).then(($fragment) => {
-        this.$posts_table.appendChild($fragment);
+      Promise.resolve(data).then((posts_data) => {
+        this.$posts_table.appendChild(generate_posts_fragment(posts_data));
         this.hide_preloader();
 
-        this.trigger('posts-gallery-rendered');
+        this.trigger('posts-gallery-rendered', { posts_data, append });
       });
     }
   }
