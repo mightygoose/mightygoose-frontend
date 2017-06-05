@@ -7,6 +7,8 @@ const aws = require('aws-sdk');
 const _ = require('lodash');
 const fs = require('fs');
 
+const { routes: app_routes } = require('config/routes');
+
 const jsdom = require("jsdom");
 const { Response } = require('node-fetch');
 const { JSDOM } = jsdom;
@@ -89,7 +91,7 @@ front_app.use(route.get('/post/', function *(post_id){
   });
 }));
 
-front_app.use(route.get('/welcome/:rest(.*)?', function *(post_id){
+front_app.use(route.get(`${app_routes.posts_page.route_base}/:rest(.*)?`, function *(rest){
   log.info('render welcome page');
 
   const dom = new JSDOM(``, {
@@ -101,9 +103,9 @@ front_app.use(route.get('/welcome/:rest(.*)?', function *(post_id){
   const { window } = dom;
   const { document } = window;
 
-  const $controller = document.createElement('welcome-page-controller');
+  const $controller = document.createElement(app_routes.posts_page.controller);
   $controller.setAttribute('router-root', 'true');
-  $controller.setAttribute('router-base', '/welcome');
+  $controller.setAttribute('router-base', app_routes.posts_page.route_base);
 
   window.fetch = (url, request) => {
     return store.search(JSON.parse(request.body)).then((data) => {
@@ -124,6 +126,7 @@ front_app.use(route.get('/welcome/:rest(.*)?', function *(post_id){
   dom.runVMScript(yield is_production ? frontend_app : get_frontend_app());
 
   const { target } = yield when_gallery_rendered;
+  //should be more generic prerendered attrs setter
   target.setAttribute('tags-prerendered', 'true');
 
   const critical_styles = [].slice.apply(document.querySelectorAll('head style')).reduce((acc, $el) => {

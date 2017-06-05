@@ -2,8 +2,9 @@ const BaseComponent = require('ascesis').BaseComponent;
 const template = require('./post.html');
 const styles = require('./post.styl');
 const _ = require('lodash');
+const { routes } = require('config/routes');
 
-const TAGS_PATH = '/welcome';
+const TAGS_PATH = routes.posts_page.route_base;
 
 class PostItem extends BaseComponent {
   render(data){

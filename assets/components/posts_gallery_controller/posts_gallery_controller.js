@@ -51,7 +51,9 @@ class PostsGalleryController extends BaseController {
 
   show_preloader(){
     //should be attribute or property
-    this.$preloader.show && this.$preloader.show();
+    setTimeout(() => {
+      this.$preloader.show && this.$preloader.show();
+    }, 0);
   }
 
   hide_preloader(){

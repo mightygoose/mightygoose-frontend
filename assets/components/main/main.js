@@ -3,6 +3,7 @@ require('file-loader?name=../../assets/main.css!stylus-loader!./main.styl');
 
 const { BaseController, html, attr } = require('ascesis');
 const RouterController = require('lib/router_controller');
+const { routes: app_routes, index: app_index } = require('config/routes');
 
 
 class MainController extends RouterController {
@@ -16,26 +17,22 @@ class MainController extends RouterController {
 
     window.router = this.router;
 
-    let table = {
-      'post':     this.querySelector('random-post-controller') || document.createElement('random-post-controller' ),
-      'search':   this.querySelector('search-posts-controller') || document.createElement('search-posts-controller'),
-      'user':     this.querySelector('user-profile-controller') || document.createElement('user-profile-controller'),
-      'mixcloud': this.querySelector('mixcloud-controller') || document.createElement('mixcloud-controller'),
-      'welcome':  this.querySelector('welcome-page-controller') || document.createElement('welcome-page-controller')
-    };
+    Object.keys(app_routes).forEach((key, index, arr) => {
+      const { route_base, controller } = app_routes[key];
+      const $controller = this.querySelector(controller) || document.createElement(controller);
 
-    this.router.add('/*', (path) => {
-      let controller_name = path.split('/')[0];
-      let $controller = table[controller_name];
-      attr($controller, 'router-base', controller_name);
-      if(!($content_section.children[0] === $controller)){
-        $content_section.children[0] && buffer.appendChild($content_section.children[0]);
-        $content_section.appendChild($controller);
-      }
-    });
+      attr($controller, 'router-base', route_base);
 
-    if(this.router.getPath() === '/'){
-      this.router.navigate('/post/');
+      this.router.add(`${route_base}/:rest(.*)?`, () => {
+        if(!($content_section.children[0] === $controller)){
+          $content_section.children[0] && buffer.appendChild($content_section.children[0]);
+          $content_section.appendChild($controller);
+        }
+      });
+    }, {});
+
+    if(this.router.getPath() === '/' && app_index !== '/'){
+      this.router.navigate(app_index);
     } else {
       this.router.resolve();
     }
