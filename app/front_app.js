@@ -91,75 +91,117 @@ front_app.use(route.get('/post/', function *(post_id){
   });
 }));
 
-front_app.use(route.get(`${app_routes.posts_page.route_base}/:rest(.*)?`, function *(rest){
-  log.info('render welcome page');
 
+function *render_component(request_url){
+
+  const init_time = new Date();
+  let fetch_time;
+
+  //create dom
   const dom = new JSDOM(``, {
     runScripts: "dangerously",
     resources: "usable",
-    url: this.request.href
+    url: request_url
   });
 
   const { window } = dom;
   const { document } = window;
 
-  const $controller = document.createElement(app_routes.posts_page.controller);
-  $controller.setAttribute('router-root', 'true');
-  $controller.setAttribute('router-base', app_routes.posts_page.route_base);
+  const after_dom_created = new Date();
 
+  //mock fetch function
   window.fetch = (url, request) => {
+    const start = new Date();
     return store.search(JSON.parse(request.body)).then((data) => {
+      fetch_time = new Date() - start;
       return new Response(JSON.stringify(data));
     });
   }
 
+  //create and set up controller
+  const $controller = document.createElement(app_routes.posts_page.controller);
+
+  /* communicate with controller */
+  $controller.setAttribute('router-root', 'true');
+  $controller.setAttribute('router-base', app_routes.posts_page.route_base);
+
+  //resolve router after it connects to DOM
   document.addEventListener('subrouter-connected', (event) => {
     event.target.router.resolve();
   });
+
+  /* / */
 
   const when_gallery_rendered = new Promise((resolve) => {
     document.addEventListener('posts-gallery-rendered', resolve);
   });
 
+  //attach controller to the DOM
   document.body.appendChild($controller);
 
+  const after_inserted = new Date();
+
+  //execute script
   dom.runVMScript(yield is_production ? frontend_app : get_frontend_app());
 
+  const after_application_run = new Date();
+
+  //await for event
   const { target, eventData: { posts_data } } = yield when_gallery_rendered;
 
-  //should be more generic prerendered attrs setter
+  const after_got_event = new Date();
+
+  //we don't want to render it on frontend again
   target.setAttribute('tags-prerendered', 'true');
 
-  const jsonld_content = render('../public/item_jsonld.html', {
-    jsonld: {
-      "@context": "http://schema.org",
-      "@graph": posts_data.map((item_data) => {
-        var title_parts = item_data.title.split(' - ');
-        return {
-          "@type": "MusicAlbum",
-          "name": title_parts[1],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": title_parts[0]
-          }
-        }
-      })
-    }
-  });
-
+  //extract critical styles
   const critical_styles = [].slice.apply(document.querySelectorAll('head style')).reduce((acc, $el) => {
     acc.appendChild($el);
     return acc;
   }, document.createElement('div')).innerHTML;
 
+  const after_styles_inserted = new Date();
+
+  //our router will work as subrouter on frontend
   $controller.removeAttribute('router-root');
+
+  //close window
+  window.close();
+
+  const finish_time = new Date();
+
+  return {
+    content: $controller.outerHTML,
+    critical_styles: critical_styles,
+    metrics: {
+      'dom_creation': after_dom_created - init_time,
+      'dom_insertion': after_inserted - after_dom_created,
+      'application_run': after_application_run - after_inserted,
+      'fetch_resorces': fetch_time,
+      'await_event': after_got_event - after_application_run - fetch_time,
+      'insert_styles': after_styles_inserted - after_got_event,
+      'flushing': finish_time - after_styles_inserted,
+      'total': finish_time - init_time
+    }
+  }
+}
+
+
+front_app.use(route.get(`${app_routes.posts_page.route_base}/:rest(.*)?`, function *(rest){
+  log.info('render welcome page');
+
+  let rendering_result = {};
+  try {
+    rendering_result = yield* render_component(this.request.href);
+  } catch(e) {
+    logger.error(`Could not render component. {e}`);
+  }
 
   this.body = render('../public/index.html', {
     GA_TRACKING_CODE,
     request_href: this.request.href,
-    critical_styles: critical_styles,
-    content: $controller.outerHTML,
-    jsonld: jsonld_content
+    critical_styles: rendering_result.critical_styles,
+    content: rendering_result.content,
   });
 }));
 
