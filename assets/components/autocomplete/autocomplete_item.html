@@ -6,7 +6,7 @@ ${scope.type === 'tags_suggestion'
     </span>
     <span>(${scope.count})</span>
 ` : `
-    <img class="mg-autocomplete-image" src="${scope.image}"/>
+    <lazy-image src="${scope.image}" class="mg-autocomplete-image"></lazy-image>
     <span>
         ${scope.title.replace(
             new RegExp(`(${scope.input_value})`, 'gi'),
