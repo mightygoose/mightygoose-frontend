@@ -166,7 +166,7 @@ class Store {
             'tags_count', (
               SELECT COUNT(id)
               FROM items
-              WHERE lower(tags::text) LIKE '%${search_query.toLowerCase()}%'
+              WHERE tags @> '["${search_query}"]'::jsonb
             )
         ) as object
       `;

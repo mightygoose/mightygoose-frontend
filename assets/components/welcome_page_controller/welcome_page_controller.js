@@ -4,13 +4,27 @@ const { attr } = require('ascesis');
 const template = require('./welcome_page_controller.html');
 const styles = require('./welcome_page_controller.styl');
 
+const { routes } = require('config/routes');
+
+const POST_PATH = routes.post_page.route_base;
+
 
 class WelcomePageController extends RouterController {
 
   connectedCallback(){
-    require.ensure(['components/posts_gallery_controller/posts_gallery_controller'], () => {
+    require.ensure(['components/posts_gallery_controller/posts_gallery_controller'/* autocomplete */], () => {
       require('components/posts_gallery_controller/posts_gallery_controller');
     });
+
+    this.on('mg-autocomplete-item-selected', (event) => {
+      var {eventData: data} = event;
+      if(data.type === 'tags_suggestion'){
+        this.router.navigate(`/tags/${data.title}`)
+      } else {
+        this.router.navigate(`/${POST_PATH}/${data.id}`, { absolute: true });
+      }
+    });
+
     super.connectedCallback();
   }
 

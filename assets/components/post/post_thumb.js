@@ -2,7 +2,9 @@ const { BaseComponent } = require('ascesis');
 const template = require('./post_thumb.html');
 const styles = require('./post_thumb.styl');
 
-const POSTS_PATH = '/post';
+const { routes } = require('config/routes');
+
+const POST_PATH = routes.post_page.route_base;
 
 class PostThumb extends BaseComponent {
 
@@ -16,7 +18,7 @@ class PostThumb extends BaseComponent {
 
   render(data = this.data){
     this.html(template(Object.assign({}, data, {
-      link: `${POSTS_PATH}/${data.id}`
+      link: `${POST_PATH}/${data.id}`
     })));
   }
 
