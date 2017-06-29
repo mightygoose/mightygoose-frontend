@@ -21,5 +21,5 @@ module.exports = {
       controller: 'mixcloud-controller'
     },
   },
-  index: '/post'
+  index: '/posts'
 }
