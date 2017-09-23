@@ -76,6 +76,7 @@
     "rivets": "^0.8.1",
     "sitemap": "^1.6.0",
     "speakingurl": "^9.0.0",
+    "spotify-web-api-node": "^2.5.0",
     "style-inject": "0.0.11",
     "style-loader": "^0.13.0",
     "stylus": "^0.54.5",
