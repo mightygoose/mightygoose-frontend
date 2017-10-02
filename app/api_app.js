@@ -72,11 +72,9 @@ app.use(route.get('/search/discogs', function *(){
   var url = `https://api.discogs.com/database/search`;
   var response = yield request({
     url: url,
-    qs: {
+    qs: Object.assign({
       token: DISCOGS_TOKEN,
-      barcode: query.barcode,
-      catno: query.catno
-    },
+    }, query),
     headers: {
       'User-Agent': 'request'
     }
