@@ -6,6 +6,8 @@ const urllib = require('url');
 const Store = require('./store');
 const pry = require('pryjs');
 
+const DISCOGS_TOKEN = process.env['DISCOGS_TOKEN'];
+
 var app = koa();
 global.store = new Store(); // bad!
 
@@ -62,6 +64,26 @@ app.use(route.get('/search/tag', function *(){
   var query = this.query.q;
   var response = yield store.get_by_tag(query);
   this.body = response;
+}));
+
+app.use(route.get('/search/discogs', function *(){
+  var query = this.query;
+
+  var url = `https://api.discogs.com/database/search`;
+  var response = yield request({
+    url: url,
+    qs: {
+      token: DISCOGS_TOKEN,
+      barcode: query.barcode,
+      catno: query.catno
+    },
+    headers: {
+      'User-Agent': 'request'
+    }
+  });
+
+
+  this.body = response.body;
 }));
 
 app.use(route.post('/mixcloud/get_tracks', function *(){
