@@ -17,7 +17,7 @@ require('tocca');
 require.ensure([], () => {
   require('components/short_stat/short_stat');
   require('components/random_post/random_post');
-  require('components/search_posts/search_posts');
+  //require('components/search_posts/search_posts');
   require('components/post/post');
   require('components/posts_controller/posts_controller');
   require('components/tag_form/tag_form');
@@ -35,6 +35,7 @@ require.ensure([], () => {
   require('components/login_bar/login_bar');
   require('components/user_profile_controller/user_profile_controller');
 
+  require('components/search_controller/search_controller');
   require('components/welcome_page_controller/welcome_page_controller');
 });
 

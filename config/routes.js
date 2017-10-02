@@ -10,7 +10,7 @@ module.exports = {
     },
     search_page: {
       route_base: '/search',
-      controller: 'search-posts-controller'
+      controller: 'search-controller'
     },
     user_page: {
       route_base: '/user',
