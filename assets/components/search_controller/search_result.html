@@ -1,0 +1,49 @@
+<div class="row result-row" refs="result">
+    <div class="result-image">
+      <img src="${scope.thumb}">
+    </div>
+    <div class="result-info result-main">
+        <div class="row result-title">${scope.title} (${scope.year})</div>
+        <div class="row tags-row">
+            ${scope.genre.map(genre => `
+                <div class="result-tag">${genre}</div>
+            `).join('')}
+        </div>
+        <div class="row tags-row">
+            ${scope.style.map(style => `
+                <div class="result-tag">${style}</div>
+            `).join('')}
+        </div>
+    </div>
+    <div class="result-additional">
+        <div class="row">
+            <div class="row result-codes">
+                <div class="result-item">
+                    <span class="item-category-title">barcode:</span>
+                    <span class="item-category-label">
+                        ${scope.barcode.map((barcode) => `
+                            <div>${barcode}</div>
+                        `).join('')}
+                    </span>
+                </div>
+                <div class="result-item">
+                    <span class="item-category-title"> catno: </span>
+                    <span class="item-category-label">
+                        <div>${scope.catno}</div>
+                    </span>
+                </div>
+            </div>
+            <div class="row result-item">
+                <span class="item-category-title"> label: </span>
+                <span class="item-category-label"> ${scope.label.join(', ')} </span>
+            </div>
+            <div class="row result-item">
+                <span class="item-category-title"> format: </span>
+                <span class="item-category-label"> ${scope.format.join(', ')} </span>
+            </div>
+        </div>
+        <div class="row info-button-row">
+            <a refs="release-info" class="button" href="/search/discogs/releases/${scope.id}">more</a>
+        </div>
+    </div>
+</div>

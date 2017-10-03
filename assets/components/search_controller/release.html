@@ -1,0 +1,107 @@
+<div ref="release">
+    <div class="release-gallery">
+        ${scope.images.slice(0, 1).map((image) => `
+          <img src="${image.resource_url}">
+        `).join('')}
+    </div>
+    <div class="release-info">
+      <div class="row release-title">
+          <span class="release-title-artist">${scope.artists.map(artist => artist.name).join(', ')}</span>
+          <span class="release-title-divider"> - </span>
+          <span class="release-title-release">${scope.title}</span>
+          <span class="release-title-year">${scope.year}</span>
+      </div>
+      <div class="row tags-row">
+        <div class="row">
+            ${scope.genres.map(genre => `
+                <div class="release-tag">${genre}</div>
+            `).join('')}
+        </div>
+        <div class="row">
+            ${scope.styles.map(style => `
+                <div class="release-tag">${style}</div>
+            `).join('')}
+        </div>
+      </div>
+
+      <div class="row">
+          <span class="item-category-title">
+              labels:
+          </span>
+          <span class="item-category-label">
+              ${scope.labels.map(label => `
+                  ${label.name} (catno: ${label.catno})
+              `).join(', ')}
+          </span>
+      </div>
+
+      <div class="row">
+          <span class="item-category-title">
+              lowest price on discogs:
+          </span>
+          <span class="item-category-label">
+              ${scope.lowest_price}$
+          </span>
+      </div>
+
+      <div class="row">
+          <span class="item-category-title">
+              format:
+          </span>
+          <span class="item-category-label">
+              ${scope.formats.map(format => format.name).join(', ')}
+          </span>
+      </div>
+
+      <div class="row">
+          <span class="item-category-title">
+              identifiers:
+          </span>
+          <span class="item-category-label">
+              ${scope.identifiers.map(identifier => `
+                  ${identifier.value} (${identifier.type})
+              `).join(', ')}
+          </span>
+      </div>
+
+      <div class="row minor-info-row">
+          <div>
+              <span class="item-category-title">
+                  rating:
+              </span>
+              <span class="item-category-label">
+                  ${scope.community.rating.average} (${scope.community.rating.count})
+              </span>
+          </div>
+          <div>
+              <span class="item-category-title">
+                  release country:
+              </span>
+              <span class="item-category-label">
+                  ${scope.country}
+              </span>
+          </div>
+          <div>
+              <span class="item-category-title">
+                  released:
+              </span>
+              <span class="item-category-label">
+                  ${scope.released}
+              </span>
+          </div>
+          <div>
+              <span class="item-category-title">
+                  released formatted:
+              </span>
+              <span class="item-category-label">
+                  ${scope.released_formatted}
+              </span>
+          </div>
+      </div>
+
+      <div class="row discogs-link-row">
+          <a href="${scope.uri}" target="blank" class="button">discogs link</a>
+      </div>
+    </div>
+
+</div>
