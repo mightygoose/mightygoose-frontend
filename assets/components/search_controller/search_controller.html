@@ -1,6 +1,6 @@
 <div class="row params-row">
     <form ref="form" class="search-form">
-        <div class="row">
+        <div class="row with-margin">
             <label class="ceil code-ceil">
                 <input name="barcode" placeholder="barcode" ref="barcode" value="${scope.barcode || ''}">
             </label>
@@ -11,7 +11,7 @@
                 <input name="year" placeholder="year" ref="year" value="${scope.year || ''}">
             </label>
         </div>
-        <div class="row">
+        <div class="row with-margin">
             <label class="ceil artist-ceil">
                 <input name="artist" placeholder="artist" ref="artist" value="${scope.artist || ''}">
             </label>
@@ -19,7 +19,7 @@
                 <input name="release_title" placeholder="release title" ref="release_title" value="${scope.release_title || ''}">
             </label>
         </div>
-        <div class="row search-button-row">
+        <div class="row search-button-row with-margin">
             <button type="submit" ref="search" class="button">search</button>
         </div>
     </form>

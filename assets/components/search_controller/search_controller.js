@@ -3,19 +3,8 @@ const RouterController = require('lib/router_controller');
 const template = require('./search_controller.html');
 const styles = require('./search_controller.styl');
 
-const resultsTemplate = (scope) => scope.map((result) => `
-  <div>
-    <img src="${result.thumb}">
-    <span>title: ${result.title}</span>
-    <span>barcode: ${result.barcode.join(', ')}</span>
-    <span>catno: ${result.catno}</span>
-    <span>year: ${result.year}</span>
-    <span>label: ${result.label.join()}</span>
-    <span>format: ${result.format.join()}</span>
-    <span>genre: ${result.genre.join()}</span>
-    <a refs="release-info" href="/search/discogs/releases/${result.id}">more</a>
-  </div>
-`).join('');
+const resultTemplate = require('./search_result.html');
+const resultsTemplate = (scope) => scope.map(resultTemplate).join('');
 
 const releaseTemplate = (scope) => `
   <div>
