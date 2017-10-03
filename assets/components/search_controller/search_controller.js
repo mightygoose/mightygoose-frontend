@@ -6,39 +6,7 @@ const styles = require('./search_controller.styl');
 const resultTemplate = require('./search_result.html');
 const resultsTemplate = (scope) => scope.map(resultTemplate).join('');
 
-const releaseTemplate = (scope) => `
-  <div>
-    <span>lowest price: ${scope.lowest_price}$</span>
-    <span>rating: ${scope.community.rating.average} (${scope.community.rating.count})</span>
-    <span>artist: ${scope.artists.map(artist => artist.name).join(', ')}</span>
-    <span>release title: ${scope.title}</span>
-    <span>genre: ${scope.genres.join()}</span>
-    <span>styles: ${scope.styles.join()}</span>
-    <span>format: ${scope.formats.map(format => format.name).join(', ')}</span>
-    <span>release country: ${scope.country}</span>
-    <span>year: ${scope.year}</span>
-    <span>released: ${scope.released}</span>
-    <span>released formatted: ${scope.released_formatted}</span>
-
-    <span>identifiers: ${scope.identifiers.map(identifier => `
-      ${identifier.value} (${identifier.type})
-    `).join(', ')}
-    </span>
-
-    <span>labels: ${scope.labels.map(label => `
-      ${label.name} (catno: ${label.catno})
-    `).join(', ')}
-    </span>
-
-    <a href="${scope.uri}">discogs link</a>
-
-    <div>
-    ${scope.images.map((image) => `
-      <img src="${image.resource_url}">
-    `).join('')}
-    </div>
-  </div>
-`;
+const releaseTemplate = require('./release.html');
 
 
 const getQueryString = (params) => {
