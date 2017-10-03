@@ -13,12 +13,12 @@
       </div>
       <div class="row tags-row">
         <div class="row">
-            ${scope.genres.map(genre => `
+            ${(scope.genres || []).map(genre => `
                 <div class="release-tag">${genre}</div>
             `).join('')}
         </div>
         <div class="row">
-            ${scope.styles.map(style => `
+            ${(scope.styles || []).map(style => `
                 <div class="release-tag">${style}</div>
             `).join('')}
         </div>
@@ -59,8 +59,8 @@
           </span>
           <span class="item-category-label">
               ${scope.identifiers.map(identifier => `
-                  ${identifier.value} (${identifier.type})
-              `).join(', ')}
+                  <div>${identifier.value} (${identifier.type})</div>
+              `).join('')}
           </span>
       </div>
 
@@ -84,14 +84,6 @@
           <div>
               <span class="item-category-title">
                   released:
-              </span>
-              <span class="item-category-label">
-                  ${scope.released}
-              </span>
-          </div>
-          <div>
-              <span class="item-category-title">
-                  released formatted:
               </span>
               <span class="item-category-label">
                   ${scope.released_formatted}
