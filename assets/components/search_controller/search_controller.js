@@ -1,7 +1,7 @@
 const RouterController = require('lib/router_controller');
 
 const template = require('./search_controller.html');
-//const styles = require('./search_posts.styl');
+const styles = require('./search_controller.styl');
 
 const resultsTemplate = (scope) => scope.map((result) => `
   <div>

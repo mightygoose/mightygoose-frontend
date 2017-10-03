@@ -1,11 +1,27 @@
 <div class="row params-row">
-    <form ref="form">
-        <input name="barcode" placeholder="barcode" ref="barcode" value="${scope.barcode || ''}">
-        <input name="catno" placeholder="catno" ref="catno" value="${scope.catno || ''}">
-        <input name="artist" placeholder="artist" ref="artist" value="${scope.artist || ''}">
-        <input name="year" placeholder="year" ref="year" value="${scope.year || ''}">
-        <input name="release_title" placeholder="release title" ref="release_title" value="${scope.release_title || ''}">
-        <button type="submit" ref="search">search</button>
+    <form ref="form" class="search-form">
+        <div class="row">
+            <label class="ceil code-ceil">
+                <input name="barcode" placeholder="barcode" ref="barcode" value="${scope.barcode || ''}">
+            </label>
+            <label class="ceil code-ceil catno-ceil">
+                <input name="catno" placeholder="catno" ref="catno" value="${scope.catno || ''}">
+            </label>
+            <label class="ceil year-ceil">
+                <input name="year" placeholder="year" ref="year" value="${scope.year || ''}">
+            </label>
+        </div>
+        <div class="row">
+            <label class="ceil artist-ceil">
+                <input name="artist" placeholder="artist" ref="artist" value="${scope.artist || ''}">
+            </label>
+            <label class="ceil release-title-ceil">
+                <input name="release_title" placeholder="release title" ref="release_title" value="${scope.release_title || ''}">
+            </label>
+        </div>
+        <div class="row search-button-row">
+            <button type="submit" ref="search" class="button">search</button>
+        </div>
     </form>
 </div>
 <div class="row preloader-row">
