@@ -106,6 +106,11 @@ class SearchController extends RouterController {
         this.refs.$results.scrollIntoView();
         return results;
       })
+      .then(results => {
+        if(!results.length){
+        this.html(`<span class="no-results">no results</span>`, this.refs.$results);
+        }
+      })
       .then(() => this.refs.$preloader.hide && this.refs.$preloader.hide())
   }
 
