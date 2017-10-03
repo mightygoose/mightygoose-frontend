@@ -114,6 +114,7 @@ class SearchController extends RouterController {
       .then(response => response.results)
       .then(results => {
         this.html(resultsTemplate(results), this.refs.$results);
+        this.refs.$results.scrollIntoView();
         return results;
       })
       .then(() => this.refs.$preloader.hide && this.refs.$preloader.hide())
@@ -125,6 +126,7 @@ class SearchController extends RouterController {
       .then(response => response.json())
       .then((data) => {
         this.html(releaseTemplate(data), this.refs.$results);
+        this.refs.$results.scrollIntoView();
       })
       .then(() => this.refs.$preloader.hide && this.refs.$preloader.hide())
   }
