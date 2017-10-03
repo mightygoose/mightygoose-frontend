@@ -74,6 +74,7 @@ app.use(route.get('/search/discogs', function *(){
     url: url,
     qs: Object.assign({
       token: DISCOGS_TOKEN,
+      type: 'release',
     }, query),
     headers: {
       'User-Agent': 'request'
@@ -108,6 +109,13 @@ app.use(route.post('/mixcloud/get_tracks', function *(){
   };
   var response = yield request(options);
   this.body = response.body || {};
+}));
+
+app.use(route.get('/discogs_info/releases/:id', function *(id){
+  var response = yield store.get_discogs_info({
+    resource_url: `https://api.discogs.com/releases/${id}`
+  });
+  this.body = response;
 }));
 
 app.use(route.post('/discogs_info', function *(){

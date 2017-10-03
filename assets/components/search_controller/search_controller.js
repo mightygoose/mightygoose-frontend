@@ -13,8 +13,43 @@ const resultsTemplate = (scope) => scope.map((result) => `
     <span>label: ${result.label.join()}</span>
     <span>format: ${result.format.join()}</span>
     <span>genre: ${result.genre.join()}</span>
+    <a refs="release-info" href="/search/discogs/releases/${result.id}">more</a>
   </div>
 `).join('');
+
+const releaseTemplate = (scope) => `
+  <div>
+    <span>lowest price: ${scope.lowest_price}$</span>
+    <span>rating: ${scope.community.rating.average} (${scope.community.rating.count})</span>
+    <span>artist: ${scope.artists.map(artist => artist.name).join(', ')}</span>
+    <span>release title: ${scope.title}</span>
+    <span>genre: ${scope.genres.join()}</span>
+    <span>styles: ${scope.styles.join()}</span>
+    <span>format: ${scope.formats.map(format => format.name).join(', ')}</span>
+    <span>release country: ${scope.country}</span>
+    <span>year: ${scope.year}</span>
+    <span>released: ${scope.released}</span>
+    <span>released formatted: ${scope.released_formatted}</span>
+
+    <span>identifiers: ${scope.identifiers.map(identifier => `
+      ${identifier.value} (${identifier.type})
+    `).join(', ')}
+    </span>
+
+    <span>labels: ${scope.labels.map(label => `
+      ${label.name} (catno: ${label.catno})
+    `).join(', ')}
+    </span>
+
+    <a href="${scope.uri}">discogs link</a>
+
+    <div>
+    ${scope.images.map((image) => `
+      <img src="${image.resource_url}">
+    `).join('')}
+    </div>
+  </div>
+`;
 
 
 const getQueryString = (params) => {
@@ -59,6 +94,10 @@ class SearchController extends RouterController {
         $results: this.querySelector('[ref="results"]')
       }
     }
+    this.html('', this.refs.$results);
+  }
+
+  applyParams(q){
 
     (this.barcode !== q.barcode) && (this.barcode = q.barcode || '');
     (this.catno !== q.catno) && (this.catno = q.catno || '');
@@ -70,17 +109,24 @@ class SearchController extends RouterController {
 
     this.refs.$preloader.show && this.refs.$preloader.show();
 
-    this.html('', this.refs.$results);
     fetch(`/api/search/discogs?${getQueryString(q)}`)
       .then(response => response.json())
       .then(response => response.results)
-      .then(response => this.renderResults(response))
+      .then(results => {
+        this.html(resultsTemplate(results), this.refs.$results);
+        return results;
+      })
       .then(() => this.refs.$preloader.hide && this.refs.$preloader.hide())
   }
 
-  renderResults(results = []){
-    this.html(resultsTemplate(results), this.refs.$results);
-    return results;
+  renderItem(id){
+    this.refs.$preloader.show && this.refs.$preloader.show();
+    fetch(`/api/discogs_info/releases/${id}`)
+      .then(response => response.json())
+      .then((data) => {
+        this.html(releaseTemplate(data), this.refs.$results);
+      })
+      .then(() => this.refs.$preloader.hide && this.refs.$preloader.hide())
   }
 
   set barcode(value){
@@ -126,8 +172,12 @@ class SearchController extends RouterController {
   get routes(){
     let self = this;
     return {
-      '/'(q){
+      '*'(path, q){
         self.render(q);
+        self.applyParams(q);
+      },
+      '/discogs/releases/:id'(id){
+        self.renderItem(id);
       },
     }
   }

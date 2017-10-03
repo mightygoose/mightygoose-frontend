@@ -180,7 +180,7 @@ class Store {
 
   get_discogs_info(discogs_object){
     return new Promise((resolve) => {
-      var url = `${discogs_object.resource_url}?token=${DISCOGS_TOKEN}`;
+      var url = `${discogs_object.resource_url}?token=${DISCOGS_TOKEN}&curr_abbr=USD`;
       request({
         url: url,
         headers: {
