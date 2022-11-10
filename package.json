@@ -89,6 +89,7 @@
     "whatwg-fetch": "^0.11.0"
   },
   "engines": {
-    "node": "7.10.1"
+    "node": "16",
+    "yarn": "1.x"
   }
 }
