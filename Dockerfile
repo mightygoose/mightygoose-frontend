@@ -1,0 +1,1 @@
+FROM strm/helloworld-http
