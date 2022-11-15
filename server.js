@@ -1,4 +1,4 @@
-if(process.env['NODE_ENV'] === 'production'){
+if (process.env['NODE_ENV'] === 'production') {
   require('@risingstack/trace');
   require('newrelic');
 }
@@ -22,7 +22,7 @@ var app = koa();
 
 
 //response time
-app.use(function *(next){
+app.use(function*(next) {
   var start = new Date;
   yield next;
   var ms = new Date - start;
@@ -30,7 +30,7 @@ app.use(function *(next){
 });
 
 // logger
-app.use(function *(next){
+app.use(function*(next) {
   var start = new Date;
   yield next;
   var ms = new Date - start;
@@ -54,4 +54,10 @@ app.use(mount('/user', user_app));
 //static
 app.use(mount('/', front_app));
 
-app.listen(process.env['PORT'] || 3000);
+const port = process.env['PORT'] || 3000;
+
+try {
+  app.listen(port, () => log.info(`server is running on port: ${port}`))
+} catch (error) {
+  log.error(`could not start server: ${error}`)
+}

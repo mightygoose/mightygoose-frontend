@@ -7,7 +7,7 @@ const aws = require('aws-sdk');
 const _ = require('lodash');
 const fs = require('fs');
 
-const { routes: app_routes } = require('config/routes');
+const { routes: app_routes } = require('../config/routes');
 
 const jsdom = require("jsdom");
 const { Response } = require('node-fetch');
