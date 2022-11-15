@@ -45,13 +45,6 @@ class Store {
     DbClient.then((db) => {
       this.db = db;
     })
-    // log.info('connecting to db');
-    // massive.connect({
-    //   connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`
-    // }, (err, db) => {
-    //   log.info('connected to db', err);
-    //   this.db = db;
-    // });
 
     log.info('connecting to queue');
     this.queue = jackrabbit(RABBITMQ_URL)
