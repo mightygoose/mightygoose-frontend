@@ -11,6 +11,8 @@ const jackrabbit = require('jackrabbit');
 const massive = require("massive");
 const url = require('url');
 
+const DbClient = require('../lib/clients/db')
+
 
 //FIXME: use lib/clients/db.js for db connection
 const DB_HOST = process.env['DB_HOST'];
@@ -40,13 +42,16 @@ class Store {
     this.collection = [];
     this.tags = [];
 
-    log.info('connecting to db');
-    massive.connect({
-      connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`
-    }, (err, db) => {
-      log.info('connected to db', err);
+    DbClient.then((db) => {
       this.db = db;
-    });
+    })
+    // log.info('connecting to db');
+    // massive.connect({
+    //   connectionString: `postgres://${DB_USER}:${DB_PASSWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`
+    // }, (err, db) => {
+    //   log.info('connected to db', err);
+    //   this.db = db;
+    // });
 
     log.info('connecting to queue');
     this.queue = jackrabbit(RABBITMQ_URL)
