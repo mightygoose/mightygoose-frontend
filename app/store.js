@@ -100,7 +100,7 @@ class Store {
 
   get_by_id(item_id){
     return new Promise((resolve) => {
-      this.db.run("select * from items where id=$1", [item_id], (err,stat) => {
+      this.db.run(`select * from items where id=${item_id}`, (err,stat) => {
         resolve(stat, err);
       });
     }).then((response, error) => {
