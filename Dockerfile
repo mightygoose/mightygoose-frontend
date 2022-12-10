@@ -1,14 +1,18 @@
 FROM node:14
 
-RUN curl -L https://github.com/DarthSim/hivemind/releases/download/v1.1.0/hivemind-v1.1.0-linux-386.gz > /tmp/hivemind.gz
-RUN gunzip -c /tmp/hivemind.gz > /tmp/hivemind
-RUN chmod +x /tmp/hivemind
+ENV WORKDIR /app
 
-WORKDIR /app
+#install mon
+RUN mkdir /tmp/mon && cd /tmp/mon && curl -L# https://github.com/tj/mon/archive/master.tar.gz | tar zx --strip 1 && make install && rm -rf /tmp/mon
+
+#install mongroup
+RUN mkdir /tmp/mongroup && cd /tmp/mongroup && curl -L# https://github.com/jgallen23/mongroup/archive/master.tar.gz | tar zx --strip 1 && make install && rm -rf /tmp/mongroup
+
+WORKDIR ${WORKDIR}
 COPY package.json /app
 RUN npm install
 COPY . .
 RUN npm run postinstall
 
-CMD /tmp/hivemind
+ENTRYPOINT ["./entrypoint.sh"]
 
