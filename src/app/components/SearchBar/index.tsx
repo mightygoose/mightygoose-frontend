@@ -115,8 +115,7 @@ const SearchBar: FC = () => {
             gap="0.4rem"
             paddingX="1rem"
             _hover={{
-              backgroundColor: "black",
-              color: "white",
+              backgroundColor: "yellow.100",
             }}
           >
             {item.type === "tag" ? (
