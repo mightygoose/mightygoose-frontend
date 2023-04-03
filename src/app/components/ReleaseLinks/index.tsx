@@ -10,47 +10,37 @@ import discogsLogo from "./discogs.svg";
 import spotifyLogo from "./spotify.svg";
 import deezerLogo from "./deezer.svg";
 
+const LogoImage: FC<{ src: string; alt: string }> = ({ src, alt }) => (
+  <Box
+    alt={alt}
+    as={Image}
+    height="100%"
+    width="auto"
+    filter="grayscale(100%)"
+    src={src}
+    _hover={{
+      filter: "none",
+    }}
+  />
+);
+
 const ReleaseLinks: FC<{ release: TRelease }> = ({ release }) => {
   const links = [];
   if (release.discogs) {
     links.push({
-      label: (
-        <Box
-          alt="discogs logo"
-          as={Image}
-          height="100%"
-          width="auto"
-          src={discogsLogo}
-        />
-      ),
+      label: <LogoImage alt="discogs logo" src={discogsLogo} />,
       url: `https://www.discogs.com/release/${release.discogs.id}`,
     });
   }
   if (release.spotify) {
     links.push({
-      label: (
-        <Box
-          alt="spotify logo"
-          as={Image}
-          height="100%"
-          width="auto"
-          src={spotifyLogo}
-        />
-      ),
+      label: <LogoImage alt="spotify logo" src={spotifyLogo} />,
       url: `https://open.spotify.com/album/${release.spotify.id}`,
     });
   }
   if (release.deezer) {
     links.push({
-      label: (
-        <Box
-          alt="deezer logo"
-          as={Image}
-          height="80%"
-          width="auto"
-          src={deezerLogo}
-        />
-      ),
+      label: <LogoImage alt="deezer logo" src={deezerLogo} />,
       url: release.deezer.deezer_link,
     });
   }
