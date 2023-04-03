@@ -28,6 +28,9 @@ export async function generateMetadata({
   )} with ${title}. Get ready for a unique and powerful musical experience!`;
   const canonical = `http://mightygoose.com/post/${id}-${slugify(title)}`;
 
+  const year = release.discogs?.year;
+  const ogDescription = [title].concat(year);
+
   return {
     title: `${title} | Mightygoose.com`,
     description,
@@ -48,7 +51,9 @@ export async function generateMetadata({
     },
     openGraph: {
       title,
-      description,
+      description: `${title} ${year ? `(${year})` : ""} ${
+        tags.length ? `[${tags.join(", ")}]` : ""
+      }`,
       url: canonical,
       siteName: "Mightygoose.com",
       images: [
