@@ -136,9 +136,6 @@ const Release: FC<{ release: TRelease }> = ({ release }) => {
             md: `"image links"
                  "media media"
                   `,
-            xl: `"image links"
-                 "image media"
-                  `,
           }}
           templateColumns={{
             base: "100%",
@@ -215,6 +212,7 @@ const Release: FC<{ release: TRelease }> = ({ release }) => {
                 <ReactPlayer
                   width="100%"
                   url={discogsInfo.videos.map(({ uri }) => uri)}
+                  controls
                 />
               </Flex>
             )}
