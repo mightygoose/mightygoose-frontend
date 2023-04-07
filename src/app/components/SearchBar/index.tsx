@@ -76,7 +76,7 @@ const SearchBar: FC = () => {
               new RegExp(`(${debouncedValue})`, "gi"),
               "<strong>$&</strong>"
             ),
-            uri: `/post/${item.id}`,
+            uri: `/release/${item.id}`,
           })),
       ]);
       setLoading(false);

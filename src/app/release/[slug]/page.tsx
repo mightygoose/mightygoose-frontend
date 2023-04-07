@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import fetch from "../../../lib/fetch";
 import slugify from "../../../lib/slugify";
-import { Releases } from "../../types";
+import { Release as TRelease } from "../../types";
 import Release, { NotFound } from "./Release";
 
 interface PageProps {
@@ -18,7 +18,7 @@ export async function generateMetadata({
   if (!releaseId) {
     return {};
   }
-  const [release] = await getRelease(+releaseId);
+  const release = await getRelease(+releaseId);
   if (!release) {
     return {};
   }
@@ -26,7 +26,7 @@ export async function generateMetadata({
   const description = `${title}: Experience the ultimate blend of ${tags.join(
     ", "
   )} with ${title}. Get ready for a unique and powerful musical experience!`;
-  const canonical = `http://mightygoose.com/post/${id}-${slugify(title)}`;
+  const canonical = `http://mightygoose.com/release/${id}-${slugify(title)}`;
 
   const year = release.discogs?.year;
   const ogDescription = [title].concat(year);
@@ -67,14 +67,14 @@ export async function generateMetadata({
   };
 }
 
-const getRelease = (id: number) => fetch<Releases>(`/api/post/${id}`);
+const getRelease = (id: number) => fetch<TRelease>(`/api/release/${id}`);
 
 const Page = async ({ params: { slug } }: PageProps) => {
   const releaseId = slug.match(/(\d+)-?/)?.[1];
   if (!releaseId) {
     notFound();
   }
-  const [release] = await getRelease(+releaseId);
+  const release = await getRelease(+releaseId);
 
   if (!release) {
     notFound();

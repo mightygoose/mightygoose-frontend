@@ -51,7 +51,7 @@ const SearchResultsItem: FC<{ release: Release }> = ({ release }) => {
       overflow="hidden"
       position="relative"
       boxShadow={`1px 1px 4px ${theme.colors.grey["500"]}`}
-      href={`/post/${release.id}-${slugify(release.title)}`}
+      href={`/release/${release.id}-${slugify(release.title)}`}
     >
       {release.images[0] ? (
         <Image

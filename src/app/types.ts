@@ -199,3 +199,7 @@ export interface AutocompleteItem {
   title: string;
   image?: string;
 }
+
+export interface RandomReleaseResponse {
+  id: number;
+}
