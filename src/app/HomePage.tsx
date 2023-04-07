@@ -71,7 +71,7 @@ const HomePage: FC<{ releases: TReleases }> = ({ releases }) => {
         >
           <Button
             as={Link}
-            href="/posts"
+            href="/releases"
             prefetch={false}
             paddingX={12}
             paddingY={6}

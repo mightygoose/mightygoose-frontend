@@ -1,5 +1,5 @@
 import HomePage from "./HomePage";
-import getReleases from "./posts/getReleases";
+import getReleases from "./releases/getReleases";
 
 const title = "Home | Mightygoose.com";
 const description =

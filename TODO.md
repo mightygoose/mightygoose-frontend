@@ -22,7 +22,7 @@
 
 - remove number from artist name
 
-- redirect /posts -> /releases
+- [*] redirect /posts -> /releases
 - cookie consent
 
 - similar releases on release page

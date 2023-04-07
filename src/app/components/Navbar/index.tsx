@@ -87,7 +87,7 @@ const Navbar: FC = () => {
         <SearchBar />
       </GridItem>
       <GridItem area={"links"} justifySelf="end">
-        <TextLink href="/posts">All Releases</TextLink>
+        <TextLink href="/releases">All Releases</TextLink>
       </GridItem>
     </Grid>
   );

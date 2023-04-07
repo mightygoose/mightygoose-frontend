@@ -10,7 +10,7 @@ interface ReleasesSearchParams {
 }
 
 const getReleases = (params?: ReleasesSearchParams) => {
-  return fetch<TReleases>("/api/search/posts", {
+  return fetch<TReleases>("/api/releases", {
     method: "POST",
     body: JSON.stringify({
       tags: [],

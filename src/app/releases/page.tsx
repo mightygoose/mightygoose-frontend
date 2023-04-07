@@ -19,11 +19,22 @@ export async function generateMetadata({
     tags.length ? tags.join(", ") : "Rock, Electronic, Jazz, Pop, Hip-Hop"
   } and more. Discover latest added releases${tagsText}`;
 
+  const queryString = tags.length
+    ? tags.map((tag) => `tag=${tag}`).join("&")
+    : "";
+
+  const canonical = `http://mightygoose.com/releases${
+    queryString ? `?${queryString}` : ""
+  }`;
+
   return {
     title,
     description,
     keywords: [...tags],
     category: "music",
+    alternates: {
+      canonical,
+    },
     robots: {
       index: true,
       follow: true,

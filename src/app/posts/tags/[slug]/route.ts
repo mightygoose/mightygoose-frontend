@@ -5,5 +5,5 @@ interface RouteProps {
 }
 
 export async function GET(_: any, { params: { slug } }: RouteProps) {
-  redirect(`/posts?tag=${slug}`);
+  redirect(`/releases?tag=${slug}`);
 }

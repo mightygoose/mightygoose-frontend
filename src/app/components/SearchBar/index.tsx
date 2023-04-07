@@ -61,7 +61,7 @@ const SearchBar: FC = () => {
           id: 0,
           type: "tag",
           title: debouncedValue,
-          uri: `/posts?tag=${debouncedValue}`,
+          uri: `/releases?tag=${debouncedValue}`,
           count: response.tags_count,
         },
         ...response.items
