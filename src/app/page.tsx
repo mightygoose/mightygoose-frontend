@@ -1,5 +1,5 @@
 import HomePage from "./HomePage";
-import getReleases from "./releases/getReleases";
+import getBestReleases from "./getBestReleases";
 
 const title = "Home | Mightygoose.com";
 const description =
@@ -33,7 +33,7 @@ export const metadata = {
 };
 
 const Home = async () => {
-  const releases = await getReleases({ limit: 3 });
+  const releases = await getBestReleases({ limit: 9 });
   return <HomePage releases={releases} />;
 };
 
