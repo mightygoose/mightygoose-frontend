@@ -168,9 +168,13 @@ const SearchBar: FC = () => {
           zIndex={2}
         >
           {(value?.length || 0) < 3 ? null : loading ? (
-            <Text>Loading...</Text>
+            <Text as="span" paddingX="1rem">
+              Loading...
+            </Text>
           ) : items.length === 0 ? (
-            <Text>No matches for {value}</Text>
+            <Text as="span" paddingX="1rem">
+              No matches for {value}
+            </Text>
           ) : (
             items
           )}

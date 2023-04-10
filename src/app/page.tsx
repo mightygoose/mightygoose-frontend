@@ -33,7 +33,7 @@ export const metadata = {
 };
 
 const Home = async () => {
-  const releases = await getBestReleases({ limit: 9 });
+  const releases = await getBestReleases({ limit: 3 });
   return <HomePage releases={releases} />;
 };
 

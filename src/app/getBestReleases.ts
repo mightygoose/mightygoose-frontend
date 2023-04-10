@@ -9,7 +9,7 @@ interface ReleasesSearchParams {
   offset?: number;
 }
 
-const getReleases = (params?: ReleasesSearchParams) => {
+const getBestReleases = (params?: ReleasesSearchParams) => {
   return fetch<TReleases>("/api/releases/best", {
     method: "POST",
     body: JSON.stringify({
@@ -21,4 +21,4 @@ const getReleases = (params?: ReleasesSearchParams) => {
   });
 };
 
-export default getReleases;
+export default getBestReleases;

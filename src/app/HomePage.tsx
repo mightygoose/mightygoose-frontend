@@ -52,9 +52,14 @@ const HomePage: FC<{ releases: TReleases }> = ({ releases }) => {
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
+        backgroundColor="grey.100"
+        paddingY="2rem"
       >
-        <HeadingLine title="recently added" />
-        <SearchResults loading={false} results={releases} />
+        <SearchResults
+          loading={false}
+          results={releases}
+          title="our best picks"
+        />
         <Flex
           marginY={16}
           gap="3rem"

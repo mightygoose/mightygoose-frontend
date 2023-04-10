@@ -109,27 +109,42 @@ const SearchResultsItem: FC<{ release: Release }> = ({ release }) => {
   );
 };
 
-const SearchResults: FC<{ results: Releases; loading: boolean }> = ({
-  loading,
-  results,
-}) => {
+const SearchResults: FC<{
+  results: Releases;
+  loading: boolean;
+  title?: string;
+}> = ({ loading, results, title }) => {
   return (
-    <Grid
-      paddingTop="2rem"
-      width="80%"
-      maxWidth="800px"
-      templateColumns={{
-        sm: "repeat(1, 1fr)",
-        md: "repeat(2, 1fr)",
-        lg: "repeat(3, 1fr)",
-      }}
-      gap="1rem"
-    >
-      {results.map((release, i) => (
-        <SearchResultsItem release={release} key={i} />
-      ))}
-      {loading && <SearchResultsLoading />}
-    </Grid>
+    <Flex flexDirection="column" width="100%" alignItems="center">
+      {title && (
+        <Text
+          as="h1"
+          fontFamily="'Roboto Condensed', sans-serif"
+          fontWeight={700}
+          textTransform="uppercase"
+          fontSize="1rem"
+          color="grey.200"
+        >
+          {title}
+        </Text>
+      )}
+      <Grid
+        paddingTop="2rem"
+        width="80%"
+        maxWidth="800px"
+        templateColumns={{
+          sm: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        }}
+        gap="1rem"
+      >
+        {results.map((release, i) => (
+          <SearchResultsItem release={release} key={i} />
+        ))}
+        {loading && <SearchResultsLoading />}
+      </Grid>
+    </Flex>
   );
 };
 
