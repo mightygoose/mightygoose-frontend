@@ -2,15 +2,7 @@
 
 import { FC, useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Text,
-  useTheme,
-} from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Text, useTheme } from "@chakra-ui/react";
 import Iframe from "react-iframe";
 import ReactPlayer from "react-player";
 import getYouTubeID from "get-youtube-id";
@@ -19,6 +11,7 @@ import Tag from "../../components/Tag";
 import { Release as TRelease, DiscogsInfo } from "../../types";
 import fetch from "../../../lib/fetch";
 import ReleaseLinks from "../../components/ReleaseLinks";
+import Image from "../../components/Image";
 
 const useDiscogsInfo = (release: TRelease) => {
   const [discogsInfo, setDiscogsInfo] = useState<DiscogsInfo | null>(null);
@@ -145,7 +138,10 @@ const Release: FC<{ release: TRelease }> = ({ release }) => {
           <GridItem area="image" style={{ aspectRatio: "1/1" }} flexBasis="40%">
             <Image
               alt={`${release.title} cover art`}
-              src={release.images[0] || discogsInfo?.images[0]?.uri}
+              src={([] as Array<string>)
+                .concat(release.images[0] || [])
+                .concat(discogsInfo ? discogsInfo.images[0].uri : [])
+                .concat(release.discogs.thumb)}
               width="100%"
               loading="lazy"
             />

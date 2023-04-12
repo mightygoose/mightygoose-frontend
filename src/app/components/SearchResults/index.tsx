@@ -4,7 +4,7 @@ import {
   Flex,
   Grid,
   GridItem,
-  Image,
+  // Image,
   Text,
   useTheme,
 } from "@chakra-ui/react";
@@ -12,6 +12,7 @@ import { FC, ReactNode } from "react";
 import { Release, Releases } from "../../types";
 import Tag from "../Tag";
 import slugify from "../../../lib/slugify";
+import Image from "../../components/Image";
 import ReleaseCardSkeleton from "./ReleaseCardSkeleton";
 
 const SearchResultsItemWrapper: FC<{ children?: ReactNode }> = ({
@@ -56,7 +57,7 @@ const SearchResultsItem: FC<{ release: Release }> = ({ release }) => {
       {release.images[0] ? (
         <Image
           alt={`${release.title} cover art`}
-          src={release.images[0]}
+          src={[release.images[0], release.discogs.thumb]}
           loading="lazy"
           position="absolute"
           height="100%"

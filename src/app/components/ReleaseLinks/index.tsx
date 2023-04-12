@@ -40,7 +40,11 @@ const ReleaseLinks: FC<{ release: TRelease }> = ({ release }) => {
   }
   if (release.deezer) {
     links.push({
-      label: <LogoImage alt="deezer logo" src={deezerLogo} />,
+      label: (
+        <Box height="1.1rem">
+          <LogoImage alt="deezer logo" src={deezerLogo} />
+        </Box>
+      ),
       url: release.deezer.deezer_link,
     });
   }
