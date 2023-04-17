@@ -5,13 +5,14 @@ import slugify from "../../../../lib/slugify";
 const URLS_PER_SITEMAP = 7000;
 
 interface RouteProps {
-  params: { index: number };
+  params: { index: Array<string> };
 }
 
 export async function GET(_: any, { params: { index } }: RouteProps) {
+  const pageIndex = +(index[0].match(/^\d+/)?.[0] || 0);
   const releases = await fetch<Array<{ id: number; title: string }>>(
     `/api/releases_short?limit=${URLS_PER_SITEMAP}&offset=${
-      URLS_PER_SITEMAP * index
+      URLS_PER_SITEMAP * pageIndex
     }`
   );
 

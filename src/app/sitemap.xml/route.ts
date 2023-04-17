@@ -8,7 +8,7 @@ export async function GET() {
   const releasePagesCount = Math.round(stat.unique_releases / URLS_PER_SITEMAP);
   const releaseSitemaps = Array.from(
     { length: releasePagesCount },
-    (_, i) => `/sitemaps/releases/${i}`
+    (_, i) => `/sitemaps/releases/${i}.xml`
   );
 
   return getServerSideSitemapIndex(releaseSitemaps);
