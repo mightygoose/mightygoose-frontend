@@ -10,15 +10,19 @@ interface ReleasesSearchParams {
 }
 
 const getBestReleases = (params?: ReleasesSearchParams) => {
-  return fetch<TReleases>("/api/releases/best", {
-    method: "POST",
-    body: JSON.stringify({
-      tags: [],
-      limit: LIMIT,
-      offset: 0,
-      ...params,
-    }),
-  });
+  return fetch<TReleases>(
+    "/api/releases/best",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        tags: [],
+        limit: LIMIT,
+        offset: 0,
+        ...params,
+      }),
+    },
+    { next: { revalidate: 60 * 60 * 24 } }
+  );
 };
 
 export default getBestReleases;

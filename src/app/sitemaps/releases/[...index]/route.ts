@@ -13,7 +13,9 @@ export async function GET(_: any, { params: { index } }: RouteProps) {
   const releases = await fetch<Array<{ id: number; title: string }>>(
     `/api/releases_short?limit=${URLS_PER_SITEMAP}&offset=${
       URLS_PER_SITEMAP * pageIndex
-    }`
+    }`,
+    {},
+    { next: { revalidate: 60 * 60 * 24 } }
   );
 
   return getServerSideSitemap(
