@@ -18,7 +18,7 @@ export async function GET(_: any, { params: { index } }: RouteProps) {
 
   return getServerSideSitemap(
     releases.map(({ id, title }) => ({
-      loc: `/release/${id}-${slugify(title)}`,
+      loc: `http://mightygoose.com/release/${id}-${slugify(title)}`,
       lastmod: new Date().toISOString(),
     }))
   );
