@@ -22,6 +22,7 @@
     "framer-motion": "^10.8.4",
     "get-youtube-id": "^1.0.1",
     "next": "13.2.4",
+    "next-sitemap": "^4.0.7",
     "react": "18.2.0",
     "react-autocomplete": "^1.8.1",
     "react-dom": "18.2.0",
