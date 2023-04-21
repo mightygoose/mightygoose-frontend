@@ -1,0 +1,5 @@
+User-agent: SemrushBot
+Disallow: /
+
+
+Sitemap: https://mightygoose.com/sitemap.xml
