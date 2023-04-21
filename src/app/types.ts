@@ -17,6 +17,7 @@ export interface Release {
   deezer?: Deezer;
   created_at: string;
   spotify?: Spotify;
+  similar_releases?: Array<Release>
 }
 
 export interface Discogs {

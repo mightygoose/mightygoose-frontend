@@ -30,7 +30,9 @@ export async function generateMetadata({
   const canonical = `http://mightygoose.com/release/${id}-${slugify(title)}`;
 
   const year = release.discogs?.year;
-  const ogDescription = [title].concat(year);
+  const ogDescription = `${title} ${year ? `(${year})` : ""} ${
+    tags.length ? `[${tags.join(", ")}]` : ""
+  }`;
 
   return {
     title: `${title} | Mightygoose.com`,
@@ -52,9 +54,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title,
-      description: `${title} ${year ? `(${year})` : ""} ${
-        tags.length ? `[${tags.join(", ")}]` : ""
-      }`,
+      description: ogDescription,
       url: canonical,
       siteName: "Mightygoose.com",
       images: [
@@ -69,8 +69,6 @@ export async function generateMetadata({
 }
 
 const getRelease = (id: number) => fetch<TRelease>(`/api/release/${id}`);
-const getSimilarReleases = (id: number) =>
-  fetch<TReleases>(`/api/release/${id}/similar`);
 
 const Page = async ({ params: { slug } }: PageProps) => {
   const releaseId = slug.match(/(\d+)-?/)?.[1];
@@ -78,10 +76,7 @@ const Page = async ({ params: { slug } }: PageProps) => {
     notFound();
   }
 
-  const [release, similarReleases] = await Promise.all([
-    getRelease(+releaseId),
-    getSimilarReleases(+releaseId),
-  ]);
+  const release = await getRelease(+releaseId);
 
   if (!release) {
     notFound();
@@ -111,7 +106,9 @@ const Page = async ({ params: { slug } }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Release release={release} />
-      <SimilarReleases releases={similarReleases} />
+      {release.similar_releases && (
+        <SimilarReleases releases={release.similar_releases} />
+      )}
     </>
   );
 };
