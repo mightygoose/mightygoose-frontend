@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
 import Link from "next/link";
 import Image from "next/image";
 import { FC } from "react";
@@ -9,19 +9,26 @@ import { Release as TRelease } from "../../types";
 import discogsLogo from "./discogs.svg";
 import spotifyLogo from "./spotify.svg";
 import deezerLogo from "./deezer.svg";
+import bandcampLogo from "./bandcamp.svg";
 
-const LogoImage: FC<{ src: string; alt: string }> = ({ src, alt }) => (
-  <Box
-    alt={alt}
-    as={Image}
-    height="100%"
-    width="auto"
-    filter="grayscale(100%)"
-    src={src}
-    _hover={{
-      filter: "none",
-    }}
-  />
+const LogoImage: FC<{ src: string; alt: string; hint?: string }> = ({
+  src,
+  alt,
+  hint,
+}) => (
+  <Tooltip label={hint}>
+    <Box
+      alt={alt}
+      as={Image}
+      height="100%"
+      width="auto"
+      filter="grayscale(100%)"
+      src={src}
+      _hover={{
+        filter: "none",
+      }}
+    />
+  </Tooltip>
 );
 
 const ReleaseLinks: FC<{ release: TRelease }> = ({ release }) => {
@@ -46,6 +53,16 @@ const ReleaseLinks: FC<{ release: TRelease }> = ({ release }) => {
         </Box>
       ),
       url: release.deezer.deezer_link,
+    });
+  }
+  if (release.bandcamp) {
+    links.push({
+      label: (
+        <Box height="1.1rem">
+          <LogoImage alt="bandcamp logo" src={bandcampLogo} hint="Bandcamp" />
+        </Box>
+      ),
+      url: release.bandcamp.url,
     });
   }
 

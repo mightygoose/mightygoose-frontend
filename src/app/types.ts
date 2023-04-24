@@ -17,7 +17,9 @@ export interface Release {
   deezer?: Deezer;
   created_at: string;
   spotify?: Spotify;
-  similar_releases?: Array<Release>;
+  bandcamp: Bandcamp;
+  musicbrainz: Musicbrainz;
+  similar_releases?: Release[];
 }
 
 export interface Discogs {
@@ -188,6 +190,30 @@ export interface DiscogsImage {
   uri150: string;
   width: number;
   height: number;
+}
+
+export interface Musicbrainz {
+  id: string;
+  date: string;
+  album: string;
+  score: number;
+  artist: string;
+  country: string;
+  similarity: number;
+}
+
+export interface Bandcamp {
+  url: string;
+  name: string;
+  tags: string[];
+  type: string;
+  album: string;
+  artist: string;
+  imageUrl: string;
+  numTracks: number;
+  numMinutes: number;
+  similarity: number;
+  releaseDate: string;
 }
 
 export interface AutocompleteResponse {
