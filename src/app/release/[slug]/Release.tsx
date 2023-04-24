@@ -200,7 +200,12 @@ const Release: FC<{ release: TRelease }> = ({ release }) => {
           <GridItem as={Flex} flexDirection="column" gap="1rem" area="media">
             <Flex flexDirection="column" width="100%" gap="1rem">
               {embeds.map(({ url }, i) => (
-                <Box as={Iframe} key={"" + i} url={url} />
+                <Box
+                  as={Iframe}
+                  key={"" + i}
+                  url={url}
+                  height={/youtube/.test(url) ? 360 : void 0}
+                />
               ))}
             </Flex>
             {discogsInfo && discogsInfo.videos && (
