@@ -173,7 +173,7 @@ const Release: FC<{ release: TRelease }> = ({ release }) => {
                 <Tag
                   as={Link}
                   prefetch={false}
-                  href={`/releases?tag=${tag}`}
+                  href={`/releases?tag=${encodeURIComponent(tag)}`}
                   fontSize="0.7rem"
                   key={i}
                 >
