@@ -28,4 +28,4 @@ echo "\n\npushing the image to repositiry"
 docker push ghcr.io/mightygoose/mightygoose-frontend:$TAG
 
 echo "\n\ndeploying on dokku"
-ssh $SERVER "dokku git:from-image mightygoose-frontend ghcr.io/mightygoose/mightygoose-frontend:$TAG"
+ssh $SERVER "docker pull ghcr.io/mightygoose/mightygoose-frontend:$TAG && dokku git:from-image mightygoose-frontend ghcr.io/mightygoose/mightygoose-frontend:$TAG"
